@@ -1,0 +1,5 @@
+.notice:hover {
+    box-shadow: 0px 10px 49px 0px rgba(94, 132, 194, 0.31);
+    transition-duration: .5s;
+  }
+  
