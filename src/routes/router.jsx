@@ -14,11 +14,14 @@ import EditTask from "../pages/task-list/edit-task/EditTask";
 import EmployeeDetailsView from "../pages/employee/employee-detaislview/EmployeeDetailsView";
 import ViewNotice from "../pages/notice/view-notice/ViewNotice";
 import CreateNotice from "../pages/notice/create-notice/CreateNotice";
+import Register from "../pages/login/Register";
+import Login from "../pages/login/Login";
+import PrivateRouter from "./PrivateRouter";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Main />,
+    element: <PrivateRouter><Main /></PrivateRouter>,
     children: [
       {
         path: "/",
@@ -90,6 +93,15 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  {
+    path: "/login",
+    element: <Login/>
+  },
+  {
+    path: "/register",
+    element: <Register/>
+  }
 ]);
 
 export default router;

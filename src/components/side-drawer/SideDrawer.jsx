@@ -7,10 +7,13 @@ import { MdHistory } from 'react-icons/md';
 import { RiListCheck3 } from 'react-icons/ri';
 import { LuClipboardList } from 'react-icons/lu';
 import { PiUsersThreeBold } from 'react-icons/pi';
+import { useDispatch } from 'react-redux';
+import { addLogout } from '../../redux/features/user/userSlice';
 
 
 const SideDrawer = () => {
   const location = useLocation();
+  const dispatch = useDispatch()
   
   const userRole = 'admin';
   // const userRole = 'member';
@@ -111,9 +114,9 @@ const SideDrawer = () => {
               </span>
             </p>
 
-            <span className="text-[31px]">
+            <button onClick={()=>dispatch(addLogout())} className="text-[31px]">
               <GrLogout />
-            </span>
+            </button>
           </div>
         </div>
       </aside>

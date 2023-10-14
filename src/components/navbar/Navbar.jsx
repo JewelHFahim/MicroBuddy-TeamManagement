@@ -3,9 +3,13 @@ import { ImLink } from 'react-icons/im';
 import { FaUserCheck } from 'react-icons/fa';
 import { BiMessageRoundedDots } from 'react-icons/bi';
 import { IoNotifications } from 'react-icons/io5';
+import { useSelector } from "react-redux";
 
 
 const Navbar = () => {
+
+    const {email, username} = useSelector(state => state.user)
+
     return (
         <nav className="nav-container border w-full h-[120px] pl-[33px] pr-[90px]">
 
@@ -56,8 +60,8 @@ const Navbar = () => {
 
                 <div className="flex text-right gap-4 ml-5 font-Poppins">
                     <p className="flex flex-col">
-                        <span className="text-[18px]  font-medium text-[#273240]">Roberto</span> 
-                        <span className="text-[#737B8B] text-[14px]">robertocarloz@mail.com</span>
+                        <span className="text-[18px]  font-medium text-[#273240] capitalize">{username}</span> 
+                        <span className="text-[#737B8B] text-[14px] ">{email}</span>
                     </p>
                     <div className="w-[56px] h-[56px] bg-[#C4C4C4] rounded-full"></div>
                 </div>
