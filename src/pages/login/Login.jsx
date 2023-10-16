@@ -1,23 +1,24 @@
 import { useForm } from "react-hook-form";
-import { loginUser } from "../../redux/features/user/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { loginUser, setToken } from "../../redux/features/user/userSlice";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/mb logo.png";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const dispathc = useDispatch();
   const navigate = useNavigate();
-  const { token } = useSelector((state) => state.user);
 
   const onSubmit = async (data) => {
     console.log(data);
     dispathc(loginUser(data));
-    const gotToken = await token;
-    if (gotToken) {
+    if (setToken()) {
+      toast.success("Login successful")
       navigate("/");
     }
   };
+
 
   return (
     <section className="bg-white dark:bg-gray-900">

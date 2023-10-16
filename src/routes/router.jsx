@@ -21,7 +21,7 @@ import PrivateRouter from "./PrivateRouter";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <PrivateRouter><Main /></PrivateRouter>,
+    element: <PrivateRouter> <Main /> </PrivateRouter>,
     children: [
       {
         path: "/",
