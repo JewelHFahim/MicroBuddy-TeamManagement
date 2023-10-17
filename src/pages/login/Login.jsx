@@ -14,11 +14,10 @@ const Login = () => {
     console.log(data);
     dispathc(loginUser(data));
     if (setToken()) {
-      toast.success("Login successful")
+      toast.success("Login successful");
       navigate("/");
     }
   };
-
 
   return (
     <section className="bg-white dark:bg-gray-900">

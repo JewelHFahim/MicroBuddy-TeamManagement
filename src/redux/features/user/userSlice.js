@@ -1,84 +1,87 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
+const userInfo = JSON.parse(localStorage.getItem("user-info"));
+console.log(userInfo.username);
+
 const initialState = {
-  email: "",
-  username: "",
+  email: "" || userInfo.email,
+  username: "" || userInfo.username,
+  userId: "" || userInfo.id,
   isLoading: false,
-  token: "",
+  token: "" || userInfo?.token,
   error: "",
-  message: null
+  message: null,
 };
 
-// export const loginUser = createAsyncThunk("loginUser", async (body) => {
-//     const res = await fetch("http://192.168.3.36:8000/user/login/", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(body),
-//     });
-//     console.log(res);
-//     return await res.json();
-//   });
+export const loginUser = createAsyncThunk(
+  "loginUser",
+  async (body, { dispatch }) => {
+    try {
+      const response = await fetch("http://192.168.3.36:8000/user/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
 
-export const loginUser = createAsyncThunk("loginUser", async (body, { dispatch }) => {
-  try {
-    const response = await fetch("http://192.168.3.36:8000/user/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+      console.log(response);
 
-    console.log(response)
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        console.log(data.token);
 
-    if (response.ok) {
-      const data = await response.json();
-      dispatch(setToken(data.token));
-      // dispatch(setEmail(data.user.email));
-      // dispatch(setUsername(data.user.username));
+        dispatch(setToken(userInfo.token));
+        dispatch(setEmail(data.user.email));
+        dispatch(setUsername(data.user.username));
+        dispatch(setUserId(data.user.id));
 
-      localStorage.setItem("token", JSON.stringify(data.token));
-      toast.success("Login Success");
-    } else {
+        const info = {
+          token: data.token,
+          email: data.user.email,
+          username: data.user.username,
+          type: data.user.type,
+          id: data.user.id,
+        };
+
+        localStorage.setItem("user-info", JSON.stringify(info));
+
+        toast.success("Login Success");
+      } else {
+        toast.error("Login Failed");
+      }
+    } catch (error) {
+      console.error(error);
       toast.error("Login Failed");
+      throw error;
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Login Failed");
-    throw error;
   }
-});
-
-
-
-
+);
 
 export const registerUser = createAsyncThunk("loginUser", async (body) => {
-    const res = await fetch("http://192.168.3.36:8000/user/register/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-
-    console.log(res.status);
-
-
-    return await res.json();
+  const res = await fetch("http://192.168.3.36:8000/user/register/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
   });
-  
+
+  console.log(res.status);
+
+  return await res.json();
+});
 
 const userSlice = createSlice({
   name: "user",
   initialState,
 
   reducers: {
-
     addLogout: (state) => {
       state.token = null;
-      state.user= null;
+      state.user = null;
       state.email = null;
       localStorage.clear();
     },
@@ -86,43 +89,16 @@ const userSlice = createSlice({
     setToken: (state, action) => {
       state.token = action.payload;
     },
-    // setEmail: (state, action) => {
-    //   state.email = action.payload;
-    // },
-    // setUsername: (state, action) => {
-    //   state.username = action.payload;
-    // },
-
-  
+    setEmail: (state, action) => {
+      state.email = action.payload;
+    },
+    setUsername: (state, action) => {
+      state.username = action.payload;
+    },
+    setUserId: (state, action) => {
+      state.userId = action.payload;
+    },
   },
-
-  // extraReducers: {
-  //   [loginUser.pending]: (state) => {
-  //     state.isLoading = true;
-  //   },
-
-  //   [loginUser.rejected]: (state, { payload }) => {
-  //     state.isLoding = false;
-  //     state.error = payload.error;
-  //     state.message = payload.status;
-  //   },
-
-  //   [loginUser.fulfilled]: (state, action) => {
-  //     if (action.error) {
-  //       state.isLoading = false;
-  //       state.error = action.payload;
-  //       state.message = 404
-  //     } else {
-  //       state.token = action.payload.token;
-  //       state.email = action.payload.user.email;
-  //       state.username = action.payload.user.username;
-  //       state.isLoading = false;
-  //       localStorage.setItem("token", JSON.stringify(state.token));
-  //       const gotToken = localStorage.getItem("token");
-  //       state.token = gotToken;
-  //     }
-  //   },
-  // },
 
   extraReducers: {
     [loginUser.pending]: (state) => {
@@ -139,8 +115,15 @@ const userSlice = createSlice({
       state.isLoading = false;
     },
   },
-
 });
 
-export const { addToken, addEmail, addLogout, setToken, setEmail, setUsername } = userSlice.actions;
+export const {
+  addToken,
+  addEmail,
+  addLogout,
+  setToken,
+  setEmail,
+  setUsername,
+  setUserId,
+} = userSlice.actions;
 export default userSlice.reducer;

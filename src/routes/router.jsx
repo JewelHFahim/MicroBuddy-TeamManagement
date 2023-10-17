@@ -17,6 +17,7 @@ import CreateNotice from "../pages/notice/create-notice/CreateNotice";
 import Register from "../pages/login/Register";
 import Login from "../pages/login/Login";
 import PrivateRouter from "./PrivateRouter";
+import UpdateNotice from "../pages/notice/notice-update/UpdateNotice";
 
 const router = createBrowserRouter([
   {
@@ -66,8 +67,7 @@ const router = createBrowserRouter([
       },
 
 
-      // **********Emplyee************//
-
+      // **********Notices************//
       {
         path: "/notices",
         element: <Notices />,
@@ -80,8 +80,10 @@ const router = createBrowserRouter([
         path: "/create-notice/",
         element: <CreateNotice />,
       },
-
-
+      {
+        path: "/notice-update/:id",
+        element: <UpdateNotice />,
+      },
 
       {
         path: "/history",

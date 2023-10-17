@@ -1,28 +1,31 @@
 import { useForm } from "react-hook-form";
-import { useCreateNoticeMutation } from "../../../redux/features/notice/NoticeApi";
+import { useUpdateNoticeMutation, useViewNoticeQuery } from "../../../redux/features/notice/NoticeApi";
 import Title from "../../../utils/Title";
-import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const CreateNotice = () => {
+const UpdateNotice = () => {
+
   const { register, handleSubmit } = useForm();
-  const [createNotice] = useCreateNoticeMutation();
-  const { userId } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const { data: noticeDetails } = useViewNoticeQuery(id);
+  const [updateNotice] = useUpdateNoticeMutation();
+
+  console.log(noticeDetails);
 
   const onSubmit = (data, event) => {
     event.preventDefault();
-    const notice = { ...data, author: userId };
-    console.log(notice);
-    createNotice(notice);
-    toast.success("Created Notice");
+    console.log(data);
+    updateNotice({data, id})
+    toast.success("Updated Notice");
     navigate("/notices")
   };
 
   return (
     <div className="">
-      <Title>Create Notice</Title>
+      <Title>Update Notice</Title>
 
       <section className="">
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -32,6 +35,7 @@ const CreateNotice = () => {
             </label>
             <input
               type="text"
+              defaultValue={noticeDetails?.title}
               {...register("title")}
               placeholder="Title Here"
               className="w-full h-[66px] rounded-[46px] border border-blue-700 bg-white focus:outline-none px-5 text-[20px] font-medium"
@@ -44,6 +48,7 @@ const CreateNotice = () => {
             </label>
             <input
               type="text"
+              defaultValue={noticeDetails.content}
               {...register("content")}
               placeholder="Title Here"
               className="w-full h-[375px] rounded-[46px] border border-blue-700 bg-white focus:outline-none px-5 text-[20px] font-medium"
@@ -64,4 +69,4 @@ const CreateNotice = () => {
   );
 };
 
-export default CreateNotice;
+export default UpdateNotice;
