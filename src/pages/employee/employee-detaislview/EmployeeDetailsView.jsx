@@ -8,8 +8,14 @@ import { MdMoreTime } from "react-icons/md";
 import { LiaEditSolid } from "react-icons/lia";
 import Title from "../../../utils/Title";
 import { ImLink } from "react-icons/im";
+import { useUserDetailsQuery } from "../../../redux/features/user/userApi";
+import { useParams } from "react-router-dom";
 
 const EmployeeDetailsView = () => {
+  const {id} = useParams();
+  const {data: userDetails }= useUserDetailsQuery(id);
+  console.log(userDetails)
+
   const datas = [
     {
       total: 245,
@@ -58,20 +64,22 @@ const EmployeeDetailsView = () => {
 
         <div className="flex flex-col justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-[238px] h-[238px] rounded-[15px]  bg-[#FF9C82]"></div>
+            <div className="w-[238px] h-[238px] rounded-[15px] overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ" alt="" className="w-full h-full"/>
+            </div>
             <div className="font-semibold text-[#273240]">
               <h3 className="text-[40px]  uppercase leading-[60px]">
-                WILLIAM BENJAMIN
+                {userDetails?.user.username}
               </h3>
               <p className="text-[26px] uppercase">Digital Marketing</p>
-              <p className="border-b border-blue-700 border-dashed pb-1">
+              <p className="border-b border-blue-700 border-dashed pb-1 ">
                 Email:
-                <span className="text-blue-600 font-normal">
-                  microbuddy@gmail.com
+                <span className="text-blue-600 font-normal ml-1">
+                  {userDetails?.user.email}
                 </span>
               </p>
               Password:
-              <span className="text-blue-600 font-normal">Reset Password</span>
+              <span className="text-blue-600 font-normal ml-1">Reset Password</span>
             </div>
           </div>
 
@@ -111,7 +119,7 @@ const EmployeeDetailsView = () => {
         <div>
           <div className="flex items-center justify-center gap-4">
             <button className="w-[170px] h-[56px] rounded-[26px] border-2 border-[#FF8723] flex justify-center items-center uppercase text-[#FF8723] text-[19px] font-semibold ">
-              Member
+              {userDetails?.type}
             </button>
 
             <LiaEditSolid className="text-[61px] text-[#FF8723]" />

@@ -66,8 +66,6 @@ const Navbar = () => {
                     <div className="w-[56px] h-[56px] bg-[#C4C4C4] rounded-full"></div>
                 </div>
             </section>
-
-
             </div>
 
 

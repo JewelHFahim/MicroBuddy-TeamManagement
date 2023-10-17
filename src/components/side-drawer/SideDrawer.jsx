@@ -7,19 +7,21 @@ import { MdHistory } from 'react-icons/md';
 import { RiListCheck3 } from 'react-icons/ri';
 import { LuClipboardList } from 'react-icons/lu';
 import { PiUsersThreeBold } from 'react-icons/pi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addLogout } from '../../redux/features/user/userSlice';
 
 
 const SideDrawer = () => {
 
   const location = useLocation();
-  const dispatch = useDispatch()
-  
-  const userRole = 'admin';
-  // const userRole = 'member';
-  
+  const dispatch = useDispatch();
+  const {type, email, username} = useSelector(state=> state.user);
 
+
+  console.log(type)
+  
+  const userRole = type;
+  
   const Menues = [
     {
       title: 'Dashboard',
@@ -64,7 +66,7 @@ const SideDrawer = () => {
   ];
 
   const filteredMenus = Menues.filter(menu => {
-    if (userRole === 'admin') {
+    if (userRole === 'superadmin' && 'admin') {
       return true;
     } else if (userRole === 'member') {
       return !['Task List', 'Employee', 'History', 'Setting'].includes(menu.title);
@@ -109,10 +111,10 @@ const SideDrawer = () => {
 
             <p className="flex flex-col mx-2">
               <span className="font-medium text-[#273240] text-[21px] uppercase">
-                Admin Name
+                {username}
               </span>
               <span className="uppercase text-[13px] text-[#216FED] font-medium">
-                Designation
+                {email}
               </span>
             </p>
 

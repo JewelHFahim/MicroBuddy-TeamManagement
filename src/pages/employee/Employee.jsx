@@ -1,78 +1,13 @@
 import { FiEye } from 'react-icons/fi';
 import Title from '../../utils/Title';
 import { Link } from 'react-router-dom';
+import { useGetAllUserQuery } from '../../redux/features/user/userApi';
 
 
 const Employee = () => {
 
-  const tableItems = [
-    {
-      avatar:
-        "https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
-      name: "Liam James",
-      email: "liamjames@example.com",
-      task_point: "50",
-      position: "Software engineer",
-      assign: 6,
-      role: "Admin",
-    },
-    {
-      avatar: "https://randomuser.me/api/portraits/men/86.jpg",
-      name: "Olivia Emma",
-      email: "oliviaemma@example.com",
-      task_point: "60",
-      position: "Product designer",
-      assign: 7,
-      role: "Admin",
-    },
-    {
-      avatar: "https://randomuser.me/api/portraits/women/79.jpg",
-      name: "William Benjamin",
-      email: "william.benjamin@example.com",
-      task_point: "70",
-      position: "Front-end developer",
-      assign: 8,
-      role: "Member",
-    },
-    {
-      avatar: "https://api.uifaces.co/our-content/donated/xZ4wg2Xj.jpg",
-      name: "Henry Theodore",
-      email: "henrytheodore@example.com",
-      task_point: "80",
-      position: "Laravel engineer",
-      assign: 9,
-      role: "Pending",
-    },
-    {
-      avatar:
-        "https://images.unsplash.com/photo-1439911767590-c724b615299d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
-      name: "Amelia Elijah",
-      email: "amelia.elijah@example.com",
-      task_point: "90",
-      position: "Open source manager",
-      assign: 11,
-      role: "Member",
-    },
-    {
-      avatar: "https://api.uifaces.co/our-content/donated/xZ4wg2Xj.jpg",
-      name: "Henry Theodore",
-      email: "henrytheodore@example.com",
-      task_point: "80",
-      position: "Laravel engineer",
-      assign: 9,
-      role: "Pending",
-    },
-    {
-      avatar:
-        "https://images.unsplash.com/photo-1439911767590-c724b615299d?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
-      name: "Amelia Elijah",
-      email: "amelia.elijah@example.com",
-      task_point: "90",
-      position: "Open source manager",
-      assign: 11,
-      role: "Member",
-    },
-  ];
+const {data: allUser} = useGetAllUserQuery();
+console.log(allUser)
 
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px]">
@@ -98,40 +33,40 @@ const Employee = () => {
             </thead>
 
             <tbody className="text-[#273240] divide-y">
-              {tableItems.map((item, idx) => (
+              {allUser?.map((user, idx) => (
                 <tr key={idx}>
                   <td className="flex items-center gap-x-3 py-3 px-6 whitespace-nowrap">
-                    <img src={item.avatar} className="w-[55px] h-[55px] rounded-full" />
+                    <img src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ" className="w-[55px] h-[55px] rounded-full" />
                     <p className="block text-[16px] font-medium">
-                      #0001234
+                      {user.user.id}
                     </p>
                   </td>
 
                   <td className="px-6 py-8 whitespace-nowrap uppercase">
-                    {item.name}
+                    {user.user.username}
                   </td>
                   <td className="px-6 py-8 whitespace-nowrap uppercase">
-                    {item.position}
+                    Software Developer
                   </td>
-                  <td className="px-6 py-8 whitespace-nowrap">{item.email}</td>
+                  <td className="px-6 py-8 whitespace-nowrap">{user.user.email}</td>
                   <td className="px-6 py-8 whitespace-nowrap">
-                    {item.task_point}
+                    123
                   </td>
-                  <td className="px-6 py-8 whitespace-nowrap">{item.assign}</td>
+                  <td className="px-6 py-8 whitespace-nowrap">{idx+3}</td>
                   <td className="px-6 py-8 whitespace-nowrap">
-                    {item.assign - 1}
+                    154
                   </td>
                   <td className={`px-6 py-8 whitespace-nowrap uppercase ${
-                      item.role === "Admin" ? "text-[#216FED]" : item.role === "Member"
+                      user.type === "superadmin" ? "text-[#216FED]" : user.type === "admin"
                         ? "text-[#ED9B21]"
                         : "text-[#32D16D]"
                     }`}
                   >
-                    {item.role}
+                    {user.type}
                   </td>
 
                   <td className='text-[20px]'>
-                    <Link to={`/employee-detail-view/${idx+1}`}><button> <FiEye/></button></Link>
+                    <Link to={`/employee-detail-view/${user.user.id}`}><button> <FiEye/></button></Link>
                   </td>
                 </tr>
               ))}

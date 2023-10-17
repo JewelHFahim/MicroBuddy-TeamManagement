@@ -8,6 +8,7 @@ const initialState = {
   email: "" || userInfo.email,
   username: "" || userInfo.username,
   userId: "" || userInfo.id,
+  type: "" || userInfo.type,
   isLoading: false,
   token: "" || userInfo?.token,
   error: "",
@@ -37,6 +38,7 @@ export const loginUser = createAsyncThunk(
         dispatch(setEmail(data.user.email));
         dispatch(setUsername(data.user.username));
         dispatch(setUserId(data.user.id));
+        dispatch(setUserType(data.user.type));
 
         const info = {
           token: data.token,
@@ -98,6 +100,9 @@ const userSlice = createSlice({
     setUserId: (state, action) => {
       state.userId = action.payload;
     },
+    setUserType: (state, action) => {
+      state.type = action.payload;
+    },
   },
 
   extraReducers: {
@@ -125,5 +130,6 @@ export const {
   setEmail,
   setUsername,
   setUserId,
+  setUserType,
 } = userSlice.actions;
 export default userSlice.reducer;

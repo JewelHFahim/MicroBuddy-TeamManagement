@@ -57,6 +57,8 @@ const noticeApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Team-Management"],
     }),
+
+    
   }),
 });
 

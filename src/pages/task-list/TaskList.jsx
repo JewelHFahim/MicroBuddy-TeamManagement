@@ -7,8 +7,13 @@ import { BsCalendarFill, BsEye } from "react-icons/bs";
 import { MdMoreTime } from "react-icons/md";
 import Title from "../../utils/Title";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const TaskList = () => {
+  const { token } = useSelector((state) => state.user);
+
   const datas = [
     {
       total: 245,
@@ -48,6 +53,36 @@ const TaskList = () => {
     },
   ];
 
+
+  const [allTask, setAllTask] = useState([]);
+  useEffect(() => {
+    fetch("http://192.168.3.36:8000/task-list/", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setAllTask(data);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [token]);
+
+
+  const filteredtask = allTask.filter(task => task.status === "todo");
+  console.log(filteredtask)
+
+
+
   return (
     <div className="w-full font-Poppins pb-10">
       <Title>Task LIst</Title>
@@ -67,9 +102,9 @@ const TaskList = () => {
         {/* Btn Filter */}
         <div className="flex items-center gap-5">
           <Link to="/create-task">
-          <button className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex justify-center items-center gap-[20px] shadow-lg text-white">
-            <p className="text-[18px] font-semibold">+ New Task</p>
-          </button>
+            <button className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex justify-center items-center gap-[20px] shadow-lg text-white">
+              <p className="text-[18px] font-semibold">+ New Task</p>
+            </button>
           </Link>
 
           <button className="w-[166px] h-[60px] rounded-[20px] bg-white flex justify-center items-center gap-[36px] shadow-lg">
@@ -113,7 +148,7 @@ const TaskList = () => {
         </button>
 
         <div className="mt-[18px] flex flex-col gap-[20px]">
-          {[1, 2, 3].map((item, i) => (
+          {filteredtask?.map((item, i) => (
             <div key={i}>
               <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
                 <table className="w-full table-auto text-center ">
@@ -186,10 +221,10 @@ const TaskList = () => {
                                 TO DO
                               </p>
                             </button>
-                            <Link to={`/view-task/${i+1}`}>
-                            <button className="text-[32px] text-black flex justify-center items-center">
-                              <BsEye />
-                            </button>
+                            <Link to={`/view-task/${i + 1}`}>
+                              <button className="text-[32px] text-black flex justify-center items-center">
+                                <BsEye />
+                              </button>
                             </Link>
                           </div>
                         </td>
