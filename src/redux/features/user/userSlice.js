@@ -2,13 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
 const userInfo = JSON.parse(localStorage.getItem("user-info"));
-console.log(userInfo.username);
+console.log(userInfo?.username);
 
 const initialState = {
-  email: "" || userInfo.email,
-  username: "" || userInfo.username,
-  userId: "" || userInfo.id,
-  type: "" || userInfo.type,
+  email: "" || userInfo?.email,
+  username: "" || userInfo?.username,
+  userId: "" || userInfo?.id,
+  type: "" || userInfo?.type,
   isLoading: false,
   token: "" || userInfo?.token,
   error: "",
@@ -34,11 +34,11 @@ export const loginUser = createAsyncThunk(
         console.log(data);
         console.log(data.token);
 
-        dispatch(setToken(userInfo.token));
-        dispatch(setEmail(data.user.email));
-        dispatch(setUsername(data.user.username));
-        dispatch(setUserId(data.user.id));
-        dispatch(setUserType(data.user.type));
+        dispatch(setToken(data.token));
+        dispatch(setEmail(data?.user?.email));
+        dispatch(setUsername(data?.user?.username));
+        dispatch(setUserId(data?.user?.id));
+        dispatch(setUserType(data?.user?.type));
 
         const info = {
           token: data.token,

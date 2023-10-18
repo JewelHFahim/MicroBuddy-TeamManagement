@@ -2,8 +2,16 @@ import Title from "../../../utils/Title";
 import { FaClipboardList } from "react-icons/fa";
 import { LiaUserPlusSolid } from "react-icons/lia";
 import { RiFlag2Fill } from "react-icons/ri";
+import { RadioButtonStyle } from "../../../utils/ClassList";
+import { Link } from "react-router-dom";
+import { useGetAllCheckListQuery } from "../../../redux/features/task/taskApi";
 
 const CreateTask = () => {
+
+  const { data: checkList } = useGetAllCheckListQuery();
+  console.log(checkList)
+
+
 
   return (
     <div className="pb-[300px]">
@@ -48,13 +56,13 @@ const CreateTask = () => {
         <section className="mt-[50px] flex justify-between">
           {/* Check List */}
           <div className="">
-            <h2 className="text-[34px] font-semibold">Check List-(4)</h2>
+            <h2 className="text-[34px] font-semibold">Check List</h2>
 
             <div className="mt-8 flex flex-col gap-[20px]">
-              {Array.from({ length: 4 }).map((item, i) => (
+              {checkList?.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
                   <div className="w-[30px] h-[30px] rounded-full border border-blue-800"></div>
-                  <p className="text-[24px] text-black font-semibold">Text</p>
+                  <p className="text-[24px] text-black font-semibold">{item?.option_text}</p>
                   <div className="w-[40px] h-[40px] rounded-full border-2 bg-yellow-300"></div>
                   <div className="w-[40px] h-[40px] rounded-full border-2 border-dashed  border-blue-800 border-doted text-right text-xl relative">
                     <p className="absolute -right-1 -top-1 bg-blue-800 w-[20px] h-[20px] flex justify-center items-center rounded-full text-white">
@@ -73,10 +81,15 @@ const CreateTask = () => {
               />
               <LiaUserPlusSolid className="text-[25px] text-blue-700" />
             </div>
+
+            <Link to="/create-checklist"><button className="text-blue-700 font-semibold hover:underline"> + Add Check List</button></Link>
           </div>
+
+  
+
           {/* Assign */}
           <div className="">
-            <h2 className="text-[34px] font-semibold">Assign-(2)</h2>
+            <h2 className="text-[34px] font-semibold">Assignee</h2>
 
             <div className="mt-8 flex flex-col gap-[20px]">
               {Array.from({ length: 2 }).map((item, i) => (
@@ -126,9 +139,7 @@ const CreateTask = () => {
             </div>
           </div>
         </section>
-
       </form>
-
     </div>
   );
 };

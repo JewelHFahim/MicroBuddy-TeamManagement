@@ -66,7 +66,7 @@ const SideDrawer = () => {
   ];
 
   const filteredMenus = Menues.filter(menu => {
-    if (userRole === 'superadmin' && 'admin') {
+    if (userRole === ('superadmin' || 'admin')) {
       return true;
     } else if (userRole === 'member') {
       return !['Task List', 'Employee', 'History', 'Setting'].includes(menu.title);

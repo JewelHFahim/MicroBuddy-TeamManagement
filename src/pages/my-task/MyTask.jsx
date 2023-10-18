@@ -584,7 +584,7 @@ const MyTask = () => {
       </section>
 
       {/* HOLD */}
-      <section className="mt-[32px]">
+      {/* <section className="mt-[32px]">
         <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D86F24] flex justify-center items-center shadow-lg">
           <p className="text-[18px] font-semibold text-white uppercase">HOLD</p>
         </button>
@@ -676,7 +676,9 @@ const MyTask = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
+
+
     </div>
   );
 };

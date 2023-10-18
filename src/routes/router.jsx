@@ -18,6 +18,7 @@ import Register from "../pages/login/Register";
 import Login from "../pages/login/Login";
 import PrivateRouter from "./PrivateRouter";
 import UpdateNotice from "../pages/notice/notice-update/UpdateNotice";
+import CheckListCreat from "../pages/task-list/create-task/CheckListCreat";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,12 @@ const router = createBrowserRouter([
         path: "/edit-task/:id",
         element: <EditTask />,
       },
+      {
+        path: "/create-checklist",
+        element: <CheckListCreat />,
+      },
+
+
 
       // **********Emplyee************//
       {
