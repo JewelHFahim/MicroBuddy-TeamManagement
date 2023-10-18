@@ -86,7 +86,7 @@ const SideDrawer = () => {
 
         <div className="flex flex-col justify-between flex-1 mt-4 text-[#96A0AF]">
           <nav>
-            {filteredMenus.map((menu, i) => (
+            {Menues.map((menu, i) => (
               <Link
                 key={i}
                 className={`flex items-center px-[30px] mx-1 py-5 ${

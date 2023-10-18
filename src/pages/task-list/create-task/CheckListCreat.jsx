@@ -7,6 +7,7 @@ import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
 import { useDispatch } from "react-redux";
 import { addQCChecker } from "../../../redux/features/task/taskSlice";
 
+
 const CheckListCreat = () => {
     const dispatch = useDispatch();
   const naviagte = useNavigate();
@@ -19,8 +20,7 @@ const CheckListCreat = () => {
   const onSubmit = (data) => {
     console.log(data);
     // createCheckList( {data: data.checklist});
-    const payload = { checklist: data.checklist }; // Ensure the payload structure matches the reducer
-    dispatch(addQCChecker(payload));
+    dispatch(addQCChecker(data));
 
     console.log(data)
     toast.success("Check List Created");
@@ -46,15 +46,15 @@ const CheckListCreat = () => {
           <LiaUserPlusSolid className="text-[25px] text-blue-700" />
         </div>
 
-        {/* <select {...register("qc_check_id")} data-te-select-init className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2">
+        <select {...register("qc_check_id")} data-te-select-init className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2">
 
           {
-            allUser?.map((user, i)=>
-                (<option key={i} value={user.user.id}> {user?.user?.username} </option>)
+            [1,2,3].map((user, i)=>
+                (<option key={i} value={i+1}> Jewel </option>)
             )
           }
    
-        </select> */}
+        </select>
 
         <button
           type="submit"
