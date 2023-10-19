@@ -1,30 +1,54 @@
 import { useForm } from "react-hook-form";
 import { LiaUserPlusSolid } from "react-icons/lia";
-import { useCreateCheckListMutation } from "../../../redux/features/task/taskApi";
+import {
+  useCreateCheckListMutation,
+  useGetAllQCUserQuery,
+} from "../../../redux/features/task/taskApi";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
 import { useDispatch } from "react-redux";
-import { addQCChecker } from "../../../redux/features/task/taskSlice";
-
+// import { addQCChecker } from "../../../redux/features/task/taskSlice";
+import { useState } from "react";
+import {
+  addUser,
+  createCheckList,
+} from "../../../redux/features/task/taskSlice";
+// import { createCheckListVSB } from "../../../redux/features/task/taskSlice";
 
 const CheckListCreat = () => {
-    const dispatch = useDispatch();
-  const naviagte = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-  const [createCheckList] = useCreateCheckListMutation();
-  const {data: allUser} = useGetAllUserQuery();
-  console.log(allUser)
+  const { data: allUser } = useGetAllQCUserQuery();
+  // const [createCheckList] = useCreateCheckListMutation();
 
+  const [selectedUserName, setSelectedUserName] = useState("");
+  const handleSelectChange = (event) => {
+    setSelectedUserName(event.target.options[event.target.selectedIndex].text);
+  };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    const newData = { ...data, selectedUserName };
+
     console.log(data);
-    // createCheckList( {data: data.checklist});
-    dispatch(addQCChecker(data));
 
-    console.log(data)
-    toast.success("Check List Created");
-    // naviagte("/create-task");
+    const neewInfo = {
+      userId: data.qc_check_id,
+      userName: selectedUserName,
+    };
+console.log(neewInfo)
+
+    dispatch(addUser(neewInfo));
+
+    dispatch(createCheckList({ option_text: data.option_text, qc_check_id: data.qc_check_id }));
+    console.log({ option_text: data.option_text})
+
+    // createCheckList( {option_text: data.checklist});
+
+    // dispatch(addQCChecker(newData));
+
+    // toast.success("Check List Created");
+    // navigate("/create-task");
   };
 
   return (
@@ -36,24 +60,28 @@ const CheckListCreat = () => {
         <h1 className="mb-10 text-[20px] underline underline-offset-4">
           New Check List
         </h1>
+
         <div className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4">
           <input
             type="text"
-            {...register("checklist")}
+            {...register("option_text")}
             className="w-[300px] h-[43px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold"
             placeholder="+ New Check List Item"
           />
           <LiaUserPlusSolid className="text-[25px] text-blue-700" />
         </div>
 
-        <select {...register("qc_check_id")} data-te-select-init className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2">
-
-          {
-            [1,2,3].map((user, i)=>
-                (<option key={i} value={i+1}> Jewel </option>)
-            )
-          }
-   
+        <select
+          {...register("qc_check_id")}
+          data-te-select-init
+          className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2"
+          onChange={handleSelectChange}
+        >
+          {allUser?.map((user) => (
+            <option key={user?.id} value={user?.id}>
+              {user?.username}
+            </option>
+          ))}
         </select>
 
         <button

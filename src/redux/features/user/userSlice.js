@@ -15,9 +15,7 @@ const initialState = {
   message: null,
 };
 
-export const loginUser = createAsyncThunk(
-  "loginUser",
-  async (body, { dispatch }) => {
+export const loginUser = createAsyncThunk( "loginUser", async (body, { dispatch }) => {
     try {
       const response = await fetch("http://192.168.3.36:8000/user/login/", {
         method: "POST",

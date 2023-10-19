@@ -13,11 +13,20 @@ const taskApi = apiSlice.injectEndpoints({
       providesTags: ["Team-Management"],
     }),
 
+    getAllQCUser: builder.query({
+      query: () => "/qc-user/",
+      providesTags: ["Team-Management"],
+    }),
 
-    
+
+  
 
     getAllCheckList: builder.query({
       query: () => "/option-list/",
+      headers: {
+          "content-type": "application/json",
+          Authorization: `Token ${userInfo?.token}`,
+        },
       providesTags: ["Team-Management"],
     }),
 
@@ -30,15 +39,15 @@ const taskApi = apiSlice.injectEndpoints({
         method: "POST",
         url: "/option-create/",
         body: data,
-        // headers: {
-        //   "content-type": "application/json",
-        //   Authorization: `Token ${userInfo?.token}`,
-        // },
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Token ${userInfo?.token}`,
+        },
       }),
       invalidatesTags: ["Team-Management"],
     }),
   }),
 });
 
-export const { useGetAllTaskQuery, useCreateCheckListMutation, useGetAllCheckListQuery } = taskApi;
+export const { useGetAllTaskQuery, useCreateCheckListMutation, useGetAllCheckListQuery, useGetAllQCUserQuery } = taskApi;
 export default taskApi;

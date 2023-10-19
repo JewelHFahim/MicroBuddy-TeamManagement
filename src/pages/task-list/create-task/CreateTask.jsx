@@ -2,25 +2,55 @@ import Title from "../../../utils/Title";
 import { FaClipboardList } from "react-icons/fa";
 import { LiaUserPlusSolid } from "react-icons/lia";
 import { RiFlag2Fill } from "react-icons/ri";
-import { RadioButtonStyle } from "../../../utils/ClassList";
+import { RadioButtonStyle, colors } from "../../../utils/ClassList";
 import { Link } from "react-router-dom";
 import { useGetAllCheckListQuery } from "../../../redux/features/task/taskApi";
+import { useSelector } from "react-redux";
+import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
+import { useForm } from "react-hook-form";
+import CreateDate from "../../../utils/CreateDate";
+import { useState } from "react";
+import { setHours, setMinutes } from "date-fns";
+import { all } from "axios";
 
 const CreateTask = () => {
+  const { register, handleSubmit } = useForm();
+  const [startDate, setStartDate] = useState(
+    setHours(setMinutes(new Date(), 30), 16),
+  );
 
-  const { data: checkList } = useGetAllCheckListQuery();
-  console.log(checkList)
+  const { addedQCArray, checkListArray } = useSelector((state) => state.task);
+  const { userId } = useSelector((state) => state.user);
+
+  const { data: allUser } = useGetAllUserQuery();
+  const { data: allChecklist } = useGetAllCheckListQuery();
+
+  console.log(allChecklist)
+
+  // const matchedCheckListId = allChecklist.filter(check =>)
+
+const newArray = addedQCArray.map((qcItem, index)=> ({...qcItem, ...checkListArray[index]}));
+
+console.log(newArray)
 
 
+  const onSubmit = (data, event) => {
+    event.preventDefault();
+    const task = { ...data, startDate, assigner: userId, pairs:{}}
+    console.log(task)
+  };
 
   return (
     <div className="pb-[300px]">
       <Title>Create Task</Title>
 
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         {/* Crate Task Btn */}
         <div className="flex justify-end">
-          <button className="w-[268px] h-[72px] rounded-[58px] bg-[#216FED] text-[22px] font-medium text-white flex items-center justify-center gap-4">
+          <button
+            type="submit"
+            className="w-[268px] h-[72px] rounded-[58px] bg-[#216FED] text-[22px] font-medium text-white flex items-center justify-center gap-4"
+          >
             <FaClipboardList className="text-[35px]" /> Create Task
           </button>
         </div>
@@ -31,6 +61,7 @@ const CreateTask = () => {
             Task Title
           </label>
           <input
+            {...register("task_name")}
             type="text"
             placeholder="Title here"
             className="w-full h-[66px] rounded-[46px] border border-[#216FED] px-6 focus:outline-none"
@@ -43,8 +74,7 @@ const CreateTask = () => {
             Task Details
           </label>
           <textarea
-            name=""
-            id=""
+         {...register("description")}
             cols="177"
             rows="14"
             placeholder="Details"
@@ -54,67 +84,46 @@ const CreateTask = () => {
 
         {/* Check List + Assign */}
         <section className="mt-[50px] flex justify-between">
-          {/* Check List */}
           <div className="">
             <h2 className="text-[34px] font-semibold">Check List</h2>
 
             <div className="mt-8 flex flex-col gap-[20px]">
-              {checkList?.map((item, i) => (
+              {addQC?.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
-                  <div className="w-[30px] h-[30px] rounded-full border border-blue-800"></div>
-                  <p className="text-[24px] text-black font-semibold">{item?.option_text}</p>
-                  <div className="w-[40px] h-[40px] rounded-full border-2 bg-yellow-300"></div>
-                  <div className="w-[40px] h-[40px] rounded-full border-2 border-dashed  border-blue-800 border-doted text-right text-xl relative">
-                    <p className="absolute -right-1 -top-1 bg-blue-800 w-[20px] h-[20px] flex justify-center items-center rounded-full text-white">
-                      +
-                    </p>
+                  <input disabled className={RadioButtonStyle} type="checkbox"value=""/>
+                  <p className="text-[24px] text-black font-semibold"> {item?.checklist}</p>
+
+                  <div
+                    key={i}
+                    className={`w-[40px] h-[40px] rounded-full border-2 ${
+                      colors[i % colors.length]
+                    } flex justify-center items-center capitalize font-semibold text-white drop-shadow text-[20px]`}
+                    data-te-toggle="tooltip"
+                    title={`${item.selectedUserName}`}
+                  >
+                    {item.selectedUserName?.charAt(0)}
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-5 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4">
-              <input
-                type="text"
-                className="w-[300px] h-[43px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold"
-                placeholder="+ New Check List Item"
-              />
-              <LiaUserPlusSolid className="text-[25px] text-blue-700" />
-            </div>
-
-            <Link to="/create-checklist"><button className="text-blue-700 font-semibold hover:underline"> + Add Check List</button></Link>
+            <Link to="/create-checklist">
+              <button className="text-blue-700 font-semibold hover:underline mt-5">
+                + Add Check List
+              </button>
+            </Link>
           </div>
 
-  
-
-          {/* Assign */}
           <div className="">
             <h2 className="text-[34px] font-semibold">Assignee</h2>
 
-            <div className="mt-8 flex flex-col gap-[20px]">
-              {Array.from({ length: 2 }).map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="w-[40px] h-[40px] rounded-full border-2 bg-yellow-300"></div>
-                  <p className="text-[24px] text-black font-semibold">
-                    Jack Sparrow
-                  </p>
-                  <div className="w-[40px] h-[40px] rounded-full border-2 border-dashed  border-blue-800 border-doted text-right text-xl relative">
-                    <p className="absolute -right-1 -top-1 bg-blue-800 w-[20px] h-[20px] flex justify-center items-center rounded-full text-white">
-                      +
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <select {...register("assignee")} data-te-select-init className="mt-6 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold">
+        {allUser?.map((user)=>(
+              <option key={user?.user?.id} value="1">{user?.user?.username}</option>
 
-            <div className="mt-5 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4">
-              <input
-                type="text"
-                className="w-[300px] h-[43px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold"
-                placeholder="+ Add New Member"
-              />
-              <LiaUserPlusSolid className="text-[25px] text-blue-700" />
-            </div>
+        ))}
+            </select>
+
           </div>
         </section>
 
@@ -124,18 +133,22 @@ const CreateTask = () => {
             <h2 className="text-[34px] font-semibold">
               Set Due Date and Time.
             </h2>
+            
             <div className="flex items-center gap-4">
-              <div className="w-[30px] h-[30px] rounded-full border border-blue-700"></div>
-              <p className="text-[25px] text-blue-700">12/10/23 - 3.56</p>
+              <p className="text-[25px] text-blue-700"><CreateDate startDate={startDate} setStartDate={setStartDate}/></p>
             </div>
           </div>
           <div>
             <h2 className="text-[34px] font-semibold">Task Prio.</h2>
             <div className="flex items-center gap-2">
-              <div className="w-[30px] h-[30px] rounded-full border border-blue-700"></div>
-              <div className="w-[180px] h-[30px] bg-white text-2xl text-yellow-200 flex  items-center px-2">
-                <RiFlag2Fill />
-              </div>
+
+            <select {...register("priority")} data-te-select-init className="mt-6 w-[200px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+
+              
             </div>
           </div>
         </section>
