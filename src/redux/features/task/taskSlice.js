@@ -49,8 +49,8 @@ const taskSlice = createSlice({
       console.log(action.payload)
     },
 
-    addUser: async (state, actions ) => {
-      // state.addedQCArray.push(actions.payload);
+    addUser: (state, actions ) => {
+      state.addedQCArray.push(actions.payload);
       console.log(actions.payload)
     },
   },

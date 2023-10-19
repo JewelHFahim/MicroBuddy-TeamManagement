@@ -28,20 +28,13 @@ const CheckListCreat = () => {
   };
 
   const onSubmit = async (data) => {
-    const newData = { ...data, selectedUserName };
-
-    console.log(data);
 
     const neewInfo = {
       userId: data.qc_check_id,
       userName: selectedUserName,
     };
-console.log(neewInfo)
-
     dispatch(addUser(neewInfo));
-
-    dispatch(createCheckList({ option_text: data.option_text, qc_check_id: data.qc_check_id }));
-    console.log({ option_text: data.option_text})
+    dispatch(createCheckList({ option_text: data.option_text }));
 
     // createCheckList( {option_text: data.checklist});
 
