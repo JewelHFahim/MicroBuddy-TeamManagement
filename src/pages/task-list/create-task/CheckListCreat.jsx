@@ -1,47 +1,33 @@
 import { useForm } from "react-hook-form";
 import { LiaUserPlusSolid } from "react-icons/lia";
-import {
-  useCreateCheckListMutation,
-  useGetAllQCUserQuery,
-} from "../../../redux/features/task/taskApi";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useGetAllQCUserQuery } from "../../../redux/features/task/taskApi";
 import { useDispatch } from "react-redux";
-// import { addQCChecker } from "../../../redux/features/task/taskSlice";
 import { useState } from "react";
 import {
   addUser,
   createCheckList,
 } from "../../../redux/features/task/taskSlice";
-// import { createCheckListVSB } from "../../../redux/features/task/taskSlice";
+import { useNavigate } from "react-router-dom";
 
 const CheckListCreat = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const { register, handleSubmit } = useForm();
   const { data: allUser } = useGetAllQCUserQuery();
-  // const [createCheckList] = useCreateCheckListMutation();
 
   const [selectedUserName, setSelectedUserName] = useState("");
   const handleSelectChange = (event) => {
     setSelectedUserName(event.target.options[event.target.selectedIndex].text);
   };
 
-  const onSubmit = async (data) => {
-
+  const onSubmit = (data) => {
     const neewInfo = {
       userId: data.qc_check_id,
       userName: selectedUserName,
     };
     dispatch(addUser(neewInfo));
     dispatch(createCheckList({ option_text: data.option_text }));
-
-    // createCheckList( {option_text: data.checklist});
-
-    // dispatch(addQCChecker(newData));
-
-    // toast.success("Check List Created");
-    // navigate("/create-task");
+    navigate("/create-task")
   };
 
   return (

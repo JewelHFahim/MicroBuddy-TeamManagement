@@ -1,43 +1,48 @@
 import Title from "../../../utils/Title";
 import { FaClipboardList } from "react-icons/fa";
-import { LiaUserPlusSolid } from "react-icons/lia";
 import { RiFlag2Fill } from "react-icons/ri";
 import { RadioButtonStyle, colors } from "../../../utils/ClassList";
-import { Link } from "react-router-dom";
-import { useGetAllCheckListQuery } from "../../../redux/features/task/taskApi";
-import { useSelector } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import {  useSelector } from "react-redux";
 import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
 import { useForm } from "react-hook-form";
 import CreateDate from "../../../utils/CreateDate";
 import { useState } from "react";
 import { setHours, setMinutes } from "date-fns";
-import { all } from "axios";
+import { useCreateTaskMutation } from "../../../redux/features/task/taskApi";
+import toast from "react-hot-toast";
 
 const CreateTask = () => {
   const { register, handleSubmit } = useForm();
   const [startDate, setStartDate] = useState(
     setHours(setMinutes(new Date(), 30), 16),
   );
+  const navigate = useNavigate()
 
   const { addedQCArray, checkListArray } = useSelector((state) => state.task);
   const { userId } = useSelector((state) => state.user);
 
   const { data: allUser } = useGetAllUserQuery();
-  const { data: allChecklist } = useGetAllCheckListQuery();
-
-  console.log(allChecklist)
-
-  // const matchedCheckListId = allChecklist.filter(check =>)
+  const [createTask] = useCreateTaskMutation();
 
 const newArray = addedQCArray.map((qcItem, index)=> ({...qcItem, ...checkListArray[index]}));
-
-console.log(newArray)
-
+console.log(newArray);
 
   const onSubmit = (data, event) => {
     event.preventDefault();
-    const task = { ...data, startDate, assigner: userId, pairs:{}}
-    console.log(task)
+
+    const pairs = newArray.map(item => ({
+      checklist_id: item.id,
+      qc_check_id: item.userId
+    }));
+
+    const task = { ...data, startDate, assigner: userId, pairs}
+    console.log(task);
+
+    createTask(task);
+    toast.success("Created Task");
+    navigate("/task-list")
+
   };
 
   return (
@@ -88,10 +93,10 @@ console.log(newArray)
             <h2 className="text-[34px] font-semibold">Check List</h2>
 
             <div className="mt-8 flex flex-col gap-[20px]">
-              {addQC?.map((item, i) => (
+              {newArray?.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
                   <input disabled className={RadioButtonStyle} type="checkbox"value=""/>
-                  <p className="text-[24px] text-black font-semibold"> {item?.checklist}</p>
+                  <p className="text-[24px] text-black font-semibold"> {item?.option_text}</p>
 
                   <div
                     key={i}
@@ -99,9 +104,9 @@ console.log(newArray)
                       colors[i % colors.length]
                     } flex justify-center items-center capitalize font-semibold text-white drop-shadow text-[20px]`}
                     data-te-toggle="tooltip"
-                    title={`${item.selectedUserName}`}
+                    title={`${item.userName}`}
                   >
-                    {item.selectedUserName?.charAt(0)}
+                    {item.userName?.charAt(0)}
                   </div>
                 </div>
               ))}

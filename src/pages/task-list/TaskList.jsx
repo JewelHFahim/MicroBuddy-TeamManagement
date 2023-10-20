@@ -10,9 +10,15 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useEffect } from "react";
+import DateFormat from "../../utils/DateFormat";
+import { useGetAllCheckListQuery } from "../../redux/features/task/taskApi";
 
 const TaskList = () => {
   const { token } = useSelector((state) => state.user);
+
+  const {data: allCheck } = useGetAllCheckListQuery();
+  // console.log(allCheck);
+
 
   const datas = [
     {
@@ -54,11 +60,14 @@ const TaskList = () => {
   ];
 
   const [allTask, setAllTask] = useState([]);
+
+  console.log(allTask)
+
   useEffect(() => {
-    fetch("http://192.168.3.36:8000/task-list/", {
+    fetch("https://jabedahmed.pythonanywhere.com/task-list/", {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Token ${token}`,
+        Authorization: `Token ${token}`
       },
     })
       .then((response) => {
@@ -76,13 +85,14 @@ const TaskList = () => {
       });
   }, [token]);
 
-  const filteredTodo = allTask.filter((task) => task.status === "todo");
-  const filteredInProgress = allTask.filter((task) => task.status === "inprogress");
-  const filteredComplete = allTask.filter((task) => task.status === "done");
-  const filteredPause = allTask.filter((task) => task.status === "pause");
-  const filteredCheckList = allTask.filter((task) => task.status === "checklist");
-  const filteredQCProgress= allTask.filter((task) => task.status === "qc_progress");
-  const filteredQCCompleted = allTask.filter((task) => task.status === "qc_complete");
+  const filteredTodo = allTask?.filter((task) => task.status === "Todo");
+  const filteredInProgress = allTask?.filter((task) => task.status === "inprogress");
+  const filteredComplete = allTask?.filter((task) => task.status === "done");
+  const filteredPause = allTask?.filter((task) => task.status === "pause");
+  const filteredCheckList = allTask?.filter((task) => task.status === "checklist");
+  const filteredQCProgress = allTask?.filter((task) => task.status === "qc_progress");
+  const filteredQCCompleted = allTask?.filter((task) => task.status === "qc_complete");
+
 
   return (
     <div className="w-full font-Poppins pb-10">
@@ -148,11 +158,13 @@ const TaskList = () => {
           <p className="text-[18px] font-semibold text-white">TO DO</p>
         </button>
 
-        <div className="mt-[18px] flex flex-col gap-[20px]">
-          {filteredTodo?.map((item, i) => (
+          <div className="mt-[18px] flex flex-col gap-[20px]">
+          {
+          filteredTodo?.map((item, i) => (
             <div key={i}>
               <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
                 <table className="w-full table-auto text-center ">
+
                   <thead className="text-[#737B8B]">
                     <tr className="font-[300]">
                       <th className="py-3 px-6 "></th>
@@ -162,42 +174,34 @@ const TaskList = () => {
                       <th className="py-3 px-4 font-[300]"></th>
                     </tr>
                   </thead>
+
                   <tbody className="text-gray-600">
-                    {tableItems.map((item, idx) => (
-                      <tr key={idx}>
+                      <tr>
                         <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
                           <img
-                            src={item.avatar}
+                            src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
                             className="w-[90px] h-[90px]  rounded-[31px]"
                           />
                           <div className="text-left">
                             <span className="block text-[#216FED] font-[300]">
-                              C012345
+                              C012345-{item?.id}
                             </span>
                             <span className="block text-[#273240] text-[20px] font-semibold">
-                              Task Name .............
+                             {item?.task_name}
                             </span>
                             <span className="block text-[#216FED] font-[300]">
-                              Create Date and Time
+                             {DateFormat(item?.start_date)}
                             </span>
                           </div>
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                          12/10/23 <br /> 11.42 am
+                        {DateFormat(item?.start_date)}
                         </td>
 
                         <td className="px-6 py-4">
                           <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-red-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
+                            <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold"> {item?.assignee} </div>
                           </div>
                         </td>
 
@@ -222,25 +226,30 @@ const TaskList = () => {
                                 TO DO
                               </p>
                             </button>
-                            <Link to={`/view-task/${i + 1}`}>
+                            <Link to={`/view-task/${item?.id}`}>
                               <button className="text-[32px] text-black flex justify-center items-center">
                                 <BsEye />
                               </button>
                             </Link>
+
                           </div>
                         </td>
+
                       </tr>
-                    ))}
+                   
                   </tbody>
+
                 </table>
               </div>
             </div>
-          ))}
+          ))
+          }
         </div>
+
       </section>
 
       {/* In Progress */}
-      <section className="mt-[32px]">
+      {/* <section className="mt-[32px]">
         <button className="w-[166px] h-[60px] rounded-[20px] bg-[#CED200] flex justify-center items-center shadow-lg">
           <p className="text-[18px] font-semibold text-white">IN PROGRESS</p>
         </button>
@@ -332,10 +341,10 @@ const TaskList = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Complete */}
-      <section className="mt-[32px]">
+      {/* <section className="mt-[32px]">
         <button className="w-[166px] h-[60px] rounded-[20px] bg-[#24D8CD] flex justify-center items-center shadow-lg">
           <p className="text-[18px] font-semibold text-white uppercase">
             Complete
@@ -429,105 +438,10 @@ const TaskList = () => {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* HOLD */}
-      {/* <section className="mt-[32px]">
-        <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D86F24] flex justify-center items-center shadow-lg">
-          <p className="text-[18px] font-semibold text-white uppercase">HOLD</p>
-        </button>
-
-        <div className="mt-[18px] flex flex-col gap-[20px]">
-          {[1, 2].map((item, i) => (
-            <div key={i}>
-              <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                <table className="w-full table-auto text-center ">
-                  <thead className="text-[#737B8B]">
-                    <tr className="font-[300]">
-                      <th className="py-3 px-6 "></th>
-                      <th className="py-3 px-4 font-[300]">Due Date</th>
-                      <th className="py-3 px-4 font-[300]">Assign</th>
-                      <th className="py-3 px-4 font-[300]">Check Assign</th>
-                      <th className="py-3 px-4 font-[300]"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600">
-                    {tableItems.map((item, idx) => (
-                      <tr key={idx}>
-                        <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
-                          <img
-                            src={item.avatar}
-                            className="w-[90px] h-[90px]  rounded-[31px]"
-                          />
-                          <div className="text-left">
-                            <span className="block text-[#216FED] font-[300]">
-                              C012345
-                            </span>
-                            <span className="block text-[#273240] text-[20px] font-semibold">
-                              Task Name .............
-                            </span>
-                            <span className="block text-[#216FED] font-[300]">
-                              Create Date and Time
-                            </span>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                          12/10/23 <br /> 11.42 am
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-red-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="text-right px-2 whitespace-nowrap">
-                          <div className="flex justify-between items-center px-5 w-full">
-                            <button className="w-[131px] h-[43px] rounded-[22px] border border-[#C4C4C4] flex justify-center items-center">
-                              <p className="text-[#D86F24] font-semibold uppercase">
-                                HOLD
-                              </p>
-                            </button>
-                            <button className="text-[32px] text-black flex justify-center items-center">
-                              <BsEye />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ))}
-        </div>
       </section> */}
 
       {/* Pause */}
-      <section className="mt-[32px]">
+      {/* <section className="mt-[32px]">
         <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D86F24] flex justify-center items-center shadow-lg">
           <p className="text-[18px] font-semibold text-white uppercase">
             Pause
@@ -621,10 +535,10 @@ const TaskList = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* CheckList */}
-      <section className="mt-[32px]">
+      {/* <section className="mt-[32px]">
         <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D824C6] flex justify-center items-center shadow-lg">
           <p className="text-[18px] font-semibold text-white uppercase">
             CheckList
@@ -718,10 +632,10 @@ const TaskList = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* QC In Progress */}
-      <section className="mt-[32px]">
+      {/* <section className="mt-[32px]">
         <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D824C6] flex justify-center items-center shadow-lg">
           <p className="text-[18px] font-semibold text-white uppercase">
             QC In Progress
@@ -815,10 +729,10 @@ const TaskList = () => {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* QC Completed */}
-      <section className="mt-[32px]">
+      {/* <section className="mt-[32px]">
         <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D824C6] flex justify-center items-center shadow-lg">
           <p className="text-[18px] font-semibold text-white uppercase">
             QC Completed
@@ -912,8 +826,7 @@ const TaskList = () => {
             </div>
           ))}
         </div>
-      </section>
-
+      </section> */}
     </div>
   );
 };

@@ -23,8 +23,7 @@ import CheckListCreat from "../pages/task-list/create-task/CheckListCreat";
 const router = createBrowserRouter([
   {
     path: "/",
-    // element: <PrivateRouter> <Main /> </PrivateRouter>,
-    element: <Main />,
+    element: <PrivateRouter> <Main /> </PrivateRouter>,
     children: [
       {
         path: "/",

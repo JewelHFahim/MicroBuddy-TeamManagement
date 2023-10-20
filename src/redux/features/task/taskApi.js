@@ -8,8 +8,13 @@ const taskApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
     // <<================ QUERIES ===============>>
+
     getAllTask: builder.query({
       query: () => "/task-list/",
+      headers: {
+          "content-type": "application/json",
+          Authorization: `Token ${userInfo?.token}`,
+        },
       providesTags: ["Team-Management"],
     }),
 
@@ -17,9 +22,6 @@ const taskApi = apiSlice.injectEndpoints({
       query: () => "/qc-user/",
       providesTags: ["Team-Management"],
     }),
-
-
-  
 
     getAllCheckList: builder.query({
       query: () => "/option-list/",
@@ -32,6 +34,18 @@ const taskApi = apiSlice.injectEndpoints({
 
     // <<================ MUTATIONS ===============>>
 
+    createTask: builder.mutation({
+      query: (data) => ({
+        method: "POST",
+        url: "/task-create/",
+        body: data,
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Token ${userInfo?.token}`,
+        },
+      }),
+      invalidatesTags: ["Team-Management"],
+    }),
 
     // check list create
     createCheckList: builder.mutation({
@@ -46,8 +60,23 @@ const taskApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Team-Management"],
     }),
+
+    deleteTask: builder.mutation({
+      query: (id) => ({
+        method: "DELETE",
+        url: `/option-delete/${id}/`,
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Token ${userInfo?.token}`,
+        },
+      }),
+      invalidatesTags: ["Team-Management"],
+    }),
+
+
+
   }),
 });
 
-export const { useGetAllTaskQuery, useCreateCheckListMutation, useGetAllCheckListQuery, useGetAllQCUserQuery } = taskApi;
+export const { useGetAllTaskQuery, etAllTaskQuery, useCreateCheckListMutation, useGetAllCheckListQuery, useGetAllQCUserQuery, useDeleteTaskMutation, useCreateTaskMutation } = taskApi;
 export default taskApi;
