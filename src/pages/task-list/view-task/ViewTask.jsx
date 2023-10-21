@@ -4,9 +4,36 @@ import { MdFileCopy } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const ViewTask = () => {
-  const {id} = useParams();
+  const { token } = useSelector((state) => state.user);
+  const { id } = useParams();
+  const [viewTask, setViewTask] = useState();
+
+  useEffect(() => {
+    fetch(`http://192.168.3.36:8000/task-detail/${id}/`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setViewTask(data)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [id, token]);
 
   return (
     <div>
@@ -64,16 +91,15 @@ const ViewTask = () => {
       </section>
 
       <section className="mt-[27px] flex gap-[40px]">
+
         {/* 1st column */}
         <section>
           <div className="w-[712px] h-[523px] rounded-[15px] bg-[#F2F6FC] p-[40px]">
             <h2 className="text-[34px] text-secondary font-semibold">
-              Task Title Design for Website.{" "}
+              {viewTask?.task_name}
             </h2>
             <p className="text-[25px] font-[300] mt-8">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic
-              officia repellat est rem impedit. Repudiandae iure rem recusandae
-              magni excepturi.
+              {viewTask?.description}
             </p>
           </div>
 
@@ -93,11 +119,11 @@ const ViewTask = () => {
             <h2 className="text-[26px] font-semibold">Check List-(4)</h2>
 
             <div className="mt-8 flex flex-col gap-[20px]">
-              {Array.from({ length: 4 }).map((item, i) => (
+              {viewTask?.pairs.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
                   <div className="w-[25px] h-[25px] rounded-full border border-blue-800"></div>
-                  <p className="text-[20px] text-black font-semibold">Text</p>
-                  <div className="w-[30px] h-[30px] rounded-full border-2 bg-yellow-300"></div>
+                  <p className="text-[20px] text-black font-semibold">CL. Name {item?.checklist_id}</p>
+                  <div className="w-[30px] h-[30px] rounded-full border-2 bg-yellow-300 flex justify-center items-center">{item?.qc_check_id}</div>
                 </div>
               ))}
             </div>

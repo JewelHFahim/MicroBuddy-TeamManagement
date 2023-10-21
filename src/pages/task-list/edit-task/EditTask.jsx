@@ -1,26 +1,79 @@
 import Title from "../../../utils/Title";
 import { FaClipboardList } from "react-icons/fa";
-import { LiaUserPlusSolid } from "react-icons/lia";
-import { RiFlag2Fill } from "react-icons/ri";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { RadioButtonStyle } from "../../../utils/ClassList";
+import CreateDate from "../../../utils/CreateDate";
+import { setHours, setMinutes } from "date-fns";
 
 const EditTask = () => {
+  const { register, handleSubmit } = useForm();
+  const { token } = useSelector((state) => state.user);
+  const { id } = useParams();
+  const [viewTask, setViewTask] = useState();
+  const [changeStatus, setChangeStatus] = useState(false);
+  const [startDate, setStartDate] = useState(
+    setHours(setMinutes(new Date(), 30), 16),
+  );
+
+  
+  useEffect(() => {
+    fetch(`http://192.168.3.36:8000/task-detail/${id}/`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setViewTask(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [id, token]);
+
+
+  const handleStatus = () => {
+    setChangeStatus(!changeStatus)
+  }
+console.log(changeStatus)
+;
+  const onSubmit = (data) => {
+    console.log({...data, changeStatus, startDate})
+  };
 
   return (
     <div className="pb-[300px]">
       <Title>Edit Task</Title>
 
-      <form>
-        
+      <form onSubmit={handleSubmit(onSubmit)}>
         {/* Crate Task Btn */}
         <div className="flex items-center gap-6 justify-end">
 
-          <button className="w-[236px] h-[54px] rounded-[10px] border border-[#216FED] text-[#216FED] text-[22px] font-medium flex items-center justify-center gap-1 uppercase">
-             In Progress <MdOutlineKeyboardArrowDown className="text-[35px]" />
-          </button>
+          <select {...register("status")} className="w-[236px] h-[54px] rounded-[10px] border border-[#216FED] text-[#216FED] text-[22px] font-medium flex items-center justify-center gap-1 uppercase px-5 focus:outline-none">
+            <option value="todo">Todo</option>
+            <option value="inprogress">In Progress</option>
+            <option value="pause">Pause</option>
+            <option value="checklist">Check List</option>
+            <option value="qc_progress">QC Progress</option>
+            <option value="qc_complete">QC Completed</option>
+            <option value="done">Done</option>
+          </select>
 
-          <button className="w-[267px] h-[71px] rounded-[58px] bg-[#216FED] text-[22px] font-medium text-white flex items-center justify-center gap-4">
-            <FaClipboardList className="text-[35px]" /> Create Task
+          <button
+            type="submit"
+            className="w-[267px] h-[71px] rounded-[58px] bg-[#216FED] text-[22px] font-medium text-white flex items-center justify-center gap-4"
+          >
+            <FaClipboardList className="text-[35px]" /> Update Task
           </button>
         </div>
 
@@ -30,6 +83,8 @@ const EditTask = () => {
             Task Title
           </label>
           <input
+          {...register("task_name")}
+            defaultValue={viewTask?.task_name}
             type="text"
             placeholder="Title here"
             className="w-full h-[66px] rounded-[46px] border border-[#216FED] px-6 focus:outline-none"
@@ -42,8 +97,8 @@ const EditTask = () => {
             Task Details
           </label>
           <textarea
-            name=""
-            id=""
+            defaultValue={viewTask?.description}
+            {...register("description")}
             cols="177"
             rows="14"
             placeholder="Details"
@@ -57,85 +112,63 @@ const EditTask = () => {
           <div className="">
             <h2 className="text-[34px] font-semibold">Check List-(4)</h2>
 
-            <div className="mt-8 flex flex-col gap-[20px]">
-              {Array.from({ length: 4 }).map((item, i) => (
+            <div className="mt-8 flex flex-col gap-[20px] pl-10">
+              {viewTask?.pairs.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
-                  <div className="w-[30px] h-[30px] rounded-full border border-blue-800"></div>
-                  <p className="text-[24px] text-black font-semibold">Text</p>
-                  <div className="w-[40px] h-[40px] rounded-full border-2 bg-yellow-300"></div>
-                  <div className="w-[40px] h-[40px] rounded-full border-2 border-dashed  border-blue-800 border-doted text-right text-xl relative">
-                    <p className="absolute -right-1 -top-1 bg-blue-800 w-[20px] h-[20px] flex justify-center items-center rounded-full text-white">
-                      +
-                    </p>
-                  </div>
+                  <button onClick={()=> handleStatus()} ><input  className={RadioButtonStyle} type="checkbox"value=""/></button>
+                  <p className="text-[20px] text-black font-semibold">CL. Name {item?.checklist_id}</p>
+                  <div className="w-[30px] h-[30px] rounded-full border-2 bg-yellow-300 flex justify-center items-center">{item?.qc_check_id}</div>
                 </div>
               ))}
             </div>
-
-            <div className="mt-5 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4">
-              <input
-                type="text"
-                className="w-[300px] h-[43px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold"
-                placeholder="+ New Check List Item"
-              />
-              <LiaUserPlusSolid className="text-[25px] text-blue-700" />
-            </div>
           </div>
-          {/* Assign */}
-          <div className="">
-            <h2 className="text-[34px] font-semibold">Assign-(2)</h2>
 
+          <div className="flex flex-col items-center">
+          <h2 className="text-[34px] font-semibold">Points</h2>
+          <input {...register("points")} type="number" placeholder="points" className="w-[100px] font-semibold h-[35px] rounded-[46px] border border-[#216FED] px-6 focus:outline-none"/>
+          </div>
+
+          {/* Assign */}
+          <div className=" pr-12">
+            <h2 className="text-[34px] font-semibold">Assign-(2)</h2>
             <div className="mt-8 flex flex-col gap-[20px]">
-              {Array.from({ length: 2 }).map((item, i) => (
+              {viewTask?.pairs.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
                   <div className="w-[40px] h-[40px] rounded-full border-2 bg-yellow-300"></div>
                   <p className="text-[24px] text-black font-semibold">
-                    Jack Sparrow
+                    Jack Sparrow - {item?.checklist_id}
                   </p>
-                  <div className="w-[40px] h-[40px] rounded-full border-2 border-dashed  border-blue-800 border-doted text-right text-xl relative">
-                    <p className="absolute -right-1 -top-1 bg-blue-800 w-[20px] h-[20px] flex justify-center items-center rounded-full text-white">
-                      +
-                    </p>
-                  </div>
                 </div>
               ))}
-            </div>
-
-            <div className="mt-5 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4">
-              <input
-                type="text"
-                className="w-[300px] h-[43px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold"
-                placeholder="+ Add New Member"
-              />
-              <LiaUserPlusSolid className="text-[25px] text-blue-700" />
             </div>
           </div>
         </section>
 
         {/* Date and Priority */}
         <section className="mt-[50px] flex justify-between mr-32">
-          <div>
+        <div>
             <h2 className="text-[34px] font-semibold">
               Set Due Date and Time.
             </h2>
+            
             <div className="flex items-center gap-4">
-              <div className="w-[30px] h-[30px] rounded-full border border-blue-700"></div>
-              <p className="text-[25px] text-blue-700">12/10/23 - 3.56</p>
+              <p className="text-[25px] text-blue-700"><CreateDate startDate={startDate} setStartDate={setStartDate}/></p>
             </div>
           </div>
+
           <div>
             <h2 className="text-[34px] font-semibold">Task Prio.</h2>
             <div className="flex items-center gap-2">
-              <div className="w-[30px] h-[30px] rounded-full border border-blue-700"></div>
-              <div className="w-[180px] h-[30px] bg-white text-2xl text-yellow-200 flex  items-center px-2">
-                <RiFlag2Fill />
-              </div>
+            <select {...register("priority")} data-te-select-init className="mt-4 w-[200px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
             </div>
           </div>
+
         </section>
-
       </form>
-
     </div>
   );
 };

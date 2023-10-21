@@ -19,16 +19,13 @@ export const loginUser = createAsyncThunk(
   "loginUser",
   async (body, { dispatch }) => {
     try {
-      const response = await fetch(
-        "https://jabedahmed.pythonanywhere.com/user/login/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        }
-      );
+      const response = await fetch("http://192.168.3.36:8000/user/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
 
       console.log(response);
 
@@ -66,16 +63,13 @@ export const loginUser = createAsyncThunk(
 );
 
 export const registerUser = createAsyncThunk("loginUser", async (body) => {
-  const res = await fetch(
-    "https://jabedahmed.pythonanywhere.com/user/register/",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    }
-  );
+  const res = await fetch("http://192.168.3.36:8000/user/register/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
 
   console.log(res.status);
 

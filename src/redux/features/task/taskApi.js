@@ -18,6 +18,15 @@ const taskApi = apiSlice.injectEndpoints({
       providesTags: ["Team-Management"],
     }),
 
+    viewTask: builder.query({
+      query: (id) => `/task-detail/${id}/`,
+      headers: {
+          "content-type": "application/json",
+          Authorization: `Token ${userInfo?.token}`,
+        },
+      providesTags: ["Team-Management"],
+    }),
+
     getAllQCUser: builder.query({
       query: () => "/qc-user/",
       providesTags: ["Team-Management"],
@@ -32,8 +41,7 @@ const taskApi = apiSlice.injectEndpoints({
       providesTags: ["Team-Management"],
     }),
 
-    // <<================ MUTATIONS ===============>>
-
+    // <<================ POSTS ===============>>
     createTask: builder.mutation({
       query: (data) => ({
         method: "POST",
@@ -46,6 +54,19 @@ const taskApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Team-Management"],
     }),
+
+    deleteTask: builder.mutation({
+      query: (id) => ({
+        method: "DELETE",
+        url: `/task-delete/${id}/`,
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Token ${userInfo?.token}`,
+        },
+      }),
+      invalidatesTags: ["Team-Management"],
+    }),
+
 
     // check list create
     createCheckList: builder.mutation({
@@ -61,22 +82,12 @@ const taskApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Team-Management"],
     }),
 
-    deleteTask: builder.mutation({
-      query: (id) => ({
-        method: "DELETE",
-        url: `/option-delete/${id}/`,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
-      }),
-      invalidatesTags: ["Team-Management"],
-    }),
+        // <<================ UPDATES ===============>>
 
 
 
   }),
 });
 
-export const { useGetAllTaskQuery, etAllTaskQuery, useCreateCheckListMutation, useGetAllCheckListQuery, useGetAllQCUserQuery, useDeleteTaskMutation, useCreateTaskMutation } = taskApi;
+export const { useGetAllTaskQuery, etAllTaskQuery, useCreateCheckListMutation, useGetAllCheckListQuery, useGetAllQCUserQuery, useDeleteTaskMutation, useCreateTaskMutation, useViewTaskQuery } = taskApi;
 export default taskApi;
