@@ -13,6 +13,7 @@ const userApi = apiSlice.injectEndpoints({
       providesTags: ["Team-Management"],
     }),
 
+
     userDetails: builder.query({
       query: (id) => `/user/user-detail/${id}/`,
       providesTags: ["Team-Management"],

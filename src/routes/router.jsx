@@ -19,6 +19,7 @@ import Login from "../pages/login/Login";
 import PrivateRouter from "./PrivateRouter";
 import UpdateNotice from "../pages/notice/notice-update/UpdateNotice";
 import CheckListCreat from "../pages/task-list/create-task/CheckListCreat";
+import ABC from "../pages/task-list/create-task/abc";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: "/create-checklist",
         element: <CheckListCreat />,
+      },
+      {
+        path: "/abc",
+        element: <ABC />,
       },
 
 

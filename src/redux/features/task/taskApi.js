@@ -83,11 +83,33 @@ const taskApi = apiSlice.injectEndpoints({
     }),
 
         // <<================ UPDATES ===============>>
+        updateTask: builder.mutation({
+          query: ({data, id}) => ({
+            method: "POST",
+            url: `/task-update/${id}/`,
+            body: data,
+            headers: {
+              "content-type": "application/json",
+              Authorization: `Token ${userInfo?.token}`,
+            },
+          }),
+          invalidatesTags: ["Team-Management"],
+        }),
 
-
-
+        updateQCUser: builder.mutation({
+          query: ({data, mappedqc}) => ({
+            method: "POST",
+            url: `/qc-update/${mappedqc}/`,
+            body: data,
+            headers: {
+              "content-type": "application/json",
+              Authorization: `Token ${userInfo?.token}`,
+            },
+          }),
+          invalidatesTags: ["Team-Management"],
+        }),
   }),
 });
 
-export const { useGetAllTaskQuery, etAllTaskQuery, useCreateCheckListMutation, useGetAllCheckListQuery, useGetAllQCUserQuery, useDeleteTaskMutation, useCreateTaskMutation, useViewTaskQuery } = taskApi;
+export const { useGetAllTaskQuery, useCreateCheckListMutation, useGetAllCheckListQuery, useGetAllQCUserQuery, useDeleteTaskMutation, useCreateTaskMutation, useViewTaskQuery, useUpdateTaskMutation, useUpdateQCUserMutation} = taskApi;
 export default taskApi;

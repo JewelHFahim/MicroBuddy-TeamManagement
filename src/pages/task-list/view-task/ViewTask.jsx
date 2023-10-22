@@ -7,11 +7,17 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import {
+  useGetAllCheckListQuery,
+  useGetAllQCUserQuery,
+} from "../../../redux/features/task/taskApi";
 
 const ViewTask = () => {
   const { token } = useSelector((state) => state.user);
   const { id } = useParams();
   const [viewTask, setViewTask] = useState();
+  const { data: allOptions } = useGetAllCheckListQuery();
+  const { data: allQCUsers } = useGetAllQCUserQuery();
 
   useEffect(() => {
     fetch(`http://192.168.3.36:8000/task-detail/${id}/`, {
@@ -28,7 +34,7 @@ const ViewTask = () => {
       })
       .then((data) => {
         console.log(data);
-        setViewTask(data)
+        setViewTask(data);
       })
       .catch((error) => {
         console.error(error);
@@ -91,7 +97,6 @@ const ViewTask = () => {
       </section>
 
       <section className="mt-[27px] flex gap-[40px]">
-
         {/* 1st column */}
         <section>
           <div className="w-[712px] h-[523px] rounded-[15px] bg-[#F2F6FC] p-[40px]">
@@ -117,13 +122,28 @@ const ViewTask = () => {
           {/* Check List */}
           <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] py-[12px] px-[30px]">
             <h2 className="text-[26px] font-semibold">Check List-(4)</h2>
-
             <div className="mt-8 flex flex-col gap-[20px]">
               {viewTask?.pairs.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
                   <div className="w-[25px] h-[25px] rounded-full border border-blue-800"></div>
-                  <p className="text-[20px] text-black font-semibold">CL. Name {item?.checklist_id}</p>
-                  <div className="w-[30px] h-[30px] rounded-full border-2 bg-yellow-300 flex justify-center items-center">{item?.qc_check_id}</div>
+                  <div className="text-[20px] text-black font-semibold">
+                    {allOptions
+                      ?.filter(
+                        (optionItem) => optionItem.id === item?.qc_check_id
+                      )
+                      .map((optionItem, j) => (
+                        <p key={j}>{optionItem.option_text}</p>
+                      ))}
+                  </div>
+                  <div className="w-[30px] h-[30px] rounded-full border-2 bg-yellow-300 flex justify-center items-center capitalize cursor-pointer">
+                    {allQCUsers
+                      ?.filter(
+                        (optionItem) => optionItem.id === item?.qc_check_id
+                      )
+                      .map((optionItem, j) => (
+                        <p key={j}>{optionItem.username.charAt(0)}</p>
+                      ))}
+                  </div>
                 </div>
               ))}
             </div>
