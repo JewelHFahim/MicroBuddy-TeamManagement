@@ -193,6 +193,7 @@ const ViewTask = () => {
 
         {/* 2nd column */}
         <section className=" w-full">
+
           <div className="w-full flex gap-[32px] justify-end">
             <button className="bg-[#216FED] rounded-[43px] uppercase w-[133px]  text-white h-[53px]">
               Pause
@@ -268,6 +269,7 @@ const ViewTask = () => {
             </button>
           </div>
         </section>
+        
       </section>
     </div>
   );

@@ -3,7 +3,6 @@ import { loginUser, setToken } from "../../redux/features/user/userSlice";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/mb logo.png";
-import toast from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -14,7 +13,6 @@ const Login = () => {
     console.log(data);
     dispathc(loginUser(data));
     if (setToken()) {
-      toast.success("Login successful");
       navigate("/");
     }
   };

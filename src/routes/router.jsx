@@ -20,6 +20,7 @@ import PrivateRouter from "./PrivateRouter";
 import UpdateNotice from "../pages/notice/notice-update/UpdateNotice";
 import CheckListCreat from "../pages/task-list/create-task/CheckListCreat";
 import ABC from "../pages/task-list/create-task/abc";
+import UpdateMyTask from "../pages/my-task/update/UpdateMyTask";
 
 const router = createBrowserRouter([
   {
@@ -30,10 +31,20 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
+
+
+      // **********My Task Related************//
       {
         path: "/my-task",
         element: <MyTask />,
       },
+      {
+        path: "/update-mytask/:id",
+        element: <UpdateMyTask />,
+      },
+
+
+
       {
         path: "/calender",
         element: <Calender />,

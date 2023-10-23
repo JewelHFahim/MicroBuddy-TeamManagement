@@ -30,6 +30,8 @@ console.log(newArray);
   const onSubmit = (data, event) => {
     event.preventDefault();
 
+    console.log(data)
+
     const pairs = newArray.map(item => ({
       checklist_id: item.id,
       qc_check_id: item.userId
@@ -123,7 +125,7 @@ console.log(newArray);
 
             <select {...register("assignee")} data-te-select-init className="mt-6 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold">
         {allUser?.map((user)=>(
-              <option key={user?.user?.id} value="1">{user?.user?.username}</option>
+              <option key={user?.user?.id} value={user?.user?.id}>{user?.user?.username} {user?.user?.id}</option>
 
         ))}
             </select>

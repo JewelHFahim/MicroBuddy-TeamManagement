@@ -57,9 +57,7 @@ const CheckListCreat = () => {
           onChange={handleSelectChange}
         >
           {allUser?.map((user) => (
-            <option key={user?.id} value={user?.id}>
-              {user?.username}
-            </option>
+            <option key={user?.id} value={user?.id}>{user?.username}</option>
           ))}
         </select>
 

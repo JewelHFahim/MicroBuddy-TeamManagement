@@ -186,7 +186,6 @@ const EditTask = () => {
                       
                       {/* - {item?.qc_check_id} */}
 
-
                   </div>
                 </div>
               ))}
