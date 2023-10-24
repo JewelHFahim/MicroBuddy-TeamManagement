@@ -1,28 +1,20 @@
 import apiSlice from "../../api/apiSlice";
 
 const userInfo = JSON.parse(localStorage.getItem("user-info"));
-
 console.log("Token", userInfo?.token);
 
 const taskApi = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
-    // <<================ QUERIES ===============>>
 
+  endpoints: (builder) => ({
+
+    // <<========================= QUERIES ========================>>
     getAllTask: builder.query({
-      query: () => `/task-list/`,
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Token ${userInfo?.token}`,
-      },
+      query: () => "/task-list/",
       providesTags: ["Team-Management"],
     }),
 
     viewTask: builder.query({
       query: (id) => `/task-detail/${id}/`,
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Token ${userInfo?.token}`,
-      },
       providesTags: ["Team-Management"],
     }),
 
@@ -33,10 +25,6 @@ const taskApi = apiSlice.injectEndpoints({
 
     getAllCheckList: builder.query({
       query: () => "/option-list/",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Token ${userInfo?.token}`,
-      },
       providesTags: ["Team-Management"],
     }),
 
@@ -46,10 +34,6 @@ const taskApi = apiSlice.injectEndpoints({
         method: "POST",
         url: "/task-create/",
         body: data,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
       }),
       invalidatesTags: ["Team-Management"],
     }),
@@ -58,10 +42,6 @@ const taskApi = apiSlice.injectEndpoints({
       query: (id) => ({
         method: "DELETE",
         url: `/task-delete/${id}/`,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
       }),
       invalidatesTags: ["Team-Management"],
     }),
@@ -81,15 +61,12 @@ const taskApi = apiSlice.injectEndpoints({
     }),
 
     // <<================ UPDATES ===============>>
+
     updateTask: builder.mutation({
       query: ({ data, id }) => ({
         method: "POST",
         url: `/task-update/${id}/`,
         body: data,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
       }),
       invalidatesTags: ["Team-Management"],
     }),
@@ -99,10 +76,6 @@ const taskApi = apiSlice.injectEndpoints({
         method: "POST",
         url: `/qc-update/${mappedqc}/`,
         body: data,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
       }),
       invalidatesTags: ["Team-Management"],
     }),

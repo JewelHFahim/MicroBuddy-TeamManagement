@@ -12,6 +12,7 @@ import {
   useGetAllQCUserQuery,
   useUpdateQCUserMutation,
   useUpdateTaskMutation,
+  useViewTaskQuery,
 } from "../../../redux/features/task/taskApi";
 import toast from "react-hot-toast";
 import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
@@ -19,18 +20,18 @@ import { MdFileCopy } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { BsFlagFill } from "react-icons/bs";
 import StatusBtn from "../../../utils/StatusBtn";
-import axios from "axios";
 
 const UpdateMyTask = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
-  const { token } = useSelector((state) => state.user);
-  const { id } = useParams();
-  const [viewTask, setViewTask] = useState();
   const dispatch = useDispatch();
+  const { register, handleSubmit } = useForm();
+  const { id } = useParams();
   const [startDate, setStartDate] = useState(
     setHours(setMinutes(new Date(), 30), 16)
   );
+
+  const { data: viewTask } = useViewTaskQuery(id);
+  console.log(viewTask)
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: allQCUsers } = useGetAllQCUserQuery();
 
@@ -38,36 +39,19 @@ const UpdateMyTask = () => {
     return qcuid;
   });
 
+  const qcStatus = allQCUsers?.map((qc) => {
+    return qc;
+  });
+  console.log(qcStatus);
+
   const mappedqc = qcUserId
     ?.map((qcuid) => qcuid?.qc_check_id)
     ?.find((qcId) => qcId !== undefined);
-  console.log(mappedqc);
+    console.log(mappedqc)
 
   const [updateQCUser] = useUpdateQCUserMutation();
   const [updateTask] = useUpdateTaskMutation();
   const { data: allUser } = useGetAllUserQuery();
-
-  useEffect(() => {
-    fetch(`http://192.168.3.36:8000/task-detail/${id}/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Request failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setViewTask(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [token, id]);
 
   const [isChecked, setIsChecked] = useState();
   const handleRadioChange = (i) => {
@@ -80,35 +64,36 @@ const UpdateMyTask = () => {
     }
   });
 
-  console.log(assigneeName?.user?.username);
-
   // ============================>> UPDATE FORM <<========================
-  //   const onSubmit = (data) => {
-  //     const upd = { ...data, due_date: startDate };
-  //     updateTask({ data: upd, id });
-  //     const is_checked = { is_checked: isChecked };
-  //     updateQCUser({ data: is_checked, mappedqc });
-  //     toast.success("Updated");
-  //     navigate(`/view-task/${id}`);
-  //   };
+  const [state, setState] = useState(false);
+  console.log(state);
+  const onSubmitQCCheckedStatus = (newCheckStatus) => {
+    setState(!newCheckStatus);
+    const data = { is_checked: newCheckStatus };
+    updateQCUser({ data, mappedqc });
+    // https://jabedahmed.pythonanywhere.com/qc-user/
+    // {
+    //         "id": 6,
+    //         "username": "Member",
+    //         "is_checked": false,
+    //         "point": 0
+    //  }
+    // if i change "is_checked" status from any task, that will changed for all the task, where this qc user is exist.
+  };
 
-//   const [status, setStatus] = useState("Todo");
-
-//   const handleStatusChange = (newStatus) => {
-//     if (
-//       (status === 'Todo' && newStatus === 'In Progress') ||
-//       (status === 'In Progress' && (newStatus === 'Pause' || newStatus === 'Done')) ||
-//       (status === 'Pause' && newStatus === 'In Progress') ||
-//       (status === 'Done' && newStatus === 'Done')
-//     ) {
-//       setStatus(newStatus);
-//     }
-//   };
-
-const onSubmitLink = (data) => {
-    console.log(data);
+  const handleStatusChange = (newStatus) => {
+    const data = { status: newStatus };
+    console.log({ data, id });
     updateTask({ data, id });
-}
+  };
+
+  const onSubmitLink = (data, event) => {
+    event.preventDefault();
+    const form = event.target;
+    updateTask({ data, id });
+    toast.success("Task Location Submitted");
+    form.reset();
+  };
 
   return (
     <div className="pb-[300px]">
@@ -146,12 +131,10 @@ const onSubmitLink = (data) => {
             Task Point - 10
           </p>
         </div>
-
-     
       </section>
 
-      <section className="flex justify-between gap-[40px]">
-        <div className="border border-red-600 w-[50%]">
+      <section className="flex justify-between gap-[40px] mt-5">
+        <div className="w-[50%]">
           {/* title and description */}
           <div className="mt-5 w-[712px] h-[524px] bg-[#F2F6FC] border border-blue-700 rounded-[15px] shadow-md p-[40px] text-[#273240]">
             <h1 className="text-[34px] font-semibold">{viewTask?.task_name}</h1>
@@ -163,9 +146,12 @@ const onSubmitLink = (data) => {
               Task File Location.
             </h2>
 
-            <form onSubmit={handleSubmit(onSubmitLink)} className="w-full h-[67px] rounded-[15px] flex items-center">
+            <form
+              onSubmit={handleSubmit(onSubmitLink)}
+              className="w-full h-[67px] rounded-[15px] flex items-center"
+            >
               <input
-              {...register("task_submit")}
+                {...register("task_submit")}
                 type="text"
                 placeholder="Task File Link...."
                 className="w-[75%] h-full px-5 placeholder:text-blue-600 placeholder:text-opacity-[50%] focus:outline-none text-[25px] rounded-s-[15px]"
@@ -190,14 +176,37 @@ const onSubmitLink = (data) => {
               <div className="mt-8 flex flex-col gap-[20px] pl-10">
                 {viewTask?.pairs.map((item, i) => (
                   <div key={i} className="flex items-center gap-4">
-                    <div>
-                      <input
+                    <div className="flex items-center">
+                      {allQCUsers
+                        ?.filter(
+                          (optionItem) => optionItem.id === item?.qc_check_id
+                        )
+                        .map((filteredItem) => (
+                          <div key={filteredItem.id}>
+                            <p>from db-{filteredItem.is_checked.toString()}</p>
+
+                            {/* <input
                         type="radio"
                         className={RadioButtonStyle}
                         value={isChecked}
                         checked={isChecked === i ? "true" : "false"}
                         onClick={() => handleRadioChange(i)}
-                      />
+                      /> */}
+
+                            <button
+                              onClick={() => onSubmitQCCheckedStatus(state)}
+                              className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center"
+                            >
+                              <div
+                                className={`w-[16px] h-[16px] rounded-full  ${
+                                  filteredItem.is_checked.toString() === true
+                                    ? "bg-red-600"
+                                    : "bg-transparent"
+                                }`}
+                              ></div>
+                            </button>
+                          </div>
+                        ))}
                     </div>
 
                     <div className="text-[20px] text-black font-semibold">
@@ -215,11 +224,9 @@ const onSubmitLink = (data) => {
                         ?.filter(
                           (optionItem) => optionItem.id === item?.qc_check_id
                         )
-                        .map((optionItem, j) => (
-                          <p key={j}>{optionItem.username.charAt(0)}</p>
+                        .map((optionItem, i) => (
+                          <p key={i}>{optionItem.username.charAt(0)}</p>
                         ))}
-
-                      {/* - {item?.qc_check_id} */}
                     </div>
                   </div>
                 ))}
@@ -272,35 +279,91 @@ const onSubmitLink = (data) => {
           </section>
         </div>
 
+        {/***************************** * SECOND COLUMN *******************************/}
 
-{/***************************** * SECOND COLUMN *******************************/}
-
-        <section className="w-[50%] border border-green-700">
+        <section className="w-[50%]">
           {/* Crate Task Btn */}
+          <p> status:--- {viewTask?.status} </p>
 
           <div className="flex items-center gap-6 justify-end">
-            <button
-              onClick={() => handleStatusChange("inprogress")}
-              //  disabled={status !== 'Todo' || status === 'Done' || (status === 'In Progress' && status === 'Pause')}
-            >
-              <StatusBtn>In Progress</StatusBtn>
-            </button>
+            <div className="flex flex-col gap-5">
+              <>
+                {
+                  viewTask?.status === "todo" && (
+                    <button
+                      onClick={() => handleStatusChange("inprogress")}
+                      className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
+                    >
+                      Start Work
+                    </button>
+                  )
 
-            <button
-              onClick={() => handleStatusChange("pause")}
-              //   disabled={status !== 'In Progress' || status === 'Done' || status === 'Pause'}
-            >
-              <StatusBtn>Pause</StatusBtn>
-            </button>
+                  // : (
+                  //   <button className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}>
+                  //     Start Work
+                  //   </button>
+                  // )
+                }
+              </>
 
-            <button
-              onClick={() => handleStatusChange("done")}
-              //   disabled={status === 'Done'}
-            >
-              <StatusBtn>Done</StatusBtn>
-            </button>
+              <>
+                {viewTask?.status === "inprogress" ||
+                viewTask?.status === "todo" ||
+                viewTask?.status === "pause" ? (
+                  <button
+                    onClick={() => handleStatusChange("inprogress")}
+                    className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
+                  >
+                    In Progress
+                  </button>
+                ) : (
+                  <button
+                    className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
+                  >
+                    In Progress
+                  </button>
+                )}
+              </>
+            </div>
+
+            <>
+              {viewTask?.status === "inprogress" ||
+              viewTask?.status === "pause" ? (
+                <button
+                  onClick={() => handleStatusChange("pause")}
+                  className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
+                >
+                  Pause
+                </button>
+              ) : (
+                <button
+                  className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
+                >
+                  Pause
+                </button>
+              )}
+            </>
+
+            <>
+              {viewTask?.status === "inprogress" ||
+              viewTask?.status === "checklist" ? (
+                <button
+                  onClick={() => handleStatusChange("checklist")}
+                  className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
+                >
+                  Check List
+                </button>
+              ) : (
+                <button
+                  className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
+                >
+                  Check List
+                </button>
+              )}
+            </>
           </div>
 
+          {/* Chatting */}
           <section className=" w-full">
             <div className="mt-[100px] w-fll rounded-[15px] shadow-lg bg-[#F2F6FC] p-[30px]">
               <h1 className="text-[30px] font-semibold text-[#273240] uppercase">

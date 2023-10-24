@@ -28,7 +28,6 @@ const EditTask = () => {
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: allQCUsers } = useGetAllQCUserQuery();
 
-
   const qcUserId = viewTask?.pairs?.map((qcuid) => {
     return qcuid;
   });
@@ -43,12 +42,15 @@ const EditTask = () => {
   const { data: allUser } = useGetAllUserQuery();
 
   useEffect(() => {
-    fetch(`http://192.168.3.36:8000/task-detail/${id}/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${token}`,
-      },
-    })
+    fetch(
+      `https://jabedahmed.pythonanywhere.com/task-detail/${id}/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Request failed");
@@ -161,7 +163,7 @@ const EditTask = () => {
                       className={RadioButtonStyle}
                       value={isChecked}
                       checked={isChecked === i ? "true" : "false"}
-                      onClick={()=>handleRadioChange(i)}
+                      onClick={() => handleRadioChange(i)}
                     />
                   </div>
 
@@ -182,10 +184,9 @@ const EditTask = () => {
                       )
                       .map((optionItem, j) => (
                         <p key={j}>{optionItem.username.charAt(0)}</p>
-                      ))} 
-                      
-                      {/* - {item?.qc_check_id} */}
+                      ))}
 
+                    {/* - {item?.qc_check_id} */}
                   </div>
                 </div>
               ))}

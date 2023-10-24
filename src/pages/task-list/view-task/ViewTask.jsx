@@ -20,12 +20,15 @@ const ViewTask = () => {
   const { data: allQCUsers } = useGetAllQCUserQuery();
 
   useEffect(() => {
-    fetch(`http://192.168.3.36:8000/task-detail/${id}/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Token ${token}`,
-      },
-    })
+    fetch(
+      `https://jabedahmed.pythonanywhere.com/task-detail/${id}/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Request failed");
@@ -193,7 +196,6 @@ const ViewTask = () => {
 
         {/* 2nd column */}
         <section className=" w-full">
-
           <div className="w-full flex gap-[32px] justify-end">
             <button className="bg-[#216FED] rounded-[43px] uppercase w-[133px]  text-white h-[53px]">
               Pause
@@ -269,7 +271,6 @@ const ViewTask = () => {
             </button>
           </div>
         </section>
-        
       </section>
     </div>
   );
