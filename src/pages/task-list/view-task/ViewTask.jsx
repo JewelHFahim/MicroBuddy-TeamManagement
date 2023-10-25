@@ -2,52 +2,35 @@ import Title from "../../../utils/Title";
 import { BsFlagFill } from "react-icons/bs";
 import { MdFileCopy } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
 import {
+  useDeleteTaskMutation,
   useGetAllCheckListQuery,
   useGetAllQCUserQuery,
+  useViewTaskQuery,
 } from "../../../redux/features/task/taskApi";
+import toast from "react-hot-toast";
 
 const ViewTask = () => {
-  const { token } = useSelector((state) => state.user);
   const { id } = useParams();
-  const [viewTask, setViewTask] = useState();
+  const navigate = useNavigate()
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: allQCUsers } = useGetAllQCUserQuery();
+  const { data: viewTask } = useViewTaskQuery(id);
+  const [deleteTask] = useDeleteTaskMutation()
 
-  useEffect(() => {
-    fetch(
-      `https://jabedahmed.pythonanywhere.com/task-detail/${id}/`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Request failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setViewTask(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [id, token]);
+  const hnadleTaskDelete = (taskid) => {
+    deleteTask(taskid);
+    toast.error("Deleted");
+    navigate("/task-list")
+  }
 
   return (
     <div>
       <Title>View Task</Title>
 
+      {/* Pause and Complete Btn */}
       <section className="w-full h-[97px] rounded-[15px] bg-[#F2F6FC] flex gap-4 justify-between items-center px-4">
         <div>
           <p className="text-[#737B8B] uppercase">Created</p>
@@ -125,7 +108,7 @@ const ViewTask = () => {
           {/* Check List */}
           <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] py-[12px] px-[30px]">
             <h2 className="text-[26px] font-semibold">Check List-(4)</h2>
-            <div className="mt-8 flex flex-col gap-[20px]">
+            {/* <div className="mt-8 flex flex-col gap-[20px]">
               {viewTask?.pairs.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
                   <div className="w-[25px] h-[25px] rounded-full border border-blue-800"></div>
@@ -149,7 +132,7 @@ const ViewTask = () => {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] w-full h-[800px] p-[40px]">
@@ -205,6 +188,7 @@ const ViewTask = () => {
             </button>
           </div>
 
+          {/* Chating UI */}
           <div className="mt-[27px] w-fll rounded-[15px] shadow-lg bg-[#F2F6FC] p-[30px]">
             <h1 className="text-[30px] font-semibold text-[#273240] uppercase">
               Chat.
@@ -266,7 +250,7 @@ const ViewTask = () => {
           </div>
 
           <div className="mt-[50px] flex justify-end ">
-            <button className="w-[388px] h-[53px] rounded-[44px] bg-[#ED2121] text-[20px] text-white font-medium uppercase">
+            <button onClick={()=>hnadleTaskDelete(id)} className="w-[388px] h-[53px] rounded-[44px] bg-[#ED2121] text-[20px] text-white font-medium uppercase">
               Delete This Project
             </button>
           </div>

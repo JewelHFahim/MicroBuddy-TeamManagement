@@ -10,9 +10,10 @@ import StatusBtnOutLine from "../../../utils/StatusBtnOutLine";
 import Loading from "../../../utils/loading/Loading";
 
 const Todo = ({redirect}) => {
-  
   const { data: allTask, isLoading } = useGetAllTaskQuery();
+
   const filteredTodo = allTask?.filter((task) => task.status === "todo");
+
 
   return (
     <>

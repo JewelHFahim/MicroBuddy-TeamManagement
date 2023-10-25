@@ -9,51 +9,47 @@ import { LiaEditSolid } from "react-icons/lia";
 import Title from "../../../utils/Title";
 import { ImLink } from "react-icons/im";
 import { useUserDetailsQuery } from "../../../redux/features/user/userApi";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import Todo from "../../task-list/categorry/Todo";
+import InProgress from "../../task-list/categorry/InProgress";
+import Pause from "../../task-list/categorry/Pause";
+import CheckList from "../../task-list/categorry/CheckList";
+import { datas, userProPic } from "../../../utils/Important";
+import { useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
+import Loading from "../../../utils/loading/Loading";
+import StatusTitle from "../../../utils/StatusTitle";
+import TableHead from "../../../utils/TableHead";
+import DateFormat from "../../../utils/DateFormat";
+import StatusBtnOutLine from "../../../utils/StatusBtnOutLine";
 
 const EmployeeDetailsView = () => {
-  const {id} = useParams();
-  const {data: userDetails }= useUserDetailsQuery(id);
-  console.log(userDetails)
+  const { id } = useParams();
+  console.log(parseInt(id));
+  const { data: userDetails } = useUserDetailsQuery(id);
+  const { data: allTask, isLoading } = useGetAllTaskQuery();
+  console.log(allTask);
 
-  const datas = [
-    {
-      total: 245,
-      title: "Total Assign",
-      icon: <FaUserCheck />,
-      bg: "bg-[#216FED]",
-    },
-    {
-      total: 5623,
-      title: "Completed",
-      icon: <BiSolidPieChartAlt />,
-      bg: "bg-[#CED200]",
-    },
-    {
-      total: 312,
-      title: "Total Assign",
-      icon: <IoCheckmarkDoneCircle />,
-      bg: "bg-[#216FED]",
-    },
-    {
-      total: 415,
-      title: "Over Date",
-      icon: <MdMoreTime />,
-      bg: "bg-[#ED9B21]",
-    },
-  ];
+  const filteredTasksAsQC = allTask?.filter((task) => task.qc_check.includes(parseInt(id)));
 
-  const tableItems = [
-    {
-      avatar:
-        "https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
-      name: "",
-      email: "",
-      phone_nimber: "",
-      position: "",
-      salary: "",
-    },
-  ];
+  const filteredTasksTodo = allTask?.filter((task) => {
+    return ( task.assignee === parseInt(id)  && task.status === "todo");
+  });
+
+  const filteredTasksInProgress = allTask?.filter((task) => {
+    return ( task.assignee === parseInt(id)  && task.status === "inprogress");
+  });
+  console.log(filteredTasksInProgress)
+
+  const filteredTasksPause = allTask?.filter((task) => {
+    return ( task.assignee === parseInt(id)  && task.status === "pause");
+  });
+
+  const filteredTasksChecklist = allTask?.filter((task) => {
+    return ( task.assignee === parseInt(id)  && task.status === "checklist");
+  });
+
+
+  const redirect = "view-task";
 
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px] pb-10">
@@ -61,11 +57,14 @@ const EmployeeDetailsView = () => {
 
       {/* Profile Details */}
       <section className="h-[465px] rounded-[46px] bg-[#F2F6FC] flex  justify-between items-center px-[55px]">
-
         <div className="flex flex-col justify-between">
           <div className="flex items-center gap-4">
             <div className="w-[238px] h-[238px] rounded-[15px] overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ" alt="" className="w-full h-full"/>
+              <img
+                src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+                alt=""
+                className="w-full h-full"
+              />
             </div>
             <div className="font-semibold text-[#273240]">
               <h3 className="text-[40px]  uppercase leading-[60px]">
@@ -79,7 +78,9 @@ const EmployeeDetailsView = () => {
                 </span>
               </p>
               Password:
-              <span className="text-blue-600 font-normal ml-1">Reset Password</span>
+              <span className="text-blue-600 font-normal ml-1">
+                Reset Password
+              </span>
             </div>
           </div>
 
@@ -126,25 +127,29 @@ const EmployeeDetailsView = () => {
           </div>
 
           <div className="mt-[36px] flex items-center gap-5">
-
             <div className="w-[234px] h-[283px] bg-[#307EF3] rounded-[10px] p-[24px]">
-                <button className="bg-white bg-opacity-[40%] p-3 rounded-lg"><FaEdit className="text-[30px] text-white"/></button>
-                <div className="mt-10">
-                    <h3 className="text-[40px] text-white font-bold">12</h3>
-                    <p className="mt-5 text-[20px] text-white font-medium uppercase">Over Date Lifetime</p>
-                </div>
-
-            </div> 
+              <button className="bg-white bg-opacity-[40%] p-3 rounded-lg">
+                <FaEdit className="text-[30px] text-white" />
+              </button>
+              <div className="mt-10">
+                <h3 className="text-[40px] text-white font-bold">12</h3>
+                <p className="mt-5 text-[20px] text-white font-medium uppercase">
+                  Over Date Lifetime
+                </p>
+              </div>
+            </div>
 
             <div className="w-[234px] h-[283px] bg-[#353F5C] rounded-[10px] p-[24px]">
-                <button className="bg-white bg-opacity-[40%] p-3 rounded-lg"><FaEdit className="text-[30px] text-white"/></button>
-                <div className="mt-10">
-                    <h3 className="text-[40px] text-white font-bold">52</h3>
-                    <p className="mt-5 text-[20px] text-white font-medium uppercase">Over Date Lifetime</p>
-                </div>
-
-            </div> 
-
+              <button className="bg-white bg-opacity-[40%] p-3 rounded-lg">
+                <FaEdit className="text-[30px] text-white" />
+              </button>
+              <div className="mt-10">
+                <h3 className="text-[40px] text-white font-bold">52</h3>
+                <p className="mt-5 text-[20px] text-white font-medium uppercase">
+                  Over Date Lifetime
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -197,581 +202,428 @@ const EmployeeDetailsView = () => {
         ))}
       </section>
 
-      {/* TO DO */}
-      <section className="mt-[32px]">
-        <button className="w-[166px] h-[60px] rounded-[20px] bg-[#FF8723] flex justify-center items-center shadow-lg">
-          <p className="text-[18px] font-semibold text-white">TO DO</p>
-        </button>
+      {/*  <<=========== QC CHECK ============>>  */}
+      <>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <section className="mt-[32px]">
+            <StatusTitle className="bg-[#FF8723]">QC CHECK</StatusTitle>
 
-        <div className="mt-[18px] flex flex-col gap-[20px]">
-          {[1, 2, 3].map((item, i) => (
-            <div key={i}>
-              <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                <table className="w-full table-auto text-center ">
-                  <thead className="text-[#737B8B]">
-                    <tr className="font-[300]">
-                      <th className="py-3 px-6 "></th>
-                      <th className="py-3 px-4 font-[300]">Due Date</th>
-                      <th className="py-3 px-4 font-[300]">Assign</th>
-                      <th className="py-3 px-4 font-[300]">Check Assign</th>
-                      <th className="py-3 px-4 font-[300]"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600">
-                    {tableItems.map((item, idx) => (
-                      <tr key={idx}>
+            <div className="mt-[18px] flex flex-col gap-[20px]">
+              {filteredTasksAsQC?.map((item, i) => (
+                <div key={i}>
+                  <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
+                    <table className="w-full table-auto text-center">
+                      <TableHead />
+
+                      <tbody className="text-gray-600">
+                        <tr>
+                          <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
+                            <img
+                              src={userProPic}
+                              className="w-[90px] h-[90px]  rounded-[31px]"
+                            />
+
+                            <div className="text-left">
+                              <span className="block text-[#216FED] font-[300]">
+                                C012345-{item?.id}
+                              </span>
+                              <span className="block text-[#273240] text-[20px] font-semibold">
+                                {item?.task_name}
+                              </span>
+                              <span className="block text-[#216FED] font-[300]">
+                                {DateFormat(item?.start_date)}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
+                            {DateFormat(item?.start_date)}
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
+                                {item?.assignee}
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              {item?.qc_check?.map((item, i) => (
+                                <div
+                                  key={i}
+                                  className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
+                                >
+                                  {item}
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+
+                          <td className="text-right px-2 whitespace-nowrap">
+                            <div className="flex justify-between items-center px-5 w-full">
+                              <StatusBtnOutLine className="text-[#FF8723]">
+                                To Do{" "}
+                              </StatusBtnOutLine>
+                              <Link to={`/${redirect}/${item?.id}`}>
+                                <button className="text-[32px] text-black flex justify-center items-center">
+                                  <BsEye />
+                                </button>
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </>
+
+
+      {/*  <<=========== TODO============>>  */}
+      <>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <section className="mt-[32px]">
+            <StatusTitle className="bg-[#FF8723]">TODO</StatusTitle>
+
+            <div className="mt-[18px] flex flex-col gap-[20px]">
+              {filteredTasksTodo?.map((item, i) => (
+                <div key={i}>
+                  <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
+                    <table className="w-full table-auto text-center">
+                      <TableHead />
+
+                      <tbody className="text-gray-600">
+                        <tr>
+                          <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
+                            <img
+                              src={userProPic}
+                              className="w-[90px] h-[90px]  rounded-[31px]"
+                            />
+
+                            <div className="text-left">
+                              <span className="block text-[#216FED] font-[300]">
+                                C012345-{item?.id}
+                              </span>
+                              <span className="block text-[#273240] text-[20px] font-semibold">
+                                {item?.task_name}
+                              </span>
+                              <span className="block text-[#216FED] font-[300]">
+                                {DateFormat(item?.start_date)}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
+                            {DateFormat(item?.start_date)}
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
+                                {item?.assignee}
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              {item?.qc_check?.map((item, i) => (
+                                <div
+                                  key={i}
+                                  className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
+                                >
+                                  {item}
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+
+                          <td className="text-right px-2 whitespace-nowrap">
+                            <div className="flex justify-between items-center px-5 w-full">
+                              <StatusBtnOutLine className="text-[#FF8723]">
+                                To Do{" "}
+                              </StatusBtnOutLine>
+                              <Link to={`/${redirect}/${item?.id}`}>
+                                <button className="text-[32px] text-black flex justify-center items-center">
+                                  <BsEye />
+                                </button>
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </>
+
+      {/*  <<======== IN PROGRESS ========>>  */}
+      <>
+    {
+      isLoading ? <Loading/> :
+
+    <section className="mt-[32px]">
+      <StatusTitle className="bg-[#CED200]">In Progress</StatusTitle>
+
+      <div className="mt-[18px] flex flex-col gap-[20px]">
+        {filteredTasksInProgress?.map((item, i) => (
+          <div key={i}>
+            <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
+              <table className="w-full table-auto text-center ">
+                <TableHead />
+
+                <tbody className="text-gray-600">
+                  <tr>
+                    <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
+                      <img
+                        src={userProPic}
+                        className="w-[90px] h-[90px]  rounded-[31px]"
+                      />
+
+                      <div className="text-left">
+                        <span className="block text-[#216FED] font-[300]">
+                          C012345-{item?.id}
+                        </span>
+                        <span className="block text-[#273240] text-[20px] font-semibold">
+                          {item?.task_name}
+                        </span>
+                        <span className="block text-[#216FED] font-[300]">
+                          {DateFormat(item?.start_date)}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
+                      {DateFormat(item?.start_date)}
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <div className="flex justify-center items-center">
+                        <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
+                          {item?.assignee}
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <div className="flex justify-center items-center">
+                        {item?.qc_check?.map((item, i) => (
+                          <div
+                            key={i}
+                            className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
+                          >
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+
+                    <td className="text-right px-2 whitespace-nowrap">
+                      <div className="flex justify-between items-center px-5 w-full">
+                        <StatusBtnOutLine className="text-[#5DD732]">
+                          In Progress
+                        </StatusBtnOutLine>
+{/* 
+                        <Link to={`/${redirect}/${item?.id}`}>
+                          <button className="text-[32px] text-black flex justify-center items-center">
+                            <BsEye />
+                          </button>
+                        </Link> */}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+}
+</>
+
+      {/*  <<=========== PAUSE ===========>>  */}
+      <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <section className="mt-[32px]">
+          <StatusTitle className="bg-[#D86F24]"> Pause </StatusTitle>
+          <div className="mt-[18px] flex flex-col gap-[20px]">
+            {filteredTasksPause?.map((item, i) => (
+              <div key={i}>
+                <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
+                  <table className="w-full table-auto text-center">
+                    <TableHead />
+
+                    <tbody className="text-gray-600">
+                      <tr>
                         <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
                           <img
-                            src={item.avatar}
+                            src={userProPic}
                             className="w-[90px] h-[90px]  rounded-[31px]"
                           />
+
                           <div className="text-left">
                             <span className="block text-[#216FED] font-[300]">
-                              C012345
+                              C012345-{item?.id}
                             </span>
                             <span className="block text-[#273240] text-[20px] font-semibold">
-                              Task Name .............
+                              {item?.task_name}
                             </span>
                             <span className="block text-[#216FED] font-[300]">
-                              Create Date and Time
+                              {DateFormat(item?.start_date)}
                             </span>
                           </div>
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                          12/10/23 <br /> 11.42 am
+                          {DateFormat(item?.start_date)}
                         </td>
 
                         <td className="px-6 py-4">
                           <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-red-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
+                            <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
+                              {item?.assignee}
+                            </div>
                           </div>
                         </td>
 
                         <td className="px-6 py-4">
                           <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
+                            {item?.qc_check?.map((item, i) => (
                               <div
                                 key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300"
-                              />
+                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
+                              >
+                                {item}
+                              </div>
                             ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
                           </div>
                         </td>
 
                         <td className="text-right px-2 whitespace-nowrap">
                           <div className="flex justify-between items-center px-5 w-full">
-                            <button className="w-[131px] h-[43px] rounded-[22px] border border-[#C4C4C4] flex justify-center items-center">
-                              <p className="text-[#FF8723] font-semibold">
-                                TO DO
-                              </p>
-                            </button>
-                            <button className="text-[32px] text-black flex justify-center items-center">
-                              <BsEye />
-                            </button>
+                            <StatusBtnOutLine className="text-[#D86F24]">
+                              Pause
+                            </StatusBtnOutLine>
+                            <Link to={`/${redirect}/${item?.id}`}>
+                              <button className="text-[32px] text-black flex justify-center items-center">
+                                <BsEye />
+                              </button>
+                            </Link>
                           </div>
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
+    </>
 
-      {/* In Progress */}
-      <section className="mt-[32px]">
-        <button className="w-[166px] h-[60px] rounded-[20px] bg-[#CED200] flex justify-center items-center shadow-lg">
-          <p className="text-[18px] font-semibold text-white">IN PROGRESS</p>
-        </button>
+      {/*  <<===========FOR QC CHECKLIST===========>>  */}
+      <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <section className="mt-[32px]">
+          <StatusTitle className="bg-[#D824C6]"> CheckList </StatusTitle>
 
-        <div className="mt-[18px] flex flex-col gap-[20px]">
-          {[1, 2, 3].map((item, i) => (
-            <div key={i}>
-              <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                <table className="w-full table-auto text-center ">
-                  <thead className="text-[#737B8B]">
-                    <tr className="font-[300]">
-                      <th className="py-3 px-6 "></th>
-                      <th className="py-3 px-4 font-[300]">Due Date</th>
-                      <th className="py-3 px-4 font-[300]">Assign</th>
-                      <th className="py-3 px-4 font-[300]">Check Assign</th>
-                      <th className="py-3 px-4 font-[300]"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600">
-                    {tableItems.map((item, idx) => (
-                      <tr key={idx}>
+          <div className="mt-[18px] flex flex-col gap-[20px]">
+            {filteredTasksChecklist?.map((item, i) => (
+              <div key={i}>
+                <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
+                  <table className="w-full table-auto text-center">
+                    <TableHead />
+
+                    <tbody className="text-gray-600">
+                      <tr>
                         <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
                           <img
-                            src={item.avatar}
+                            src={userProPic}
                             className="w-[90px] h-[90px]  rounded-[31px]"
                           />
+
                           <div className="text-left">
                             <span className="block text-[#216FED] font-[300]">
-                              C012345
+                              C012345-{item?.id}
                             </span>
                             <span className="block text-[#273240] text-[20px] font-semibold">
-                              Task Name .............
+                              {item?.task_name}
                             </span>
                             <span className="block text-[#216FED] font-[300]">
-                              Create Date and Time
+                              {DateFormat(item?.start_date)}
                             </span>
                           </div>
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                          12/10/23 <br /> 11.42 am
+                          {DateFormat(item?.start_date)}
                         </td>
 
                         <td className="px-6 py-4">
                           <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-red-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
+                            <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
+                              {item?.assignee}
+                            </div>
                           </div>
                         </td>
 
                         <td className="px-6 py-4">
                           <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
+                            {item?.qc_check?.map((item, i) => (
                               <div
                                 key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300"
-                              />
+                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
+                              >
+                                {item}
+                              </div>
                             ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
                           </div>
                         </td>
 
                         <td className="text-right px-2 whitespace-nowrap">
                           <div className="flex justify-between items-center px-5 w-full">
-                            <button className="w-[131px] h-[43px] rounded-[22px] border border-[#C4C4C4] flex justify-center items-center">
-                              <p className="text-[#5DD732] font-semibold uppercase">
-                                In Progress
-                              </p>
-                            </button>
-                            <button className="text-[32px] text-black flex justify-center items-center">
-                              <BsEye />
-                            </button>
+                            <StatusBtnOutLine className="text-[#D824C6]">
+                              CheckList
+                            </StatusBtnOutLine>
+                            <Link to={`/${redirect}/${item?.id}`}>
+                              <button className="text-[32px] text-black flex justify-center items-center">
+                                <BsEye />
+                              </button>
+                            </Link>
                           </div>
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
+    </>
 
-      {/* Complete */}
-      <section className="mt-[32px]">
-        <button className="w-[166px] h-[60px] rounded-[20px] bg-[#24D8CD] flex justify-center items-center shadow-lg">
-          <p className="text-[18px] font-semibold text-white uppercase">
-            Complete
-          </p>
-        </button>
 
-        <div className="mt-[18px] flex flex-col gap-[20px]">
-          {[1, 2, 3].map((item, i) => (
-            <div key={i}>
-              <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                <table className="w-full table-auto text-center ">
-                  <thead className="text-[#737B8B]">
-                    <tr className="font-[300]">
-                      <th className="py-3 px-6 "></th>
-                      <th className="py-3 px-4 font-[300]">Due Date</th>
-                      <th className="py-3 px-4 font-[300]">Assign</th>
-                      <th className="py-3 px-4 font-[300]">Check Assign</th>
-                      <th className="py-3 px-4 font-[300]"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600">
-                    {tableItems.map((item, idx) => (
-                      <tr key={idx}>
-                        <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
-                          <img
-                            src={item.avatar}
-                            className="w-[90px] h-[90px]  rounded-[31px]"
-                          />
-                          <div className="text-left">
-                            <span className="block text-[#216FED] font-[300]">
-                              C012345
-                            </span>
-                            <span className="block text-[#273240] text-[20px] font-semibold">
-                              Task Name .............
-                            </span>
-                            <span className="block text-[#216FED] font-[300]">
-                              Create Date and Time
-                            </span>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                          12/10/23 <br /> 11.42 am
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-red-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="text-right px-2 whitespace-nowrap">
-                          <div className="flex justify-between items-center px-5 w-full">
-                            <button className="w-[131px] h-[43px] rounded-[22px] border border-[#C4C4C4] flex justify-center items-center">
-                              <p className="text-[#24D8CD] font-semibold uppercase">
-                                Complete
-                              </p>
-                            </button>
-                            <button className="text-[32px] text-black flex justify-center items-center">
-                              <BsEye />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Pause */}
-      <section className="mt-[32px]">
-        <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D86F24] flex justify-center items-center shadow-lg">
-          <p className="text-[18px] font-semibold text-white uppercase">
-            Pause
-          </p>
-        </button>
-
-        <div className="mt-[18px] flex flex-col gap-[20px]">
-          {[1, 2].map((item, i) => (
-            <div key={i}>
-              <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                <table className="w-full table-auto text-center ">
-                  <thead className="text-[#737B8B]">
-                    <tr className="font-[300]">
-                      <th className="py-3 px-6 "></th>
-                      <th className="py-3 px-4 font-[300]">Due Date</th>
-                      <th className="py-3 px-4 font-[300]">Assign</th>
-                      <th className="py-3 px-4 font-[300]">Check Assign</th>
-                      <th className="py-3 px-4 font-[300]"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600">
-                    {tableItems.map((item, idx) => (
-                      <tr key={idx}>
-                        <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
-                          <img
-                            src={item.avatar}
-                            className="w-[90px] h-[90px]  rounded-[31px]"
-                          />
-                          <div className="text-left">
-                            <span className="block text-[#216FED] font-[300]">
-                              C012345
-                            </span>
-                            <span className="block text-[#273240] text-[20px] font-semibold">
-                              Task Name .............
-                            </span>
-                            <span className="block text-[#216FED] font-[300]">
-                              Create Date and Time
-                            </span>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                          12/10/23 <br /> 11.42 am
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-red-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="text-right px-2 whitespace-nowrap">
-                          <div className="flex justify-between items-center px-5 w-full">
-                            <button className="w-[131px] h-[43px] rounded-[22px] border border-[#C4C4C4] flex justify-center items-center">
-                              <p className="text-[#D86F24] font-semibold uppercase">
-                                Pause
-                              </p>
-                            </button>
-                            <button className="text-[32px] text-black flex justify-center items-center">
-                              <BsEye />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CheckList */}
-      <section className="mt-[32px]">
-        <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D824C6] flex justify-center items-center shadow-lg">
-          <p className="text-[18px] font-semibold text-white uppercase">
-            CheckList
-          </p>
-        </button>
-
-        <div className="mt-[18px] flex flex-col gap-[20px]">
-          {[1, 2].map((item, i) => (
-            <div key={i}>
-              <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                <table className="w-full table-auto text-center ">
-                  <thead className="text-[#737B8B]">
-                    <tr className="font-[300]">
-                      <th className="py-3 px-6 "></th>
-                      <th className="py-3 px-4 font-[300]">Due Date</th>
-                      <th className="py-3 px-4 font-[300]">Assign</th>
-                      <th className="py-3 px-4 font-[300]">Check Assign</th>
-                      <th className="py-3 px-4 font-[300]"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600">
-                    {tableItems.map((item, idx) => (
-                      <tr key={idx}>
-                        <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
-                          <img
-                            src={item.avatar}
-                            className="w-[90px] h-[90px]  rounded-[31px]"
-                          />
-                          <div className="text-left">
-                            <span className="block text-[#216FED] font-[300]">
-                              C012345
-                            </span>
-                            <span className="block text-[#273240] text-[20px] font-semibold">
-                              Task Name .............
-                            </span>
-                            <span className="block text-[#216FED] font-[300]">
-                              Create Date and Time
-                            </span>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                          12/10/23 <br /> 11.42 am
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-red-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="text-right px-2 whitespace-nowrap">
-                          <div className="flex justify-between items-center px-5 w-full">
-                            <button className="w-[131px] h-[43px] rounded-[22px] border border-[#C4C4C4] flex justify-center items-center">
-                              <p className="text-[#D824C6] font-semibold uppercase">
-                                Check List
-                              </p>
-                            </button>
-                            <button className="text-[32px] text-black flex justify-center items-center">
-                              <BsEye />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* HOLD */}
-      <section className="mt-[32px]">
-        <button className="w-[166px] h-[60px] rounded-[20px] bg-[#D86F24] flex justify-center items-center shadow-lg">
-          <p className="text-[18px] font-semibold text-white uppercase">HOLD</p>
-        </button>
-
-        <div className="mt-[18px] flex flex-col gap-[20px]">
-          {[1, 2].map((item, i) => (
-            <div key={i}>
-              <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                <table className="w-full table-auto text-center ">
-                  <thead className="text-[#737B8B]">
-                    <tr className="font-[300]">
-                      <th className="py-3 px-6 "></th>
-                      <th className="py-3 px-4 font-[300]">Due Date</th>
-                      <th className="py-3 px-4 font-[300]">Assign</th>
-                      <th className="py-3 px-4 font-[300]">Check Assign</th>
-                      <th className="py-3 px-4 font-[300]"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600">
-                    {tableItems.map((item, idx) => (
-                      <tr key={idx}>
-                        <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
-                          <img
-                            src={item.avatar}
-                            className="w-[90px] h-[90px]  rounded-[31px]"
-                          />
-                          <div className="text-left">
-                            <span className="block text-[#216FED] font-[300]">
-                              C012345
-                            </span>
-                            <span className="block text-[#273240] text-[20px] font-semibold">
-                              Task Name .............
-                            </span>
-                            <span className="block text-[#216FED] font-[300]">
-                              Create Date and Time
-                            </span>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                          12/10/23 <br /> 11.42 am
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-red-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="px-6 py-4">
-                          <div className="flex justify-center items-center">
-                            {[1, 2, 3].map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300"
-                              />
-                            ))}
-                            <p className="flex items-center justify-center w-[35px] h-[35px] -mx-1 text-[12px] font-bold text-black bg-white border-2 border-slate-200 rounded-full">
-                              +4
-                            </p>
-                          </div>
-                        </td>
-
-                        <td className="text-right px-2 whitespace-nowrap">
-                          <div className="flex justify-between items-center px-5 w-full">
-                            <button className="w-[131px] h-[43px] rounded-[22px] border border-[#C4C4C4] flex justify-center items-center">
-                              <p className="text-[#D86F24] font-semibold uppercase">
-                                HOLD
-                              </p>
-                            </button>
-                            <button className="text-[32px] text-black flex justify-center items-center">
-                              <BsEye />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };

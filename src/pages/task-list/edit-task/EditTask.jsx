@@ -1,7 +1,6 @@
 import Title from "../../../utils/Title";
 import { FaClipboardList } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { RadioButtonStyle } from "../../../utils/ClassList";
@@ -12,6 +11,7 @@ import {
   useGetAllQCUserQuery,
   useUpdateQCUserMutation,
   useUpdateTaskMutation,
+  useViewTaskQuery,
 } from "../../../redux/features/task/taskApi";
 import toast from "react-hot-toast";
 import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
@@ -19,14 +19,13 @@ import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
 const EditTask = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-  const { token } = useSelector((state) => state.user);
   const { id } = useParams();
-  const [viewTask, setViewTask] = useState();
   const [startDate, setStartDate] = useState(
     setHours(setMinutes(new Date(), 30), 16)
   );
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: allQCUsers } = useGetAllQCUserQuery();
+  const { data: viewTask} = useViewTaskQuery(id)
 
   const qcUserId = viewTask?.pairs?.map((qcuid) => {
     return qcuid;
@@ -41,30 +40,6 @@ const EditTask = () => {
   const [updateTask] = useUpdateTaskMutation();
   const { data: allUser } = useGetAllUserQuery();
 
-  useEffect(() => {
-    fetch(
-      `https://jabedahmed.pythonanywhere.com/task-detail/${id}/`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${token}`,
-        },
-      }
-    )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Request failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setViewTask(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [token, id]);
 
   const [isChecked, setIsChecked] = useState();
   const handleRadioChange = (i) => {
@@ -81,12 +56,29 @@ const EditTask = () => {
 
   // ============================>> UPDATE FORM <<====================
   const onSubmit = (data) => {
-    const upd = { ...data, due_date: startDate };
-    updateTask({ data: upd, id });
-    const is_checked = { is_checked: isChecked };
-    updateQCUser({ data: is_checked, mappedqc });
-    toast.success("Updated");
-    navigate(`/view-task/${id}`);
+    // const upd = { ...data, due_date: startDate };
+    // console.log(upd)
+    // updateTask({ data: upd, id });
+    // const is_checked = { is_checked: isChecked };
+    // console.log(is_checked)
+    // updateQCUser({ data: is_checked, mappedqc });
+    // toast.success("Updated");
+    // navigate(`/view-task/${id}`);
+  };
+
+
+  // ============>> UPDATE QC CHECK RADIO BUTTON STATUS <<=============
+  const [state, setState] = useState(false);
+  const [index, setIndex] = useState();
+  console.log(state);
+  const onSubmitQCCheckedStatus = (newCheckStatus, index) => {
+    setIndex(index);
+    console.log(newCheckStatus, "index:", index);
+    setState(!newCheckStatus);
+    const data = { is_checked: newCheckStatus };
+   const res =  updateQCUser({ data, mappedqc });
+   console.log({data, mappedqc})
+   console.log(res)
   };
 
   return (
@@ -151,12 +143,14 @@ const EditTask = () => {
           {/* Check List */}
           <div className="">
             <h2 className="text-[34px] font-semibold">
-              Check List-({viewTask?.pairs.length})
+              Check List-
+              {/* ({viewTask?.pairs.length}) */}
             </h2>
 
-            <div className="mt-8 flex flex-col gap-[20px] pl-10">
+            {/* <div className="mt-8 flex flex-col gap-[20px] pl-10">
               {viewTask?.pairs.map((item, i) => (
                 <div key={i} className="flex items-center gap-4">
+
                   <div>
                     <input
                       type="radio"
@@ -166,6 +160,30 @@ const EditTask = () => {
                       onClick={() => handleRadioChange(i)}
                     />
                   </div>
+
+                  <div className="flex items-center">
+                      {allQCUsers
+                        ?.filter(
+                          (optionItem) => optionItem.id === item?.qc_check_id
+                        )
+                        .map((filteredItem) => (
+                          <div key={filteredItem.id}>
+                            <button
+                              onClick={() => onSubmitQCCheckedStatus(state, i)}
+                              className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center"
+                            >
+                              <div
+                                className={` w-[15px] h-[15px] rounded-full  ${
+                                  filteredItem.is_checked.toString() === true && index === i
+
+                                    ? "bg-blue-700"
+                                    : "bg-transparent"
+                                }`}
+                              ></div>
+                            </button>
+                          </div>
+                        ))}
+                    </div>
 
                   <div className="text-[20px] text-black font-semibold">
                     {allOptions
@@ -185,12 +203,11 @@ const EditTask = () => {
                       .map((optionItem, j) => (
                         <p key={j}>{optionItem.username.charAt(0)}</p>
                       ))}
-
-                    {/* - {item?.qc_check_id} */}
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
+            
           </div>
 
           <div className="flex flex-col items-center">

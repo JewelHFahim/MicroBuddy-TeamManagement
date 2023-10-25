@@ -31,7 +31,7 @@ const UpdateMyTask = () => {
   );
 
   const { data: viewTask } = useViewTaskQuery(id);
-  console.log(viewTask)
+  console.log(viewTask);
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: allQCUsers } = useGetAllQCUserQuery();
 
@@ -47,7 +47,7 @@ const UpdateMyTask = () => {
   const mappedqc = qcUserId
     ?.map((qcuid) => qcuid?.qc_check_id)
     ?.find((qcId) => qcId !== undefined);
-    console.log(mappedqc)
+  console.log(mappedqc);
 
   const [updateQCUser] = useUpdateQCUserMutation();
   const [updateTask] = useUpdateTaskMutation();
@@ -65,26 +65,23 @@ const UpdateMyTask = () => {
   });
 
   // ============================>> UPDATE FORM <<========================
+
   const [state, setState] = useState(false);
+  const [index, setIndex] = useState();
   console.log(state);
-  const onSubmitQCCheckedStatus = (newCheckStatus) => {
+  const onSubmitQCCheckedStatus = (newCheckStatus, index) => {
+    setIndex(index);
+    console.log(newCheckStatus, "index:", index);
     setState(!newCheckStatus);
     const data = { is_checked: newCheckStatus };
-    updateQCUser({ data, mappedqc });
-    // https://jabedahmed.pythonanywhere.com/qc-user/
-    // {
-    //         "id": 6,
-    //         "username": "Member",
-    //         "is_checked": false,
-    //         "point": 0
-    //  }
-    // if i change "is_checked" status from any task, that will changed for all the task, where this qc user is exist.
+   const res =  updateQCUser({ data, mappedqc });
+   console.log(res)
   };
 
   const handleStatusChange = (newStatus) => {
     const data = { status: newStatus };
     console.log({ data, id });
-    updateTask({ data, id });
+    // updateTask({ data, id });
   };
 
   const onSubmitLink = (data, event) => {
@@ -176,6 +173,7 @@ const UpdateMyTask = () => {
               <div className="mt-8 flex flex-col gap-[20px] pl-10">
                 {viewTask?.pairs.map((item, i) => (
                   <div key={i} className="flex items-center gap-4">
+
                     <div className="flex items-center">
                       {allQCUsers
                         ?.filter(
@@ -184,23 +182,14 @@ const UpdateMyTask = () => {
                         .map((filteredItem) => (
                           <div key={filteredItem.id}>
                             <p>from db-{filteredItem.is_checked.toString()}</p>
-
-                            {/* <input
-                        type="radio"
-                        className={RadioButtonStyle}
-                        value={isChecked}
-                        checked={isChecked === i ? "true" : "false"}
-                        onClick={() => handleRadioChange(i)}
-                      /> */}
-
                             <button
-                              onClick={() => onSubmitQCCheckedStatus(state)}
+                              onClick={() => onSubmitQCCheckedStatus(state, i)}
                               className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center"
                             >
                               <div
-                                className={`w-[16px] h-[16px] rounded-full  ${
-                                  filteredItem.is_checked.toString() === true
-                                    ? "bg-red-600"
+                                className={` w-[15px] h-[15px] rounded-full  ${
+                                  filteredItem.is_checked.toString() === true && index === i
+                                    ? "bg-blue-700"
                                     : "bg-transparent"
                                 }`}
                               ></div>
@@ -208,7 +197,7 @@ const UpdateMyTask = () => {
                           </div>
                         ))}
                     </div>
-
+               
                     <div className="text-[20px] text-black font-semibold">
                       {allOptions
                         ?.filter(
@@ -297,12 +286,6 @@ const UpdateMyTask = () => {
                       Start Work
                     </button>
                   )
-
-                  // : (
-                  //   <button className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}>
-                  //     Start Work
-                  //   </button>
-                  // )
                 }
               </>
 

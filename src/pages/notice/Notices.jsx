@@ -4,7 +4,10 @@ import { FaTrashAlt } from "react-icons/fa";
 import "./Notices.css";
 import Title from "../../utils/Title";
 import { Link } from "react-router-dom";
-import { useDeleteNoticeMutation, useGetAllNoticeQuery } from "../../redux/features/notice/NoticeApi";
+import {
+  useDeleteNoticeMutation,
+  useGetAllNoticeQuery,
+} from "../../redux/features/notice/NoticeApi";
 import notice from "../../assets/notice img.webp";
 import DateFormat from "../../utils/DateFormat";
 import Loading from "../../utils/loading/Loading";
@@ -12,12 +15,13 @@ import toast from "react-hot-toast";
 
 const Notices = () => {
   const { data: allNotices, isLoading } = useGetAllNoticeQuery();
+  console.log(allNotices);
   const [deleteNotice] = useDeleteNoticeMutation();
 
   const handleDelete = (id) => {
     deleteNotice(id);
-    toast.error("Deleted")
-  }
+    toast.error("Deleted");
+  };
 
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px]">
@@ -57,50 +61,60 @@ const Notices = () => {
       ) : (
         <section>
           <div className="mt-12">
-            <div className="text-[#273240] flex flex-col gap-y-[10px]">
-              {allNotices?.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="w-full border flex justify-between items-center bg-white rounded-lg shadow-sm px-4  py-2 notice"
-                >
-                  <div className="flex items-center gap-x-3 whitespace-nowrap">
-                    <img
-                      src={notice}
-                      className="w-[81px] h-[81px] rounded-[20px]"
-                    />
-                    <div>
-                      <p className="text-[24px] font-medium text-[#273240]">
-                        {item.title}
-                      </p>
-                      <p className="text-[13px] text-[#216FED] mt-2 ">
-                        {item.content}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-10">
-                    <div className="text-center">
-                      <p className="text-[#737B8B]">Created Date</p>
-                      <p className="text-[20px] text-[#216FED]">
-                        {DateFormat(item.created_at)}
-                      </p>
+            {allNotices.length <= 0 ? (
+              <div className="text-[30px] font-semibold text-slate-600 text-center my-20 flex items-center justify-center"> 
+              <p>Notice List Empty</p>
+              <img src={notice} alt="" />
+              </div>
+            ) : (
+              <div className="text-[#273240] flex flex-col gap-y-[10px]">
+                {allNotices?.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="w-full border flex justify-between items-center bg-white rounded-lg shadow-sm px-4  py-2 notice"
+                  >
+                    <div className="flex items-center gap-x-3 whitespace-nowrap">
+                      <img
+                        src={notice}
+                        className="w-[81px] h-[81px] rounded-[20px]"
+                      />
+                      <div>
+                        <p className="text-[24px] font-medium text-[#273240]">
+                          {item.title}
+                        </p>
+                        <p className="text-[13px] text-[#216FED] mt-2 ">
+                          {item.content}
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-5">
-                      <Link to={`/view-notice/${item.id}`}>
-                        <button className="text-[30px] text-green-800">
-                          <FiEye />
+                    <div className="flex items-center gap-10">
+                      <div className="text-center">
+                        <p className="text-[#737B8B]">Created Date</p>
+                        <p className="text-[20px] text-[#216FED]">
+                          {DateFormat(item.created_at)}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-5">
+                        <Link to={`/view-notice/${item.id}`}>
+                          <button className="text-[30px] text-green-800">
+                            <FiEye />
+                          </button>
+                        </Link>
+
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          className="text-[25px] text-red-800 pb-2"
+                        >
+                          <FaTrashAlt />
                         </button>
-                      </Link>
-
-                      <button onClick={()=> handleDelete(item.id)} className="text-[25px] text-red-800 pb-2">
-                        <FaTrashAlt />
-                      </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="my-[52px] flex justify-end">

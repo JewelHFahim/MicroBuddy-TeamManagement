@@ -38,14 +38,6 @@ const taskApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Team-Management"],
     }),
 
-    deleteTask: builder.mutation({
-      query: (id) => ({
-        method: "DELETE",
-        url: `/task-delete/${id}/`,
-      }),
-      invalidatesTags: ["Team-Management"],
-    }),
-
     // check list create
     createCheckList: builder.mutation({
       query: (data) => ({
@@ -60,8 +52,18 @@ const taskApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Team-Management"],
     }),
 
-    // <<================ UPDATES ===============>>
 
+    // <<================ DELETE APIS ===============>>
+    deleteTask: builder.mutation({
+      query: (id) => ({
+        method: "DELETE",
+        url: `/task-delete/${id}/`,
+      }),
+      invalidatesTags: ["Team-Management"],
+    }),
+
+
+    // <<================ UPDATES ===============>>
     updateTask: builder.mutation({
       query: ({ data, id }) => ({
         method: "POST",

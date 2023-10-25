@@ -3,10 +3,7 @@ import { LiaUserPlusSolid } from "react-icons/lia";
 import { useGetAllQCUserQuery } from "../../../redux/features/task/taskApi";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import {
-  addUser,
-  createCheckList,
-} from "../../../redux/features/task/taskSlice";
+import { addUser, createCheckList } from "../../../redux/features/task/taskSlice";
 import { useNavigate } from "react-router-dom";
 
 const CheckListCreat = () => {
@@ -14,7 +11,6 @@ const CheckListCreat = () => {
   const navigate = useNavigate()
   const { register, handleSubmit } = useForm();
   const { data: allUser } = useGetAllQCUserQuery();
-
   const [selectedUserName, setSelectedUserName] = useState("");
   const handleSelectChange = (event) => {
     setSelectedUserName(event.target.options[event.target.selectedIndex].text);
@@ -32,14 +28,10 @@ const CheckListCreat = () => {
 
   return (
     <div className="h-[800px] flex justify-center items-center bg-black bg-opacity-[8%]">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
+      <form onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col  items-center border w-[450px] h-[500px] shadow-2xl bg-white rounded-2xl p-6"
       >
-        <h1 className="mb-10 text-[20px] underline underline-offset-4">
-          New Check List
-        </h1>
-
+        <h1 className="mb-10 text-[20px] underline underline-offset-4"> New Check List </h1>
         <div className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4">
           <input
             type="text"
