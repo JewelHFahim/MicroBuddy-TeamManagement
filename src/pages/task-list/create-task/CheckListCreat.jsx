@@ -1,37 +1,60 @@
 import { useForm } from "react-hook-form";
 import { LiaUserPlusSolid } from "react-icons/lia";
-import { useGetAllQCUserQuery } from "../../../redux/features/task/taskApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { addUser, createCheckList } from "../../../redux/features/task/taskSlice";
+import {
+  addUser,
+  createCheckList,
+} from "../../../redux/features/task/taskSlice";
 import { useNavigate } from "react-router-dom";
+import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
+import axios from "axios";
 
 const CheckListCreat = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-  const { data: allUser } = useGetAllQCUserQuery();
+  const { data: allUser } = useGetAllUserQuery();
   const [selectedUserName, setSelectedUserName] = useState("");
+  const { token } = useSelector((state) => state.user);
   const handleSelectChange = (event) => {
     setSelectedUserName(event.target.options[event.target.selectedIndex].text);
   };
 
-  const onSubmit = (data) => {
-    const neewInfo = {
-      userId: data.qc_check_id,
-      userName: selectedUserName,
-    };
-    dispatch(addUser(neewInfo));
-    dispatch(createCheckList({ option_text: data.option_text }));
-    navigate("/create-task")
+  const baseurl = "https://jabedahmed.pythonanywhere.com/";
+  const headers = {
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Token ${token}`,
+    },
+  }
+
+  const onSubmit = async (data) => {
+    try {
+
+      const optionData = data.option_text;
+
+      const taskResponse = await axios.post( `${baseurl}/task-create/`, optionData, headers);
+      const taskId = taskResponse.data.id;
+
+
+
+    } catch (error) {
+      // handle error
+    }
+    console.log(data);
   };
 
   return (
     <div className="h-[800px] flex justify-center items-center bg-black bg-opacity-[8%]">
-      <form onSubmit={handleSubmit(onSubmit)}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col  items-center border w-[450px] h-[500px] shadow-2xl bg-white rounded-2xl p-6"
       >
-        <h1 className="mb-10 text-[20px] underline underline-offset-4"> New Check List </h1>
+        <h1 className="mb-10 text-[20px] underline underline-offset-4">
+          New Check List
+        </h1>
+        
         <div className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4">
           <input
             type="text"
@@ -43,13 +66,14 @@ const CheckListCreat = () => {
         </div>
 
         <select
-          {...register("qc_check_id")}
-          data-te-select-init
+          {...register("user")}
           className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2"
           onChange={handleSelectChange}
         >
           {allUser?.map((user) => (
-            <option key={user?.id} value={user?.id}>{user?.username}</option>
+            <option key={user?.user?.id} value={user?.user?.id}>
+              {user?.user?.username}
+            </option>
           ))}
         </select>
 

@@ -11,8 +11,10 @@ import Loading from "../../../utils/loading/Loading";
 
 const Todo = ({redirect}) => {
   const { data: allTask, isLoading } = useGetAllTaskQuery();
+  console.log(allTask)
 
   const filteredTodo = allTask?.filter((task) => task.status === "todo");
+  console.log(filteredTodo)
 
 
   return (
@@ -22,7 +24,7 @@ const Todo = ({redirect}) => {
 
       <section className="mt-[32px]">
       
-      <StatusTitle className="bg-[#FF8723]">Todo</StatusTitle>
+      <StatusTitle className="bg-[#FF8723]">To Do</StatusTitle>
 
       <div className="mt-[18px] flex flex-col gap-[20px]">
         {filteredTodo?.map((item, i) => (
@@ -84,6 +86,7 @@ const Todo = ({redirect}) => {
                         </Link>
                       </div>
                     </td>
+                    
                   </tr>
                 </tbody>
               </table>
