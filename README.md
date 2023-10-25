@@ -1,1 +1,1 @@
-# MIcroBuddy- Task Managemnet
+# MIcroBuddy- Task Management
