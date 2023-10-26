@@ -6,8 +6,8 @@ function Abc() {
 
   const { handleSubmit } = useForm();
 
-  const baseurl = "https://jabedahmed.pythonanywhere.com/";
-  
+  const baseurl = "http://192.168.3.36:8000/";
+
   const onSubmit = async () => {
     try {
       // Step 1: Create a Task

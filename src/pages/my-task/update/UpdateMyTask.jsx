@@ -10,7 +10,7 @@ import { setHours, setMinutes } from "date-fns";
 import {
   useGetAllCheckListQuery,
   useGetAllQCUserQuery,
-  useUpdateQCUserMutation,
+  // useUpdateQCUserMutation,
   useUpdateTaskMutation,
   useViewTaskQuery,
 } from "../../../redux/features/task/taskApi";
@@ -39,17 +39,17 @@ const UpdateMyTask = () => {
     return qcuid;
   });
 
-  const qcStatus = allQCUsers?.map((qc) => {
-    return qc;
-  });
-  console.log(qcStatus);
+  // const qcStatus = allQCUsers?.map((qc) => {
+  //   return qc;
+  // });
+  // console.log(qcStatus);
 
   const mappedqc = qcUserId
     ?.map((qcuid) => qcuid?.qc_check_id)
     ?.find((qcId) => qcId !== undefined);
   console.log(mappedqc);
 
-  const [updateQCUser] = useUpdateQCUserMutation();
+  // const [updateQCUser] = useUpdateQCUserMutation();
   const [updateTask] = useUpdateTaskMutation();
   const { data: allUser } = useGetAllUserQuery();
 
@@ -74,7 +74,7 @@ const UpdateMyTask = () => {
     console.log(newCheckStatus, "index:", index);
     setState(!newCheckStatus);
     const data = { is_checked: newCheckStatus };
-   const res =  updateQCUser({ data, mappedqc });
+  //  const res =  updateQCUser({ data, mappedqc });
    console.log(res)
   };
 
@@ -168,10 +168,10 @@ const UpdateMyTask = () => {
             {/* Check List */}
             <div className="">
               <h2 className="text-[34px] font-semibold">
-                Check List-({viewTask?.pairs.length})
+                Check List-({viewTask?.pairs?.length})
               </h2>
               <div className="mt-8 flex flex-col gap-[20px] pl-10">
-                {viewTask?.pairs.map((item, i) => (
+                {viewTask?.pairs?.map((item, i) => (
                   <div key={i} className="flex items-center gap-4">
 
                     <div className="flex items-center">

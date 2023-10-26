@@ -21,24 +21,24 @@ const CheckListCreat = () => {
     setSelectedUserName(event.target.options[event.target.selectedIndex].text);
   };
 
-  const baseurl = "https://jabedahmed.pythonanywhere.com/";
+  const baseurl = "http://192.168.3.36:8000/";
   const headers = {
     headers: {
       "content-type": "application/json",
       Authorization: `Token ${token}`,
     },
-  }
+  };
 
   const onSubmit = async (data) => {
     try {
-
       const optionData = data.option_text;
 
-      const taskResponse = await axios.post( `${baseurl}/task-create/`, optionData, headers);
+      const taskResponse = await axios.post(
+        `${baseurl}/task-create/`,
+        optionData,
+        headers
+      );
       const taskId = taskResponse.data.id;
-
-
-
     } catch (error) {
       // handle error
     }
@@ -54,7 +54,7 @@ const CheckListCreat = () => {
         <h1 className="mb-10 text-[20px] underline underline-offset-4">
           New Check List
         </h1>
-        
+
         <div className="mt-10 w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4">
           <input
             type="text"

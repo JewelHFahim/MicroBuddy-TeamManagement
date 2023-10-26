@@ -80,14 +80,14 @@ const MyTask = () => {
       </section>
 
       {/*  <<======= AS QC CHECK ========>>  */}
-      <>
+      {/* <>
         {isLoading ? (
           <Loading />
         ) : (
           <section className="mt-[32px]">
             <StatusTitle className="bg-[#FF8723]">As QC Check</StatusTitle>
 
-            {/* <div className="mt-[18px] flex flex-col gap-[20px]">
+            <div className="mt-[18px] flex flex-col gap-[20px]">
               {tasksWithQcUser?.map((item, i) => (
                 <div key={i}>
                   <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
@@ -157,11 +157,11 @@ const MyTask = () => {
                   </div>
                 </div>
               ))}
-            </div> */}
+            </div>
 
           </section>
         )}
-      </>
+      </> */}
 
       {/*  <<=========== TODO ============>>  */}
       <Todo redirect={redirect} />

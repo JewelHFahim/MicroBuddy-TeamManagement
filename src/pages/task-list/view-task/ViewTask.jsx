@@ -7,24 +7,43 @@ import { useParams } from "react-router-dom";
 import {
   useDeleteTaskMutation,
   useGetAllCheckListQuery,
-  useGetAllQCUserQuery,
+  useGetQCListByTaskIdQuery,
+  useGetQCStatusByQcIdQuery,
   useViewTaskQuery,
 } from "../../../redux/features/task/taskApi";
 import toast from "react-hot-toast";
+import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const ViewTask = () => {
   const { id } = useParams();
-  const navigate = useNavigate()
-  const { data: allOptions } = useGetAllCheckListQuery();
-  const { data: allQCUsers } = useGetAllQCUserQuery();
+  const navigate = useNavigate();
+
   const { data: viewTask } = useViewTaskQuery(id);
-  const [deleteTask] = useDeleteTaskMutation()
+  const { data: allUsers } = useGetAllUserQuery();
+  const { data: allOptions } = useGetAllCheckListQuery();
+
+  const { data: QCListBytaskId } = useGetQCListByTaskIdQuery(id);
+  console.log(QCListBytaskId);
+
+  const [qcId, setQcId] = useState();
+  const { data: qcStatusList } = useGetQCStatusByQcIdQuery(qcId);
+  console.log(qcStatusList);
+  console.log(qcId);
+
+  useEffect(() => {
+    const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
+    console.log(isChekedStatus);
+  }, [QCListBytaskId]);
+
+  const [deleteTask] = useDeleteTaskMutation();
 
   const hnadleTaskDelete = (taskid) => {
     deleteTask(taskid);
     toast.error("Deleted");
-    navigate("/task-list")
-  }
+    navigate("/task-list");
+  };
 
   return (
     <div>
@@ -107,32 +126,73 @@ const ViewTask = () => {
 
           {/* Check List */}
           <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] py-[12px] px-[30px]">
-            <h2 className="text-[26px] font-semibold">Check List-(4)</h2>
-            {/* <div className="mt-8 flex flex-col gap-[20px]">
-              {viewTask?.pairs.map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="w-[25px] h-[25px] rounded-full border border-blue-800"></div>
-                  <div className="text-[20px] text-black font-semibold">
-                    {allOptions
-                      ?.filter(
-                        (optionItem) => optionItem.id === item?.qc_check_id
-                      )
-                      .map((optionItem, j) => (
-                        <p key={j}>{optionItem.option_text}</p>
-                      ))}
+            <h2 className="text-[26px] font-semibold">Check List</h2>
+
+            <div className="flex items-center gap-5">
+              {/* Radio Button */}
+              <div>
+                {qcStatusList?.map((st) => (
+                  <div key={st.id}>
+                    <button className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center">
+                      <div
+                        className={`w-[15px] h-[15px] rounded-full ${
+                          st.is_checked === true
+                            ? "bg-blue-700 "
+                            : "bg-transparent"
+                        }`}
+                      ></div>
+                    </button>
                   </div>
-                  <div className="w-[30px] h-[30px] rounded-full border-2 bg-yellow-300 flex justify-center items-center capitalize cursor-pointer">
-                    {allQCUsers
-                      ?.filter(
-                        (optionItem) => optionItem.id === item?.qc_check_id
-                      )
-                      .map((optionItem, j) => (
-                        <p key={j}>{optionItem.username.charAt(0)}</p>
-                      ))}
-                  </div>
-                </div>
-              ))}
-            </div> */}
+                ))}
+              </div>
+
+              {/* Option Ttile */}
+              <div>
+                {QCListBytaskId?.map((qc) => {
+                  const optionsText = allOptions?.find(
+                    (option) => option.id === qc.check_text
+                  );
+                  console.log(optionsText);
+                  if (optionsText) {
+                    return (
+                      <p
+                        key={optionsText?.id}
+                        className="text-[25px] font-medium"
+                      >
+                        {optionsText.option_text}
+                      </p>
+                    );
+                  } else {
+                    return (
+                      <p key={optionsText?.id}>User with userId not found</p>
+                    );
+                  }
+                })}
+              </div>
+
+              {/* QC User Name */}
+              <div>
+                {QCListBytaskId?.map((qc) => {
+                  const user = allUsers?.find(
+                    (user) => user.user.id === qc.user
+                  );
+                  if (user) {
+                    return (
+                      <p
+                        key={user.id}
+                        className="w-[55px] h-[55px] rounded-full flex justify-center items-center text-[25px] bg-green-200 border-[4px] border-green-300"
+                        title={`${user.user.username}`}
+                      >
+                        {user.user.username.charAt(0)}
+                      </p>
+                    );
+                  } else {
+                    <p>User with userId not found</p>;
+                  }
+                })}
+              </div>
+            </div>
+
           </div>
 
           <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] w-full h-[800px] p-[40px]">
@@ -250,7 +310,10 @@ const ViewTask = () => {
           </div>
 
           <div className="mt-[50px] flex justify-end ">
-            <button onClick={()=>hnadleTaskDelete(id)} className="w-[388px] h-[53px] rounded-[44px] bg-[#ED2121] text-[20px] text-white font-medium uppercase">
+            <button
+              onClick={() => hnadleTaskDelete(id)}
+              className="w-[388px] h-[53px] rounded-[44px] bg-[#ED2121] text-[20px] text-white font-medium uppercase"
+            >
               Delete This Project
             </button>
           </div>

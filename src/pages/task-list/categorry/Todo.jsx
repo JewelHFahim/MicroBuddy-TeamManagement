@@ -65,14 +65,10 @@ const Todo = ({redirect}) => {
 
                     <td className="px-6 py-4">
                       <div className="flex justify-center items-center">
-                        {item?.qc_check?.map((item, i) => (
-                          <div
-                            key={i}
-                            className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
-                          >
-                            {item}
+                       <div className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center">
+                            QcId
                           </div>
-                        ))}
+                     
                       </div>
                     </td>
 

@@ -3,18 +3,19 @@ import { FaClipboardList } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { RadioButtonStyle } from "../../../utils/ClassList";
 import CreateDate from "../../../utils/CreateDate";
 import { setHours, setMinutes } from "date-fns";
 import {
   useGetAllCheckListQuery,
-  useGetAllQCUserQuery,
-  useUpdateQCUserMutation,
+  useGetQCListByTaskIdQuery,
+  useGetQCStatusByQcIdQuery,
+  useUpdateQCUserStatusMutation,
   useUpdateTaskMutation,
   useViewTaskQuery,
 } from "../../../redux/features/task/taskApi";
 import toast from "react-hot-toast";
 import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
+import { useEffect } from "react";
 
 const EditTask = () => {
   const navigate = useNavigate();
@@ -24,8 +25,16 @@ const EditTask = () => {
     setHours(setMinutes(new Date(), 30), 16)
   );
   const { data: allOptions } = useGetAllCheckListQuery();
-  const { data: allQCUsers } = useGetAllQCUserQuery();
-  const { data: viewTask} = useViewTaskQuery(id)
+  const { data: viewTask } = useViewTaskQuery(id);
+  const { data: QCListBytaskId } = useGetQCListByTaskIdQuery(id);
+  const { data: allUsers } = useGetAllUserQuery();
+
+  const [qcId, setQcId] = useState();
+  const { data: qcStatusList } = useGetQCStatusByQcIdQuery(qcId);
+  useEffect(() => {
+    const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
+    console.log(isChekedStatus);
+  }, [QCListBytaskId]);
 
   const qcUserId = viewTask?.pairs?.map((qcuid) => {
     return qcuid;
@@ -36,15 +45,12 @@ const EditTask = () => {
     ?.find((qcId) => qcId !== undefined);
   console.log(mappedqc);
 
-  const [updateQCUser] = useUpdateQCUserMutation();
+  const [updateQCUserStatus] = useUpdateQCUserStatusMutation();
   const [updateTask] = useUpdateTaskMutation();
   const { data: allUser } = useGetAllUserQuery();
 
 
-  const [isChecked, setIsChecked] = useState();
-  const handleRadioChange = (i) => {
-    setIsChecked(i);
-  };
+
 
   const assigneeName = allUser?.find((user) => {
     if (user.user.id === viewTask?.assignee) {
@@ -55,31 +61,25 @@ const EditTask = () => {
   console.log(assigneeName?.user?.username);
 
   // ============================>> UPDATE FORM <<====================
-  const onSubmit = (data) => {
-    // const upd = { ...data, due_date: startDate };
-    // console.log(upd)
-    // updateTask({ data: upd, id });
-    // const is_checked = { is_checked: isChecked };
-    // console.log(is_checked)
-    // updateQCUser({ data: is_checked, mappedqc });
-    // toast.success("Updated");
-    // navigate(`/view-task/${id}`);
+
+  const [checkStatu, setCheckStatus] = useState(false);
+  const handleCheckStatus = () => {
+    setCheckStatus(!checkStatu);
   };
 
+  const onSubmit = (data) => {
+
+    const upd = { ...data, due_date: startDate }
+    console.log(upd)
+    updateTask({ data: upd, id });
+
+    const is_checked = { is_checked: checkStatu };
+    updateQCUserStatus({ data: is_checked, qcId });
+    toast.success("Updated");
+    navigate(`/view-task/${id}`);
+  };
 
   // ============>> UPDATE QC CHECK RADIO BUTTON STATUS <<=============
-  const [state, setState] = useState(false);
-  const [index, setIndex] = useState();
-  console.log(state);
-  const onSubmitQCCheckedStatus = (newCheckStatus, index) => {
-    setIndex(index);
-    console.log(newCheckStatus, "index:", index);
-    setState(!newCheckStatus);
-    const data = { is_checked: newCheckStatus };
-   const res =  updateQCUser({ data, mappedqc });
-   console.log({data, mappedqc})
-   console.log(res)
-  };
 
   return (
     <div className="pb-[300px]">
@@ -142,74 +142,78 @@ const EditTask = () => {
         <section className="mt-[50px] flex justify-between">
           {/* Check List */}
           <div className="">
-            <h2 className="text-[34px] font-semibold">
-              Check List-
-              {/* ({viewTask?.pairs.length}) */}
-            </h2>
+            <h2 className="text-[34px] font-semibold">Check List -</h2>
 
-            {/* <div className="mt-8 flex flex-col gap-[20px] pl-10">
-              {viewTask?.pairs.map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
-
-                  <div>
-                    <input
-                      type="radio"
-                      className={RadioButtonStyle}
-                      value={isChecked}
-                      checked={isChecked === i ? "true" : "false"}
-                      onClick={() => handleRadioChange(i)}
-                    />
+            <div className="flex items-center gap-5">
+              {/* Radio Button */}
+              <div>
+                {qcStatusList?.map((st) => (
+                  <div key={st.id}>
+                    <button
+                      onClick={handleCheckStatus}
+                      className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center"
+                    >
+                      <div
+                        className={`w-[15px] h-[15px] rounded-full ${
+                          st.is_checked === true && checkStatu === true
+                            ? "bg-blue-700 "
+                            : "bg-transparent"
+                        }`}
+                      ></div>
+                    </button>
                   </div>
+                ))}
+              </div>
 
-                  <div className="flex items-center">
-                      {allQCUsers
-                        ?.filter(
-                          (optionItem) => optionItem.id === item?.qc_check_id
-                        )
-                        .map((filteredItem) => (
-                          <div key={filteredItem.id}>
-                            <button
-                              onClick={() => onSubmitQCCheckedStatus(state, i)}
-                              className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center"
-                            >
-                              <div
-                                className={` w-[15px] h-[15px] rounded-full  ${
-                                  filteredItem.is_checked.toString() === true && index === i
+              {/* Option Ttile */}
+              <div>
+                {QCListBytaskId?.map((qc) => {
+                  const optionsText = allOptions?.find(
+                    (option) => option.id === qc.check_text
+                  );
+                  console.log(optionsText);
+                  if (optionsText) {
+                    return (
+                      <p
+                        key={optionsText?.id}
+                        className="text-[25px] font-medium"
+                      >
+                        {optionsText.option_text}
+                      </p>
+                    );
+                  } else {
+                    return (
+                      <p key={optionsText?.id}>User with userId not found</p>
+                    );
+                  }
+                })}
+              </div>
 
-                                    ? "bg-blue-700"
-                                    : "bg-transparent"
-                                }`}
-                              ></div>
-                            </button>
-                          </div>
-                        ))}
-                    </div>
-
-                  <div className="text-[20px] text-black font-semibold">
-                    {allOptions
-                      ?.filter(
-                        (optionItem) => optionItem.id === item?.qc_check_id
-                      )
-                      .map((optionItem, j) => (
-                        <p key={j}>{optionItem.option_text}</p>
-                      ))}
-                  </div>
-
-                  <div className="w-[30px] h-[30px] rounded-full border-2 bg-yellow-300 flex justify-center items-center capitalize cursor-pointer">
-                    {allQCUsers
-                      ?.filter(
-                        (optionItem) => optionItem.id === item?.qc_check_id
-                      )
-                      .map((optionItem, j) => (
-                        <p key={j}>{optionItem.username.charAt(0)}</p>
-                      ))}
-                  </div>
-                </div>
-              ))}
-            </div> */}
-            
+              {/* QC User Name */}
+              <div>
+                {QCListBytaskId?.map((qc) => {
+                  const user = allUsers?.find(
+                    (user) => user.user.id === qc.user
+                  );
+                  if (user) {
+                    return (
+                      <p
+                        key={user.id}
+                        className="w-[55px] h-[55px] rounded-full flex justify-center items-center text-[25px] bg-green-200 border-[4px] border-green-300"
+                        title={`${user.user.username}`}
+                      >
+                        {user.user.username.charAt(0)}
+                      </p>
+                    );
+                  } else {
+                    <p>User with userId not found</p>;
+                  }
+                })}
+              </div>
+            </div>
           </div>
 
+          {/* Points */}
           <div className="flex flex-col items-center">
             <h2 className="text-[34px] font-semibold">Points</h2>
             <input

@@ -4,9 +4,7 @@ const userInfo = JSON.parse(localStorage.getItem("user-info"));
 console.log("Token", userInfo?.token);
 
 const taskApi = apiSlice.injectEndpoints({
-
   endpoints: (builder) => ({
-
     // <<========================= QUERIES ========================>>
     getAllTask: builder.query({
       query: () => "/task-list/",
@@ -25,6 +23,18 @@ const taskApi = apiSlice.injectEndpoints({
 
     getAllCheckList: builder.query({
       query: () => "/option-list/",
+      providesTags: ["Team-Management"],
+    }),
+
+    //<<============================= New DB Apis========================>>
+
+    getQCListByTaskId: builder.query({
+      query: (id) => `/search-task/?task=${id}`,
+      providesTags: ["Team-Management"],
+    }),
+
+    getQCStatusByQcId: builder.query({
+      query: (id) => `/search-qc/?qc=${id} `,
       providesTags: ["Team-Management"],
     }),
 
@@ -52,7 +62,6 @@ const taskApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Team-Management"],
     }),
 
-
     // <<================ DELETE APIS ===============>>
     deleteTask: builder.mutation({
       query: (id) => ({
@@ -61,7 +70,6 @@ const taskApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Team-Management"],
     }),
-
 
     // <<================ UPDATES ===============>>
     updateTask: builder.mutation({
@@ -73,10 +81,10 @@ const taskApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Team-Management"],
     }),
 
-    updateQCUser: builder.mutation({
-      query: ({ data, mappedqc }) => ({
+    updateQCUserStatus: builder.mutation({
+      query: ({ data, qcId }) => ({
         method: "POST",
-        url: `/qc-update/${mappedqc}/`,
+        url: `/qc-status-update/${qcId}/`,
         body: data,
       }),
       invalidatesTags: ["Team-Management"],
@@ -93,6 +101,8 @@ export const {
   useCreateTaskMutation,
   useViewTaskQuery,
   useUpdateTaskMutation,
-  useUpdateQCUserMutation,
+  useUpdateQCUserStatusMutation,
+  useGetQCListByTaskIdQuery,
+  useGetQCStatusByQcIdQuery
 } = taskApi;
 export default taskApi;

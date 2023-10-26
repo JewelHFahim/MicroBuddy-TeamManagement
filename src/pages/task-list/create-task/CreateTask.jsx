@@ -13,25 +13,30 @@ import { LiaUserPlusSolid } from "react-icons/lia";
 
 const CreateTask = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const [startDate, setStartDate] = useState( setHours(setMinutes(new Date(), 30), 16));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [startDate, setStartDate] = useState(
+    setHours(setMinutes(new Date(), 30), 16)
+  );
 
   const { userId, token } = useSelector((state) => state.user);
   const { data: allUser } = useGetAllUserQuery();
 
-  const baseurl = "https://jabedahmed.pythonanywhere.com";
+  const baseurl = "http://192.168.3.36:8000";
   const headers = {
     headers: {
       "content-type": "application/json",
       Authorization: `Token ${token}`,
     },
-  }
+  };
 
   const onSubmit = async (data, event) => {
     event.preventDefault();
 
     try {
-
       // Step 1: Create a Task
       const taskData = {
         task_name: data.task_name,
@@ -40,28 +45,39 @@ const CreateTask = () => {
         points: data.points,
         priority: data.priority,
         assigner: userId,
-        assignee: parseInt(data.assignee)
-      }
-      const taskResponse = await axios.post(`${baseurl}/task-create/`, taskData, headers);
+        assignee: parseInt(data.assignee),
+      };
+      const taskResponse = await axios.post(
+        `${baseurl}/task-create/`,
+        taskData,
+        headers
+      );
       console.log(taskResponse);
       const taskId = taskResponse.data.id;
 
-
       // Step 2: Create a qc_task using the taskId
-      const optionText = {option_text: data.option_text};
-      const checkTextResponse = await axios.post(`${baseurl}/option-create/`, optionText, headers);
+      const optionText = { option_text: data.option_text };
+      const checkTextResponse = await axios.post(
+        `${baseurl}/option-create/`,
+        optionText,
+        headers
+      );
       const checkTextId = checkTextResponse.data.id;
-      console.log(checkTextResponse)
+      console.log(checkTextResponse);
 
       // Step 3: Create a qc_task using the taskId
       const qc_task = {
         task: taskId,
-        user: data.user,
+        user: parseInt(data.user),
         check_text: checkTextId,
       };
-      const qcTaskResponse = await axios.post(`${baseurl}/qc-task-create/`, qc_task, headers );
+      const qcTaskResponse = await axios.post(
+        `${baseurl}/qc-task-create/`,
+        qc_task,
+        headers
+      );
       const qcTaskId = qcTaskResponse.data.id;
-      console.log(qcTaskResponse)
+      console.log(qcTaskResponse);
 
       // Step 4: Create a qc_status using the qcTaskId
       const qc_status = {
@@ -71,13 +87,17 @@ const CreateTask = () => {
       };
 
       // Step 4: Create a qc-status-create using the taskId
-     const qcStatusResponse = await axios.post(`${baseurl}/qc-status-create/`, qc_status, headers);
-     console.log(qcStatusResponse);
+      const qcStatusResponse = await axios.post(
+        `${baseurl}/qc-status-create/`,
+        qc_status,
+        headers
+      );
+      console.log(qcStatusResponse);
 
-     toast.success("Task Created")
-     navigate("task-list")
+      toast.success("Task Created");
+      navigate("/task-list");
     } catch (error) {
-      console.log(errors)
+      console.log(errors);
     }
   };
 
@@ -86,7 +106,6 @@ const CreateTask = () => {
       <Title>Create Task</Title>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-
         {/* Crate Task Btn */}
         <div className="flex justify-end">
           <button
@@ -147,7 +166,7 @@ const CreateTask = () => {
                 className="w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center focus:outline-none px-3 text-[20px] capitalize font-semibold"
               >
                 {allUser?.map((user, i) => (
-                  <option key={i} value={parseInt(i, 10)}>
+                  <option key={i} value={user?.user?.id}>
                     {user?.user?.username} {user?.user?.id}
                   </option>
                 ))}
@@ -211,7 +230,6 @@ const CreateTask = () => {
             </div>
           </div>
         </section>
-
       </form>
     </div>
   );
