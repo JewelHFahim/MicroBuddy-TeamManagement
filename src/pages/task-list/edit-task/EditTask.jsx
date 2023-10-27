@@ -7,7 +7,7 @@ import CreateDate from "../../../utils/CreateDate";
 import { setHours, setMinutes } from "date-fns";
 import {
   useGetAllCheckListQuery,
-  useGetQCListByTaskIdQuery,
+  useGetTaskListByQcIdQuery,
   useGetQCStatusByQcIdQuery,
   useUpdateQCUserStatusMutation,
   useUpdateTaskMutation,
@@ -26,7 +26,7 @@ const EditTask = () => {
   );
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: viewTask } = useViewTaskQuery(id);
-  const { data: QCListBytaskId } = useGetQCListByTaskIdQuery(id);
+  const { data: QCListBytaskId } = useGetTaskListByQcIdQuery(id);
   const { data: allUsers } = useGetAllUserQuery();
 
   const [qcId, setQcId] = useState();
@@ -49,9 +49,6 @@ const EditTask = () => {
   const [updateTask] = useUpdateTaskMutation();
   const { data: allUser } = useGetAllUserQuery();
 
-
-
-
   const assigneeName = allUser?.find((user) => {
     if (user.user.id === viewTask?.assignee) {
       return user;
@@ -68,9 +65,8 @@ const EditTask = () => {
   };
 
   const onSubmit = (data) => {
-
-    const upd = { ...data, due_date: startDate }
-    console.log(upd)
+    const upd = { ...data, due_date: startDate };
+    console.log(upd);
     updateTask({ data: upd, id });
 
     const is_checked = { is_checked: checkStatu };

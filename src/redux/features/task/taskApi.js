@@ -5,6 +5,7 @@ console.log("Token", userInfo?.token);
 
 const taskApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    
     // <<========================= QUERIES ========================>>
     getAllTask: builder.query({
       query: () => "/task-list/",
@@ -28,7 +29,7 @@ const taskApi = apiSlice.injectEndpoints({
 
     //<<============================= New DB Apis========================>>
 
-    getQCListByTaskId: builder.query({
+    getTaskListByQcId: builder.query({
       query: (id) => `/search-task/?task=${id}`,
       providesTags: ["Team-Management"],
     }),
@@ -37,6 +38,14 @@ const taskApi = apiSlice.injectEndpoints({
       query: (id) => `/search-qc/?qc=${id} `,
       providesTags: ["Team-Management"],
     }),
+
+    getAllQCTaskList: builder.query({
+      query: () => `/qc-task-list/`,
+      providesTags: ["Team-Management"],
+    }),
+
+
+
 
     // <<================ POSTS ===============>>
     createTask: builder.mutation({
@@ -102,7 +111,8 @@ export const {
   useViewTaskQuery,
   useUpdateTaskMutation,
   useUpdateQCUserStatusMutation,
-  useGetQCListByTaskIdQuery,
-  useGetQCStatusByQcIdQuery
+  useGetTaskListByQcIdQuery,
+  useGetQCStatusByQcIdQuery,
+  useGetAllQCTaskListQuery
 } = taskApi;
 export default taskApi;

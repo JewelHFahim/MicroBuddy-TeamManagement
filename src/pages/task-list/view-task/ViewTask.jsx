@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import {
   useDeleteTaskMutation,
   useGetAllCheckListQuery,
-  useGetQCListByTaskIdQuery,
+  useGetTaskListByQcIdQuery,
   useGetQCStatusByQcIdQuery,
   useViewTaskQuery,
 } from "../../../redux/features/task/taskApi";
@@ -24,7 +24,7 @@ const ViewTask = () => {
   const { data: allUsers } = useGetAllUserQuery();
   const { data: allOptions } = useGetAllCheckListQuery();
 
-  const { data: QCListBytaskId } = useGetQCListByTaskIdQuery(id);
+  const { data: QCListBytaskId } = useGetTaskListByQcIdQuery(id);
   console.log(QCListBytaskId);
 
   const [qcId, setQcId] = useState();
@@ -192,7 +192,6 @@ const ViewTask = () => {
                 })}
               </div>
             </div>
-
           </div>
 
           <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] w-full h-[800px] p-[40px]">

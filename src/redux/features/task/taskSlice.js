@@ -13,13 +13,16 @@ export const createCheckList = createAsyncThunk(
   "createCheckList",
   async (body, { dispatch }) => {
     try {
-      const response = await fetch("http://192.168.3.36:8000/option-create/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        "https://jabedahmed.pythonanywhere.com/option-create/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
 
       console.log(response);
 

@@ -25,13 +25,14 @@ const CreateTask = () => {
   const { userId, token } = useSelector((state) => state.user);
   const { data: allUser } = useGetAllUserQuery();
 
-  const baseurl = "http://192.168.3.36:8000";
+  const baseurl = "https://jabedahmed.pythonanywhere.com";
   const headers = {
     headers: {
       "content-type": "application/json",
       Authorization: `Token ${token}`,
     },
   };
+// const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data, event) => {
     event.preventDefault();
@@ -47,22 +48,14 @@ const CreateTask = () => {
         assigner: userId,
         assignee: parseInt(data.assignee),
       };
-      const taskResponse = await axios.post(
-        `${baseurl}/task-create/`,
-        taskData,
-        headers
-      );
+      const taskResponse = await axios.post( `${baseurl}/task-create/`, taskData, headers);
       console.log(taskResponse);
       const taskId = taskResponse.data.id;
 
       // Step 2: Create a qc_task using the taskId
       const optionText = { option_text: data.option_text };
-      const checkTextResponse = await axios.post(
-        `${baseurl}/option-create/`,
-        optionText,
-        headers
-      );
-      const checkTextId = checkTextResponse.data.id;
+      const checkTextResponse = await axios.post( `${baseurl}/option-create/`, optionText);
+      const checkTextId = checkTextResponse.data.id; 
       console.log(checkTextResponse);
 
       // Step 3: Create a qc_task using the taskId
@@ -71,11 +64,7 @@ const CreateTask = () => {
         user: parseInt(data.user),
         check_text: checkTextId,
       };
-      const qcTaskResponse = await axios.post(
-        `${baseurl}/qc-task-create/`,
-        qc_task,
-        headers
-      );
+      const qcTaskResponse = await axios.post(`${baseurl}/qc-task-create/`, qc_task, headers);
       const qcTaskId = qcTaskResponse.data.id;
       console.log(qcTaskResponse);
 
@@ -110,9 +99,9 @@ const CreateTask = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="w-[268px] h-[72px] rounded-[58px] bg-[#216FED] text-[22px] font-medium text-white flex items-center justify-center gap-4"
+            className="w-[268px] h-[60px] rounded-[58px] bg-[#216FED] text-[22px] font-medium text-white flex items-center justify-center gap-4"
           >
-            <FaClipboardList className="text-[35px]" /> Create Task
+            <FaClipboardList className="text-[30px]" /> Create Task
           </button>
         </div>
 

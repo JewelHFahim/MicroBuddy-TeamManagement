@@ -81,7 +81,7 @@ const UpdateMyTask = () => {
   const handleStatusChange = (newStatus) => {
     const data = { status: newStatus };
     console.log({ data, id });
-    // updateTask({ data, id });
+    updateTask({ data, id });
   };
 
   const onSubmitLink = (data, event) => {
