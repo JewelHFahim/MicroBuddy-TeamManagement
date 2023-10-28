@@ -29,7 +29,7 @@ const EmployeeDetailsView = () => {
   const { data: allTask, isLoading } = useGetAllTaskQuery();
   console.log(allTask);
 
-  const filteredTasksAsQC = allTask?.filter((task) => task.qc_check.includes(parseInt(id)));
+  const filteredTasksAsQC = allTask?.filter((task) => task);
 
   const filteredTasksTodo = allTask?.filter((task) => {
     return ( task.assignee === parseInt(id)  && task.status === "todo");

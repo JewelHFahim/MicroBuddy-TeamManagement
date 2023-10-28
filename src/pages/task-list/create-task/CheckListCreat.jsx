@@ -21,7 +21,7 @@ const CheckListCreat = () => {
     setSelectedUserName(event.target.options[event.target.selectedIndex].text);
   };
 
-  const baseurl = "https://jabedahmed.pythonanywhere.com/";
+  const baseurl = "http://192.168.50.123:8000/";
   const headers = {
     headers: {
       "content-type": "application/json",

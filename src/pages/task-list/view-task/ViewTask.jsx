@@ -10,39 +10,42 @@ import {
   useGetTaskListByQcIdQuery,
   useGetQCStatusByQcIdQuery,
   useViewTaskQuery,
+  useUpdateTaskMutation,
 } from "../../../redux/features/task/taskApi";
 import toast from "react-hot-toast";
 import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const ViewTask = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const [qcId, setQcId] = useState();
   const { data: viewTask } = useViewTaskQuery(id);
   const { data: allUsers } = useGetAllUserQuery();
+  const [updateTask] = useUpdateTaskMutation();
+  const [deleteTask] = useDeleteTaskMutation();
   const { data: allOptions } = useGetAllCheckListQuery();
-
   const { data: QCListBytaskId } = useGetTaskListByQcIdQuery(id);
-  console.log(QCListBytaskId);
-
-  const [qcId, setQcId] = useState();
   const { data: qcStatusList } = useGetQCStatusByQcIdQuery(qcId);
-  console.log(qcStatusList);
-  console.log(qcId);
+  const {type} = useSelector(state=> state.user)
 
   useEffect(() => {
     const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
     console.log(isChekedStatus);
   }, [QCListBytaskId]);
 
-  const [deleteTask] = useDeleteTaskMutation();
-
   const hnadleTaskDelete = (taskid) => {
     deleteTask(taskid);
     toast.error("Deleted");
     navigate("/task-list");
+  };
+
+  const handleStatusChange = (newStatus) => {
+    const data = { status: newStatus };
+    console.log({ data, id });
+    updateTask({ data, id });
   };
 
   return (
@@ -118,6 +121,8 @@ const ViewTask = () => {
               Task File Location.
             </h2>
             <input
+              disabled
+              defaultValue={viewTask?.task_submit}
               type="text"
               placeholder="Google Drive Link..."
               className="w-full h-[67px] rounded-[15px] px-5 placeholder:text-blue-600 focus:outline-none text-[25px]"
@@ -133,7 +138,10 @@ const ViewTask = () => {
               <div>
                 {qcStatusList?.map((st) => (
                   <div key={st.id}>
-                    <button className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center">
+                    <button
+                      disabled
+                      className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center"
+                    >
                       <div
                         className={`w-[15px] h-[15px] rounded-full ${
                           st.is_checked === true
@@ -238,14 +246,36 @@ const ViewTask = () => {
 
         {/* 2nd column */}
         <section className=" w-full">
-          <div className="w-full flex gap-[32px] justify-end">
-            <button className="bg-[#216FED] rounded-[43px] uppercase w-[133px]  text-white h-[53px]">
-              Pause
-            </button>
-            <button className="bg-[#216FED] rounded-[43px] uppercase w-[240px]  text-white h-[53px]">
-              Mark As Complete
-            </button>
-          </div>
+
+          {/* For QC Status Update */}
+          { type !== "superadmin" || type !== "admin"   && (
+            <div className="flex items-center gap-6 justify-end">
+             
+
+              <>
+                {viewTask?.status === "qc_progress" ? (
+                  <button
+                    onClick={() => handleStatusChange("qc_progress")}
+                    className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
+                  > QC Progress </button>
+                ) : (
+                  <button
+                    className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
+                  > QC Progress </button>
+                )}
+              </>
+
+              <>
+                  <button
+                    onClick={() => handleStatusChange("done")}
+                    className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
+                  > Mark As Done </button>
+
+              </>
+            </div>
+          )}
+
+
 
           {/* Chating UI */}
           <div className="mt-[27px] w-fll rounded-[15px] shadow-lg bg-[#F2F6FC] p-[30px]">

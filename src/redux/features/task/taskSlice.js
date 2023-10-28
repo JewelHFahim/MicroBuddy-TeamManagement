@@ -14,7 +14,7 @@ export const createCheckList = createAsyncThunk(
   async (body, { dispatch }) => {
     try {
       const response = await fetch(
-        "https://jabedahmed.pythonanywhere.com/option-create/",
+        "http://192.168.50.123:8000/option-create/",
         {
           method: "POST",
           headers: {
