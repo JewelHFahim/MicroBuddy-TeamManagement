@@ -31,19 +31,19 @@ const EditTask = () => {
 
   const [qcId, setQcId] = useState();
   const { data: qcStatusList } = useGetQCStatusByQcIdQuery(qcId);
+
   useEffect(() => {
-    const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
-    console.log(isChekedStatus);
+    if (QCListBytaskId && QCListBytaskId.length > 0) {
+      setQcId(QCListBytaskId[0].id);
+    }
   }, [QCListBytaskId]);
 
-  const qcUserId = viewTask?.pairs?.map((qcuid) => {
-    return qcuid;
-  });
+  let QCID = null;
 
-  const mappedqc = qcUserId
-    ?.map((qcuid) => qcuid?.qc_check_id)
-    ?.find((qcId) => qcId !== undefined);
-  console.log(mappedqc);
+  if (Array.isArray(qcStatusList) && qcStatusList.length > 0) {
+    const [firstQcStatus] = qcStatusList;
+    QCID = firstQcStatus?.id;
+  }
 
   const [updateQCUserStatus] = useUpdateQCUserStatusMutation();
   const [updateTask] = useUpdateTaskMutation();
@@ -61,10 +61,10 @@ const EditTask = () => {
   const [description, setDescription] = useState(viewTask?.description);
   const [points, setPoints] = useState(viewTask?.points);
   const [priority, setPriority] = useState(viewTask?.priority);
+  const [isChecked, setIsChecked] = useState(false);
 
-  const [checkStatu, setCheckStatus] = useState(false);
-  const handleCheckStatus = () => {
-    setCheckStatus(!checkStatu);
+  const handleRadioClick = () => {
+    setIsChecked(!isChecked);
   };
 
   const onSubmit = () => {
@@ -94,10 +94,9 @@ const EditTask = () => {
     if (priority !== undefined) {
       upd.priority = priority;
     }
-
-    // Change True/False
-    const is_checked = { is_checked: checkStatu };
-    updateQCUserStatus({ data: is_checked, qcId });
+    const data = { is_checked: isChecked };
+    console.log(data);
+    updateQCUserStatus({ data, QCID });
 
     toast.success("Updated");
     navigate(`/view-task/${id}`);
@@ -175,26 +174,16 @@ const EditTask = () => {
             <div className="flex items-center gap-5">
               {/* Radio Button */}
               <div>
-                {qcStatusList?.map((st) => (
-                  <div key={st.id}>
-                    <button
-                      onClick={handleCheckStatus}
-                      className="w-[25px] h-[25px] rounded-full border-2 border-blue-700 flex justify-center items-center"
-                    >
-                      <div
-                        className={`w-[15px] h-[15px] rounded-full ${
-                          st.is_checked === true && checkStatu === true
-                            ? "bg-blue-700 "
-                            : "bg-transparent"
-                        }`}
-                      ></div>
-                    </button>
-                  </div>
-                ))}
+                <input
+                  type="radio"
+                  checked={isChecked}
+                  onClick={handleRadioClick}
+                  className="w-[25px] h-[25px]"
+                />
               </div>
 
               {/* Option Ttile */}
-              <div>
+              <div className="flex flex-col gap-2">
                 {QCListBytaskId?.map((qc) => {
                   const optionsText = allOptions?.find(
                     (option) => option.id === qc.check_text
@@ -218,7 +207,7 @@ const EditTask = () => {
               </div>
 
               {/* QC User Name */}
-              <div>
+              <div className="flex flex-col gap-2">
                 {QCListBytaskId?.map((qc) => {
                   const user = allUsers?.find(
                     (user) => user.user.id === qc.user
@@ -227,7 +216,7 @@ const EditTask = () => {
                     return (
                       <p
                         key={user.id}
-                        className="w-[55px] h-[55px] rounded-full flex justify-center items-center text-[25px] bg-green-200 border-[4px] border-green-300"
+                        className="w-[50px] h-[50px] rounded-full flex justify-center items-center text-[25px] bg-green-200 border-[4px] border-green-300"
                         title={`${user.user.username}`}
                       >
                         {user.user.username.charAt(0)}

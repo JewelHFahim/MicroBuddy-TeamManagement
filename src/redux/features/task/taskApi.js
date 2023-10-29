@@ -44,9 +44,6 @@ const taskApi = apiSlice.injectEndpoints({
       providesTags: ["Team-Management"],
     }),
 
-
-
-
     // <<================ POSTS ===============>>
     createTask: builder.mutation({
       query: (data) => ({
@@ -91,9 +88,9 @@ const taskApi = apiSlice.injectEndpoints({
     }),
 
     updateQCUserStatus: builder.mutation({
-      query: ({ data, qcId }) => ({
+      query: ({ data, QCID }) => ({
         method: "POST",
-        url: `/qc-status-update/${qcId}/`,
+        url: `/qc-status-update/${QCID}/`,
         body: data,
       }),
       invalidatesTags: ["Team-Management"],

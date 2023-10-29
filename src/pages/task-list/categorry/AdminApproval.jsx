@@ -3,28 +3,26 @@ import { useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const CheckList = ({ redirect }) => {
+const AdminApproval = ({ redirect }) => {
   const { data: allTask, isLoading } = useGetAllTaskQuery();
-  const filteredCheckList = allTask?.filter(
-    (task) => task.status === "checklist"
-  );
+  const adminTask = allTask?.filter((task) => task.status === "qc_complete");
 
   const dataSet = {
-    btnText: "CheckList",
-    bgColor: "bg-[#D824C6]",
-    textColor: "text-[#D824C6]",
+    btnText: "Admin Approval",
+    bgColor: "bg-[#0AECBF]",
+    textColor: "text-[#0AECBF]",
     redirect: redirect,
   };
 
   return (
     <>
-      {filteredCheckList?.length > 0 && (
+      {adminTask?.length > 0 && (
         <div>
           {isLoading ? (
             <Loading />
           ) : (
             <div className="mt-[30px] flex flex-col gap-[20px]">
-              <Card cardData={filteredCheckList} dataSet={dataSet} />
+              <Card cardData={adminTask} dataSet={dataSet} />
             </div>
           )}
         </div>
@@ -33,4 +31,4 @@ const CheckList = ({ redirect }) => {
   );
 };
 
-export default CheckList;
+export default AdminApproval;

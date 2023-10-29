@@ -29,7 +29,7 @@ const ViewTask = () => {
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: QCListBytaskId } = useGetTaskListByQcIdQuery(id);
   const { data: qcStatusList } = useGetQCStatusByQcIdQuery(qcId);
-  const {type} = useSelector(state=> state.user)
+  const { type } = useSelector((state) => state.user);
 
   useEffect(() => {
     const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
@@ -57,6 +57,7 @@ const ViewTask = () => {
       <section className="mt-[27px] flex gap-[40px]">
         {/* 1st column */}
         <section>
+
           <div className="w-[712px] h-[523px] rounded-[15px] bg-[#F2F6FC] p-[40px]">
             <h2 className="text-[34px] text-secondary font-semibold">
               {viewTask?.task_name}
@@ -66,6 +67,7 @@ const ViewTask = () => {
             </p>
           </div>
 
+          {/* Task File */}
           <div className="mt-[27px] w-[712px] h-[187px] rounded-[15px] bg-[#F2F6FC] p-[30px]">
             <h2 className="text-[34px] text-secondary font-semibold">
               Task File Location.
@@ -152,47 +154,46 @@ const ViewTask = () => {
             </div>
           </div>
 
-         {/* Activity */}
-         <Activity/>
-
-
+          {/* Activity */}
+          <Activity />
         </section>
 
         {/* 2nd column */}
         <section className=" w-full">
-
           {/* For QC Status Update */}
-          { type !== "superadmin" || type !== "admin"   && (
-            <div className="flex items-center gap-6 justify-end">
-             
+          {type !== "superadmin" ||
+            (type !== "admin" && (
+              <div className="flex items-center gap-6 justify-end">
+                <>
+                  {viewTask?.status === "qc_progress" ? (
+                    <button
+                      onClick={() => handleStatusChange("qc_progress")}
+                      className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
+                    >
+                      QC Progress
+                    </button>
+                  ) : (
+                    <button
+                      className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
+                    >
+                      QC Progress
+                    </button>
+                  )}
+                </>
 
-              <>
-                {viewTask?.status === "qc_progress" ? (
-                  <button
-                    onClick={() => handleStatusChange("qc_progress")}
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                  > QC Progress </button>
-                ) : (
-                  <button
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
-                  > QC Progress </button>
-                )}
-              </>
-
-              <>
+                <>
                   <button
                     onClick={() => handleStatusChange("done")}
                     className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                  > Mark As Done </button>
-
-              </>
-            </div>
-          )}
-
-
+                  >
+                    Mark As Done
+                  </button>
+                </>
+              </div>
+            ))}
 
           {/* Chating UI */}
-          <Chatting/>
+          <Chatting />
 
           <div className="mt-[50px] flex justify-end ">
             <button

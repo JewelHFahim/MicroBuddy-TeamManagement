@@ -66,24 +66,23 @@ const InfoHeader = ({ viewTask, allUser }) => {
       </div>
 
       <>
-        {(type === "superadmin" ||
-          type === "admin") && (
-            <div className="flex items-center gap-4">
-              <div className="w-[227px] h-[54px] rounded-[10px] border border-blue-600 flex justify-center items-center">
-                <p className="text-[23px] uppercase font-medium text-blue-600 ">
-                  {viewTask?.status}
-                </p>
-              </div>
+        <div className="flex items-center gap-4">
+          <div className="w-[227px] h-[54px] rounded-[10px] border border-blue-600 flex justify-center items-center">
+            <p className="text-[23px] uppercase font-medium text-blue-600 ">
+              {viewTask?.status}
+            </p>
+          </div>
 
-              <div className="mx-4">
-                <Link to={`/edit-task/${viewTask?.id}`}>
-                  <button>
-                    <FiEdit className="text-[45px]" />
-                  </button>
-                </Link>
-              </div>
+          {(type === "superadmin" || type === "admin") && (
+            <div className="mx-4">
+              <Link to={`/edit-task/${viewTask?.id}`}>
+                <button>
+                  <FiEdit className="text-[45px]" />
+                </button>
+              </Link>
             </div>
           )}
+        </div>
       </>
     </section>
   );
