@@ -4,13 +4,12 @@ import Title from "../../../utils/Title";
 import { TbEdit } from "react-icons/tb";
 import DateFormat from "../../../utils/DateFormat";
 import Loading from "../../../utils/loading/Loading";
+import { useSelector } from "react-redux";
 
 const ViewNotice = () => {
   const { id } = useParams();
-
+  const { type } = useSelector((state) => state.user);
   const { data: noticeDetails, isLoading } = useViewNoticeQuery(id);
-
-  console.log(noticeDetails);
 
   return (
     <div>
@@ -43,11 +42,13 @@ const ViewNotice = () => {
             </p>
           </div>
 
-          <Link to={`/notice-update/${noticeDetails.id}`}>
-            <button className="text-[45px]">
-              <TbEdit />
-            </button>
-          </Link>
+          {type === "superadmin" && (
+            <Link to={`/notice-update/${noticeDetails.id}`}>
+              <button className="text-[45px]">
+                <TbEdit />
+              </button>
+            </Link>
+          )}
         </section>
       )}
     </div>

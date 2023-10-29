@@ -20,7 +20,7 @@ import Pause from "../task-list/categorry/Pause";
 import CheckList from "../task-list/categorry/CheckList";
 
 const MyTask = () => {
-  const { userId } = useSelector((state) => state.user);
+  const { userId, type } = useSelector((state) => state.user);
   const { data: allTask, isLoading } = useGetAllTaskQuery();
   const { data: allQCTask } = useGetAllQCTaskListQuery();
 
@@ -28,14 +28,14 @@ const MyTask = () => {
     ?.filter((task) => task.user === userId)
     .map((task) => task.task);
 
-  const onlyQCTask = allTask?.filter((task) => tasksWithQcUser?.includes(task.id) && task.status === "checklist");
+  const onlyQCTask = allTask?.filter(
+    (task) => tasksWithQcUser?.includes(task.id) && task.status === "checklist"
+  );
 
-
-
-
-  const qcCompleteTask = allTask?.filter(task => task.status === "qc_complete");
-  const qcInProgress = allTask?.filter(task => task.status === "qc_progress");
-
+  const qcCompleteTask = allTask?.filter(
+    (task) => task.status === "qc_complete"
+  );
+  const qcInProgress = allTask?.filter((task) => task.status === "qc_progress");
 
   const redirect = "update-mytask";
 
@@ -93,288 +93,271 @@ const MyTask = () => {
 
       {/*  <<======= AS QC CHECK ========>>  */}
 
-      <section className="mt-[32px]">
-        <StatusTitle className="bg-[#FF8723]">As QC Check</StatusTitle>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            {onlyQCTask <= 0 ? (
-              <p className="text-[25px] font-Manrope font-medium flex justify-center items-center text-slate-400">
-                No QC Task Now
-              </p>
-            ) : (
-              <div className="mt-[18px] flex flex-col gap-[20px]">
-                {onlyQCTask?.map((item, i) => (
-                  <div key={i}>
-                    <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                      <table className="w-full table-auto text-center">
-                        <TableHead />
-                        <tbody className="text-gray-600">
-                          <tr>
-                            <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
-                              <img
-                                src={userProPic}
-                                className="w-[90px] h-[90px]  rounded-[31px]"
-                              />
+      {onlyQCTask?.length > 0 && (
+        <section className="mt-[32px]">
+          <StatusTitle className="bg-[#FF8723]">As QC Check</StatusTitle>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <div className="mt-[18px] flex flex-col gap-[20px]">
+              {onlyQCTask?.map((item, i) => (
+                <div key={i}>
+                  <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
+                    <table className="w-full table-auto text-center">
+                      <TableHead />
+                      <tbody className="text-gray-600">
+                        <tr>
+                          <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
+                            <img
+                              src={userProPic}
+                              className="w-[90px] h-[90px]  rounded-[31px]"
+                            />
 
-                              <div className="text-left">
-                                <span className="block text-[#216FED] font-[300]">
-                                  C012345-{item?.id}
-                                </span>
-                                <span className="block text-[#273240] text-[20px] font-semibold">
-                                  {item?.task_name}
-                                </span>
-                                <span className="block text-[#216FED] font-[300]">
-                                  {DateFormat(item?.start_date)}
-                                </span>
+                            <div className="text-left">
+                              <span className="block text-[#216FED] font-[300]">
+                                C012345-{item?.id}
+                              </span>
+                              <span className="block text-[#273240] text-[20px] font-semibold">
+                                {item?.task_name}
+                              </span>
+                              <span className="block text-[#216FED] font-[300]">
+                                {DateFormat(item?.start_date)}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
+                            {DateFormat(item?.start_date)}
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
+                                {item?.assignee}
                               </div>
-                            </td>
+                            </div>
+                          </td>
 
-                            <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                              {DateFormat(item?.start_date)}
-                            </td>
-
-                            <td className="px-6 py-4">
-                              <div className="flex justify-center items-center">
-                                <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
-                                  {item?.assignee}
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              {item?.qc_check?.map((item, i) => (
+                                <div
+                                  key={i}
+                                  className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
+                                >
+                                  {item}
                                 </div>
-                              </div>
-                            </td>
+                              ))}
+                            </div>
+                          </td>
 
-                            <td className="px-6 py-4">
-                              <div className="flex justify-center items-center">
-                                {item?.qc_check?.map((item, i) => (
-                                  <div
-                                    key={i}
-                                    className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
-                                  >
-                                    {item}
-                                  </div>
-                                ))}
-                              </div>
-                            </td>
-
-                            <td className="text-right px-2 whitespace-nowrap">
-                              <div className="flex justify-between items-center px-5 w-full">
-                                <StatusBtnOutLine className="text-[#FF8723]">
-                                  QC Check{" "}
-                                </StatusBtnOutLine>
-                                <Link to={`/update-mytask/${item?.id}`}>
-                                  <button className="text-[32px] text-black flex justify-center items-center">
-                                    <BsEye />
-                                  </button>
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                          <td className="text-right px-2 whitespace-nowrap">
+                            <div className="flex justify-between items-center px-5 w-full">
+                              <StatusBtnOutLine className="text-[#FF8723]">
+                                QC Check{" "}
+                              </StatusBtnOutLine>
+                              <Link to={`/update-mytask/${item?.id}`}>
+                                <button className="text-[32px] text-black flex justify-center items-center">
+                                  <BsEye />
+                                </button>
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      </section>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
-      {/*  <<======= QC In PROGRESS ========>>  */}
+      {/*  <<======= QC In PROGRESS ========>> */}
 
-      <section className="mt-[32px]">
-        <StatusTitle className="bg-[#FF8723]">QC In Progress</StatusTitle>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            {qcInProgress <= 0 ? (
-              <p className="text-[25px] font-Manrope font-medium flex justify-center items-center text-slate-400">
-                No QC Task Now
-              </p>
-            ) : (
-              <div className="mt-[18px] flex flex-col gap-[20px]">
-                {qcInProgress?.map((item, i) => (
-                  <div key={i}>
-                    <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                      <table className="w-full table-auto text-center">
-                        <TableHead />
-                        <tbody className="text-gray-600">
-                          <tr>
-                            <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
-                              <img
-                                src={userProPic}
-                                className="w-[90px] h-[90px]  rounded-[31px]"
-                              />
+      {qcInProgress?.length > 0 && (
+        <section className="mt-[32px]">
+          <StatusTitle className="bg-[#FF8723]">QC In Progress</StatusTitle>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <div className="mt-[18px] flex flex-col gap-[20px]">
+              {qcInProgress?.map((item, i) => (
+                <div key={i}>
+                  <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
+                    <table className="w-full table-auto text-center">
+                      <TableHead />
+                      <tbody className="text-gray-600">
+                        <tr>
+                          <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
+                            <img
+                              src={userProPic}
+                              className="w-[90px] h-[90px]  rounded-[31px]"
+                            />
 
-                              <div className="text-left">
-                                <span className="block text-[#216FED] font-[300]">
-                                  C012345-{item?.id}
-                                </span>
-                                <span className="block text-[#273240] text-[20px] font-semibold">
-                                  {item?.task_name}
-                                </span>
-                                <span className="block text-[#216FED] font-[300]">
-                                  {DateFormat(item?.start_date)}
-                                </span>
+                            <div className="text-left">
+                              <span className="block text-[#216FED] font-[300]">
+                                C012345-{item?.id}
+                              </span>
+                              <span className="block text-[#273240] text-[20px] font-semibold">
+                                {item?.task_name}
+                              </span>
+                              <span className="block text-[#216FED] font-[300]">
+                                {DateFormat(item?.start_date)}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
+                            {DateFormat(item?.start_date)}
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
+                                {item?.assignee}
                               </div>
-                            </td>
+                            </div>
+                          </td>
 
-                            <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                              {DateFormat(item?.start_date)}
-                            </td>
-
-                            <td className="px-6 py-4">
-                              <div className="flex justify-center items-center">
-                                <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
-                                  {item?.assignee}
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              {item?.qc_check?.map((item, i) => (
+                                <div
+                                  key={i}
+                                  className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
+                                >
+                                  {item}
                                 </div>
-                              </div>
-                            </td>
+                              ))}
+                            </div>
+                          </td>
 
-                            <td className="px-6 py-4">
-                              <div className="flex justify-center items-center">
-                                {item?.qc_check?.map((item, i) => (
-                                  <div
-                                    key={i}
-                                    className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
-                                  >
-                                    {item}
-                                  </div>
-                                ))}
-                              </div>
-                            </td>
-
-                            <td className="text-right px-2 whitespace-nowrap">
-                              <div className="flex justify-between items-center px-5 w-full">
-                                <StatusBtnOutLine className="text-[#FF8723]">
-                                  QC Check{" "}
-                                </StatusBtnOutLine>
-                                <Link to={`/update-mytask/${item?.id}`}>
-                                  <button className="text-[32px] text-black flex justify-center items-center">
-                                    <BsEye />
-                                  </button>
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                          <td className="text-right px-2 whitespace-nowrap">
+                            <div className="flex justify-between items-center px-5 w-full">
+                              <StatusBtnOutLine className="text-[#FF8723]">
+                                QC Check{" "}
+                              </StatusBtnOutLine>
+                              <Link to={`/update-mytask/${item?.id}`}>
+                                <button className="text-[32px] text-black flex justify-center items-center">
+                                  <BsEye />
+                                </button>
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-      </section>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {/*  <<======= QC COMPLETE ========>>  */}
 
-      <section className="mt-[32px]">
-        <StatusTitle className="bg-[#FF8723]">QC COMPLETE</StatusTitle>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            {qcCompleteTask <= 0 ? (
-              <p className="text-[25px] font-Manrope font-medium flex justify-center items-center text-slate-400">
-                No QC Complete Task
-              </p>
-            ) : (
-              <div className="mt-[18px] flex flex-col gap-[20px]">
-                {qcCompleteTask?.map((item, i) => (
-                  <div key={i}>
-                    <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
-                      <table className="w-full table-auto text-center">
-                        <TableHead />
-                        <tbody className="text-gray-600">
-                          <tr>
-                            <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
-                              <img
-                                src={userProPic}
-                                className="w-[90px] h-[90px]  rounded-[31px]"
-                              />
+      {qcCompleteTask?.length > 0 && (
+        <section className="mt-[32px]">
+          <StatusTitle className="bg-[#FF8723]">QC COMPLETE</StatusTitle>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <div className="mt-[18px] flex flex-col gap-[20px]">
+              {qcCompleteTask?.map((item, i) => (
+                <div key={i}>
+                  <div className="w-full h-[158px] rounded-[20px] bg-white shadow-md">
+                    <table className="w-full table-auto text-center">
+                      <TableHead />
+                      <tbody className="text-gray-600">
+                        <tr>
+                          <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap">
+                            <img
+                              src={userProPic}
+                              className="w-[90px] h-[90px]  rounded-[31px]"
+                            />
 
-                              <div className="text-left">
-                                <span className="block text-[#216FED] font-[300]">
-                                  C012345-{item?.id}
-                                </span>
-                                <span className="block text-[#273240] text-[20px] font-semibold">
-                                  {item?.task_name}
-                                </span>
-                                <span className="block text-[#216FED] font-[300]">
-                                  {DateFormat(item?.start_date)}
-                                </span>
+                            <div className="text-left">
+                              <span className="block text-[#216FED] font-[300]">
+                                C012345-{item?.id}
+                              </span>
+                              <span className="block text-[#273240] text-[20px] font-semibold">
+                                {item?.task_name}
+                              </span>
+                              <span className="block text-[#216FED] font-[300]">
+                                {DateFormat(item?.start_date)}
+                              </span>
+                            </div>
+                          </td>
+
+                          <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
+                            {DateFormat(item?.start_date)}
+                          </td>
+
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
+                                {item?.assignee}
                               </div>
-                            </td>
+                            </div>
+                          </td>
 
-                            <td className="px-6 py-4 whitespace-nowrap text-[#216FED] font-[300]">
-                              {DateFormat(item?.start_date)}
-                            </td>
-
-                            <td className="px-6 py-4">
-                              <div className="flex justify-center items-center">
-                                <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 bg-red-300 flex justify-center items-center font-semibold">
-                                  {item?.assignee}
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center items-center">
+                              {item?.qc_check?.map((item, i) => (
+                                <div
+                                  key={i}
+                                  className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
+                                >
+                                  {item}
                                 </div>
-                              </div>
-                            </td>
+                              ))}
+                            </div>
+                          </td>
 
-                            <td className="px-6 py-4">
-                              <div className="flex justify-center items-center">
-                                {item?.qc_check?.map((item, i) => (
-                                  <div
-                                    key={i}
-                                    className="w-[35px] h-[35px] -mx-1 rounded-full border-2  shrink-0 bg-green-300 flex justify-center items-center"
-                                  >
-                                    {item}
-                                  </div>
-                                ))}
-                              </div>
-                            </td>
-
-                            <td className="text-right px-2 whitespace-nowrap">
-                              <div className="flex justify-between items-center px-5 w-full">
-                                <StatusBtnOutLine className="text-[#FF8723]">
+                          <td className="text-right px-2 whitespace-nowrap">
+                            <div className="flex justify-between items-center px-5 w-full">
+                              <StatusBtnOutLine className="text-[#FF8723]">
                                 QC COMPLETE
-                                </StatusBtnOutLine>
-                                <Link to={`/update-mytask/${item?.id}`}>
-                                  <button className="text-[32px] text-black flex justify-center items-center">
-                                    <BsEye />
-                                  </button>
-                                </Link>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                              </StatusBtnOutLine>
+                              <Link to={`/update-mytask/${item?.id}`}>
+                                <button className="text-[32px] text-black flex justify-center items-center">
+                                  <BsEye />
+                                </button>
+                              </Link>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ####### NOT FOR SUPERADMIN/ADMIN ######## */}
+      <>
+        {type !== "superadmin" && (
+          <>
+            {/*  <<=========== TODO ============>>  */}
+            <Todo redirect={redirect} />
+
+            {/*  <<======== IN PROGRESS ========>>  */}
+            <InProgress redirect={redirect} />
+
+            {/*  <<=========== PAUSE ===========>>  */}
+            <Pause redirect={redirect} />
+
+            {/*  <<===== FOR QC CHECKLIST ======>>  */}
+            <CheckList redirect={redirect} />
           </>
         )}
-      </section>
-
-
-
-
-
-      {/*  <<=========== TODO ============>>  */}
-      <Todo redirect={redirect} />
-
-      {/*  <<======== IN PROGRESS ========>>  */}
-      <InProgress redirect={redirect} />
-
-      {/*  <<=========== PAUSE ===========>>  */}
-      <Pause redirect={redirect} />
-
-      {/*  <<===== FOR QC CHECKLIST ======>>  */}
-      <CheckList redirect={redirect} />
-
-
+      </>
     </div>
   );
 };

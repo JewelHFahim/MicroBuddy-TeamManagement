@@ -1,8 +1,5 @@
 import Title from "../../../utils/Title";
-import { BsFlagFill } from "react-icons/bs";
-import { MdFileCopy } from "react-icons/md";
-import { FiEdit } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import {
   useDeleteTaskMutation,
@@ -17,13 +14,16 @@ import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import InfoHeader from "../../../components/info-header/InfoHeader";
+import Chatting from "../../../components/chatting/Chatting";
+import Activity from "../../../components/activity/Activity";
 
 const ViewTask = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [qcId, setQcId] = useState();
   const { data: viewTask } = useViewTaskQuery(id);
-  const { data: allUsers } = useGetAllUserQuery();
+  const { data: allUser } = useGetAllUserQuery();
   const [updateTask] = useUpdateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
   const { data: allOptions } = useGetAllCheckListQuery();
@@ -52,57 +52,7 @@ const ViewTask = () => {
     <div>
       <Title>View Task</Title>
 
-      {/* Pause and Complete Btn */}
-      <section className="w-full h-[97px] rounded-[15px] bg-[#F2F6FC] flex gap-4 justify-between items-center px-4">
-        <div>
-          <p className="text-[#737B8B] uppercase">Created</p>
-          <p className="text-[#216FED] font-medium">Oct 2, 2013 - 11:08</p>
-        </div>
-
-        <div>
-          <p className="text-[#737B8B] uppercase">Due Date</p>
-          <p className="text-red-500 font-medium">Oct 2, 2013 - 11:08</p>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <p className="text-[#737B8B] uppercase">Assigned</p>
-          <div className="flex">
-            <div className="w-[40px] h-[40px] bg-orange-300 rounded-full border-2 border-white ml-[-10px]"></div>
-            <div className="w-[40px] h-[40px] bg-red-300 rounded-full border-2 border-white ml-[-10px]"></div>
-            <div className="w-[40px] h-[40px] bg-green-300 rounded-full border-2 border-white ml-[-10px]"></div>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <p className="text-[#737B8B] uppercase">Priority</p>
-          <div className="w-[50px] h-[50px] rounded-full border-2 ml-[-10px] border-dashed border-yellow-400 flex justify-center items-center">
-            <BsFlagFill className="text-[25px] text-yellow-400" />
-          </div>
-        </div>
-
-        <div className="w-[227px] h-[54px] rounded-[10px] border border-blue-600 flex justify-center items-center">
-          <p className="text-[23px] uppercase font-medium text-blue-600 ">
-            Task Point - 10
-          </p>
-        </div>
-
-        <div className="w-[227px] h-[54px] rounded-[10px] border border-blue-600 flex justify-center items-center">
-          <p className="text-[23px] uppercase font-medium text-blue-600 ">
-            In Progress
-          </p>
-        </div>
-
-        <div className="flex gap-8">
-          <button>
-            <MdFileCopy className="text-[45px]" />
-          </button>
-          <Link to={`/edit-task/${id}`}>
-            <button>
-              <FiEdit className="text-[45px]" />
-            </button>
-          </Link>
-        </div>
-      </section>
+      <InfoHeader viewTask={viewTask} allUser={allUser} />
 
       <section className="mt-[27px] flex gap-[40px]">
         {/* 1st column */}
@@ -181,7 +131,7 @@ const ViewTask = () => {
               {/* QC User Name */}
               <div>
                 {QCListBytaskId?.map((qc) => {
-                  const user = allUsers?.find(
+                  const user = allUser?.find(
                     (user) => user.user.id === qc.user
                   );
                   if (user) {
@@ -202,46 +152,10 @@ const ViewTask = () => {
             </div>
           </div>
 
-          <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] w-full h-[800px] p-[40px]">
-            <h2 className="text-secondary text-[20px] font-semibold">
-              Activity
-            </h2>
+         {/* Activity */}
+         <Activity/>
 
-            <div className="mt-[40px] flex items-start gap-4">
-              <div className="w-[40px] h-[40px] rounded-full border-2 border-white bg-yellow-300"></div>
 
-              <div className="flex flex-col">
-                <p className="text-secondary text-[18px]">Lily Anderson</p>
-                <p className="text-[10px] text-[#7C8DB5]">Today 10:15 AM</p>
-
-                <div className="mt-5">
-                  <p className="font-semibold">Checked on Text</p>
-                  <p className="bg-[#F7F7F8] p-5 rounded-md w-[313px] h-[110px]">
-                    That’s pretty good. For the Hero section, maybe you can
-                    reduce some objects for white space.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-[40px] flex items-start gap-4">
-              <div className="w-[40px] h-[40px] rounded-full border-2 border-white bg-[#DDDEFD]"></div>
-
-              <div className="flex flex-col">
-                <p className="text-secondary text-[18px]">Luckman Brown</p>
-                <p className="text-[10px] text-[#7C8DB5]">
-                  Yesterday, 05:25 PM
-                </p>
-
-                <div className="mt-5">
-                  <p className="font-semibold">Complete to Task</p>
-                  <p className="bg-[#F7F7F8] p-5 rounded-md w-[313px] h-[110px]">
-                    Complete to Task
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* 2nd column */}
@@ -278,65 +192,7 @@ const ViewTask = () => {
 
 
           {/* Chating UI */}
-          <div className="mt-[27px] w-fll rounded-[15px] shadow-lg bg-[#F2F6FC] p-[30px]">
-            <h1 className="text-[30px] font-semibold text-[#273240] uppercase">
-              Chat.
-            </h1>
-
-            <div className="mt-[43px] flex flex-col gap-10">
-              <div className="flex items-start gap-[31px]">
-                <div className="w-[65px] h-[65px] rounded-full border-2 border-white bg-[#FBEE9F]"></div>
-                <p className="font-[300px] w-[60%]">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Laudantium
-                </p>
-              </div>
-
-              <div className="flex justify-end items-start gap-[31px]">
-                <p className="font-[300px] w-[60%] text-right">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Laudantium
-                </p>
-                <div className="w-[65px] h-[65px] rounded-full border-2 border-white bg-[#FF9C82]"></div>
-              </div>
-
-              <div className="flex items-start gap-[31px]">
-                <div className="w-[65px] h-[65px] rounded-full border-2 border-white bg-[#FBEE9F]"></div>
-                <p className="font-[300px] w-[60%]">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Laudantium
-                </p>
-              </div>
-
-              <div className="flex justify-end items-start gap-[31px]">
-                <p className="font-[300px] w-[60%] text-right">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Laudantium
-                </p>
-                <div className="w-[65px] h-[65px] rounded-full border-2 border-white bg-[#FF9C82]"></div>
-              </div>
-
-              <div className="flex items-start gap-[31px]">
-                <div className="w-[65px] h-[65px] rounded-full border-2 border-white bg-[#FBEE9F]"></div>
-                <p className="font-[300px] w-[60%]">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Laudantium
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-10 w-full h-[162px] rounded-[15px] border border-[#216FED] shadow-md flex flex-col items-end">
-              <input
-                type="text"
-                placeholder="write....."
-                className="w-full h-[70%] rounded-[15px] focus:outline-none bg-transparent px-4"
-              />
-
-              <button className="w-[143px] h-[38px] border border-[#216FED] rounded-[12px] text-[20px] font-medium uppercase text-[#216FED] mx-[10px]">
-                Send
-              </button>
-            </div>
-          </div>
+          <Chatting/>
 
           <div className="mt-[50px] flex justify-end ">
             <button

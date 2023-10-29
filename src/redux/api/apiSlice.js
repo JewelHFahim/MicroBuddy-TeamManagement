@@ -5,7 +5,7 @@ const userInfo = JSON.parse(localStorage.getItem("user-info"));
 const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://192.168.50.123:8000",
+    baseUrl: "https://jabedahmed.pythonanywhere.com",
     headers: {
       "content-type": "application/json",
       Authorization: `Token ${userInfo?.token}`,

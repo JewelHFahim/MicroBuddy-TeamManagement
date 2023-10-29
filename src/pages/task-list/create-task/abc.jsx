@@ -6,7 +6,7 @@ function Abc() {
 
   const { handleSubmit } = useForm();
 
-  const baseurl = "http://192.168.50.123:8000/";
+  const baseurl = "https://jabedahmed.pythonanywhere.com/";
 
   const onSubmit = async () => {
     try {

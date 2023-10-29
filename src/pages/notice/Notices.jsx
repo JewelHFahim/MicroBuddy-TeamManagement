@@ -12,11 +12,12 @@ import notice from "../../assets/notice img.webp";
 import DateFormat from "../../utils/DateFormat";
 import Loading from "../../utils/loading/Loading";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const Notices = () => {
   const { data: allNotices, isLoading } = useGetAllNoticeQuery();
-  console.log(allNotices);
   const [deleteNotice] = useDeleteNoticeMutation();
+  const { type } = useSelector((state) => state.user);
 
   const handleDelete = (id) => {
     deleteNotice(id);
@@ -41,11 +42,13 @@ const Notices = () => {
 
         {/* Btn Filter */}
         <div className="flex items-center gap-5">
-          <Link to="/create-notice">
-            <button className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex justify-center items-center gap-[20px] shadow-lg text-white">
-              <p className="text-[18px] font-semibold">+ New Notice</p>
-            </button>
-          </Link>
+          {(type === "superadmin" || type === "admin") && (
+            <Link to="/create-notice">
+              <button className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex justify-center items-center gap-[20px] shadow-lg text-white">
+                <p className="text-[18px] font-semibold">+ New Notice</p>
+              </button>
+            </Link>
+          )}
 
           <button className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex justify-center items-center gap-[20px] shadow-lg text-white">
             <BsCalendarFill className="text-[24px] " />
@@ -61,10 +64,10 @@ const Notices = () => {
       ) : (
         <section>
           <div className="mt-12">
-            {allNotices.length <= 0 ? (
-              <div className="text-[30px] font-semibold text-slate-600 text-center my-20 flex items-center justify-center"> 
-              <p>Notice List Empty</p>
-              <img src={notice} alt="" />
+            {allNotices?.length <= 0 ? (
+              <div className="text-[30px] font-semibold text-slate-600 text-center my-20 flex items-center justify-center">
+                <p>Notice List Empty</p>
+                <img src={notice} alt="" />
               </div>
             ) : (
               <div className="text-[#273240] flex flex-col gap-y-[10px]">
@@ -103,12 +106,14 @@ const Notices = () => {
                           </button>
                         </Link>
 
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="text-[25px] text-red-800 pb-2"
-                        >
-                          <FaTrashAlt />
-                        </button>
+                        {type === "superadmin" && (
+                          <button
+                            onClick={() => handleDelete(item.id)}
+                            className="text-[25px] text-red-800 pb-2"
+                          >
+                            <FaTrashAlt />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

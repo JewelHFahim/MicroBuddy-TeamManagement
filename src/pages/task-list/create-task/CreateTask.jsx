@@ -25,7 +25,7 @@ const CreateTask = () => {
   const { userId, token } = useSelector((state) => state.user);
   const { data: allUser } = useGetAllUserQuery();
 
-  const baseurl = "http://192.168.50.123:8000";
+  const baseurl = "https://jabedahmed.pythonanywhere.com";
   const headers = {
     headers: {
       "content-type": "application/json",

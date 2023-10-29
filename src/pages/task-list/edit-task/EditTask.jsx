@@ -55,22 +55,50 @@ const EditTask = () => {
     }
   });
 
-  console.log(assigneeName?.user?.username);
-
   // ============================>> UPDATE FORM <<====================
+  const [status, setStatus] = useState(viewTask?.status);
+  const [task_name, setTask_name] = useState(viewTask?.task_name);
+  const [description, setDescription] = useState(viewTask?.description);
+  const [points, setPoints] = useState(viewTask?.points);
+  const [priority, setPriority] = useState(viewTask?.priority);
 
   const [checkStatu, setCheckStatus] = useState(false);
   const handleCheckStatus = () => {
     setCheckStatus(!checkStatu);
   };
 
-  const onSubmit = (data) => {
-    const upd = { ...data, due_date: startDate };
+  const onSubmit = () => {
+    const upd = {
+      task_name,
+      description,
+      points,
+      status,
+      priority,
+      due_date: startDate,
+    };
     console.log(upd);
     updateTask({ data: upd, id });
 
+    if (status !== undefined) {
+      upd.status = status;
+    }
+    if (task_name !== undefined) {
+      upd.task_name = task_name;
+    }
+    if (description !== undefined) {
+      upd.description = description;
+    }
+    if (points !== undefined) {
+      upd.points = points;
+    }
+    if (priority !== undefined) {
+      upd.priority = priority;
+    }
+
+    // Change True/False
     const is_checked = { is_checked: checkStatu };
     updateQCUserStatus({ data: is_checked, qcId });
+
     toast.success("Updated");
     navigate(`/view-task/${id}`);
   };
@@ -85,7 +113,8 @@ const EditTask = () => {
         {/* Crate Task Btn */}
         <div className="flex items-center gap-6 justify-end">
           <select
-            {...register("status")}
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
             className="w-[236px] h-[54px] rounded-[10px] border border-[#216FED] text-[#216FED] text-[22px] font-medium flex items-center justify-center gap-1 uppercase px-5 focus:outline-none"
           >
             <option value="todo">Todo</option>
@@ -111,7 +140,9 @@ const EditTask = () => {
             Task Title
           </label>
           <input
-            {...register("task_name")}
+            // {...register("task_name")}
+            value={task_name}
+            onChange={(e) => setTask_name(e.target.value)}
             defaultValue={viewTask?.task_name}
             type="text"
             placeholder="Title here"
@@ -125,8 +156,9 @@ const EditTask = () => {
             Task Details
           </label>
           <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             defaultValue={viewTask?.description}
-            {...register("description")}
             cols="177"
             rows="14"
             placeholder="Details"
@@ -213,7 +245,8 @@ const EditTask = () => {
           <div className="flex flex-col items-center">
             <h2 className="text-[34px] font-semibold">Points</h2>
             <input
-              {...register("points")}
+              value={points}
+              onChange={(e) => setPoints(e.target.value)}
               type="number"
               placeholder="points"
               className="w-[100px] font-semibold h-[35px] rounded-[46px] border border-[#216FED] px-6 focus:outline-none"
@@ -253,6 +286,8 @@ const EditTask = () => {
             <div className="flex items-center gap-2">
               <select
                 {...register("priority")}
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
                 data-te-select-init
                 className="mt-4 w-[200px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold"
               >
