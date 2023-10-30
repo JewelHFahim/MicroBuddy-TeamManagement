@@ -34,13 +34,13 @@ const MyTask = () => {
       <Statistics />
 
       {/*  <<======= QC Todo ========>>  */}
-      <QcTodo />
+      <QcTodo redirect={redirect}/>
 
       {/*  <<==== QC In PROGRESS =====>> */}
       <QCProgress redirect={redirect} />
 
       {/*  <<===== QC COMPLETE =======>>  */}
-      <QCComplete />
+      <QCComplete redirect={redirect}/>
 
       {/* ####### NOT FOR SUPERADMIN/ADMIN ######## */}
       <>

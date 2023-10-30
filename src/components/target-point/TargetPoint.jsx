@@ -2,6 +2,7 @@ import { BiMessageRoundedDots } from "react-icons/bi";
 import { ImLink } from "react-icons/im";
 
 const TargetPoint = () => {
+  
     return (
         <section className="mt-10 target-point w-[590px] font-Manrope h-[94px] bg-white rounded-[9px] px-[6px] py-[13px] flex justify-between items-center">
             <div className="w-[82px] h-[68px] bg-[#69D0CA] rounded-[9px] flex justify-center items-center">

@@ -76,9 +76,9 @@ const SideDrawer = () => {
   return (
     <div>
       <aside className="flex flex-col w-[345px] h-screen pt-8 overflow-y-auto border-r shadow-lg sticky top-0">
-        <a href="#" className="px-4">
+        <Link to="/" className="px-4">
           <img src={logo} alt="" width={247} height={94} />
-        </a>
+        </Link>
 
         <div className="mt-6 ml-[38px] font-semibold uppercase text-[#96A0AF]">
           <p>Main Menu</p>

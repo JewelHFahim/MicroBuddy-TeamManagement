@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import InfoHeader from "../../../components/info-header/InfoHeader";
 import Chatting from "../../../components/chatting/Chatting";
 import Activity from "../../../components/activity/Activity";
+import QcButtons from "../../../components/qc-buttons/QcButtons";
 
 const ViewTask = () => {
   const { id } = useParams();
@@ -42,12 +43,6 @@ const ViewTask = () => {
     navigate("/task-list");
   };
 
-  const handleStatusChange = (newStatus) => {
-    const data = { status: newStatus };
-    console.log({ data, id });
-    updateTask({ data, id });
-  };
-
   return (
     <div>
       <Title>View Task</Title>
@@ -57,11 +52,14 @@ const ViewTask = () => {
       <section className="mt-[27px] flex gap-[40px]">
         {/* 1st column */}
         <section>
-
-          <div className="w-[712px] h-[523px] rounded-[15px] bg-[#F2F6FC] p-[40px]">
+          <div className="w-[712px] h-[780px] overflow-y-auto rounded-[15px] bg-[#F2F6FC] p-[40px]  shadow-md">
             <h2 className="text-[34px] text-secondary font-semibold">
               {viewTask?.task_name}
+
+              
+
             </h2>
+            <hr />
             <p className="text-[25px] font-[300] mt-8">
               {viewTask?.description}
             </p>
@@ -161,36 +159,12 @@ const ViewTask = () => {
         {/* 2nd column */}
         <section className=" w-full">
           {/* For QC Status Update */}
-          {type !== "superadmin" ||
-            (type !== "admin" && (
-              <div className="flex items-center gap-6 justify-end">
-                <>
-                  {viewTask?.status === "qc_progress" ? (
-                    <button
-                      onClick={() => handleStatusChange("qc_progress")}
-                      className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                    >
-                      QC Progress
-                    </button>
-                  ) : (
-                    <button
-                      className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
-                    >
-                      QC Progress
-                    </button>
-                  )}
-                </>
-
-                <>
-                  <button
-                    onClick={() => handleStatusChange("done")}
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                  >
-                    Mark As Done
-                  </button>
-                </>
-              </div>
-            ))}
+          <QcButtons
+            viewTask={viewTask}
+            type={type}
+            updateTask={updateTask}
+            id={id}
+          />
 
           {/* Chating UI */}
           <Chatting />

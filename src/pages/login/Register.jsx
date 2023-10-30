@@ -2,18 +2,20 @@ import { useForm } from "react-hook-form";
 import { registerUser } from "../../redux/features/user/userSlice";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/mb logo.png";
 
 const Register = () => {
   const { register, handleSubmit } = useForm();
   const dispathc = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = (data) => {
     const res = dispathc(registerUser(data));
     console.log(res);
     toast.success("Register Success");
     console.log(data);
+    navigate("/login");
   };
 
   return (

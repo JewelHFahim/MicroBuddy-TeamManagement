@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 import InfoHeader from "../../../components/info-header/InfoHeader";
 import Activity from "../../../components/activity/Activity";
 import Chatting from "../../../components/chatting/Chatting";
+import QcButtons from "../../../components/qc-buttons/QcButtons";
+import MemberButtons from "../../../components/member-btns/MemberButtons";
 
 const UpdateMyTask = () => {
   // const navigate = useNavigate();
@@ -30,18 +32,11 @@ const UpdateMyTask = () => {
   const { data: allUser } = useGetAllUserQuery();
   const { userId, type } = useSelector((state) => state.user);
   const [updateQCUserStatus] = useUpdateQCUserStatusMutation();
-  console.log(viewTask)
 
   useEffect(() => {
     const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
     console.log(isChekedStatus);
   }, [QCListBytaskId]);
-
-  const handleStatusChange = (newStatus) => {
-    const data = { status: newStatus };
-    console.log({ data, id });
-    updateTask({ data, id });
-  };
 
   const [qsState, setQcState] = useState();
   useEffect(() => {
@@ -74,9 +69,9 @@ const UpdateMyTask = () => {
       <section className="flex justify-between gap-[40px] mt-5">
         <section className="w-[50%]">
           {/* title and description */}
-          <div className="mt-5 w-[712px] h-[524px] bg-[#F2F6FC] border border-blue-700 rounded-[15px] shadow-md p-[40px] text-[#273240]">
+          <div className="mt-5 w-[712px] h-[780px] overflow-y-auto bg-[#F2F6FC] border border-blue-700 rounded-[15px] shadow-md p-[40px] text-[#273240]">
             <h1 className="text-[34px] font-semibold">{viewTask?.task_name}</h1>
-            <p className="text-[25px] font-light">{viewTask?.task_name}</p>
+            <p className="text-[25px] font-light">{viewTask?.description}</p>
           </div>
 
           {/* Task Submit */}
@@ -188,167 +183,11 @@ const UpdateMyTask = () => {
 
         {/***************************** * SECOND COLUMN *******************************/}
         <section className="w-[50%]">
-          {/* Crate Task Btn */}
           {/* For Member Status Update */}
-          {viewTask?.assignee === userId && (
-            <div className="flex items-center gap-6 justify-end">
-              <div className="flex flex-col gap-5">
-                <>
-                  {viewTask?.status === "todo" && (
-                    <button
-                      onClick={() => handleStatusChange("inprogress")}
-                      className={`${
-                        viewTask?.status === "todo"
-                          ? "bg-opacity-[100%] "
-                          : "bg-opacity-[80%]"
-                      } w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                    >
-                      Start Work
-                    </button>
-                  )}
-                </>
-
-                <>
-                  {viewTask?.status === "inprogress" ||
-                  viewTask?.status === "todo" ||
-                  viewTask?.status === "pause" ? (
-                    <button
-                      onClick={() => handleStatusChange("inprogress")}
-                      className={`${
-                        viewTask?.status === "inprogress"
-                          ? "bg-opacity-[100%] "
-                          : "bg-opacity-[80%]"
-                      } w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                    >
-                      In Progress
-                    </button>
-                  ) : (
-                    <button
-                      className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
-                    >
-                      In Progress
-                    </button>
-                  )}
-                </>
-              </div>
-
-              <>
-                {viewTask?.status === "inprogress" ||
-                viewTask?.status === "pause" ? (
-                  <button
-                    onClick={() => handleStatusChange("pause")}
-                    className={`${
-                      viewTask?.status === "pause"
-                        ? "bg-opacity-[100%] "
-                        : "bg-opacity-[80%]"
-                    } w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                  >
-                    Pause
-                  </button>
-                ) : (
-                  <button
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
-                  >
-                    Pause
-                  </button>
-                )}
-              </>
-
-              <>
-                {viewTask?.status === "inprogress" ||
-                viewTask?.status === "checklist" ? (
-                  <button
-                    onClick={() => handleStatusChange("checklist")}
-                    className={`${
-                      viewTask?.status === "checklist"
-                        ? "bg-opacity-[100%] "
-                        : "bg-opacity-[80%]"
-                    } w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                  >
-                    Check List
-                  </button>
-                ) : (
-                  <button
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
-                  >
-                    Check List
-                  </button>
-                )}
-              </>
-            </div>
-          )}
+          <MemberButtons viewTask={viewTask} updateTask={updateTask} id={id} />
 
           {/* For QC Status Update */}
-          {viewTask?.assignee !== userId && type !== "superadmin" && (
-            <div className="flex items-center gap-6 justify-end">
-              <div className="flex flex-col gap-5">
-                <>
-                  {(viewTask?.status === "checklist" ||
-                    viewTask?.status === "inprogress") && (
-                    <button
-                      onClick={() => handleStatusChange("qc_progress")}
-                      className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                    >
-                      Start Work
-                    </button>
-                  )}
-                </>
-
-                <>
-                  {viewTask?.status === "qc_progress" ? (
-                    <button
-                      onClick={() => handleStatusChange("'qc_progress")}
-                      className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                    >
-                      QC In Progress
-                    </button>
-                  ) : (
-                    <button
-                      className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
-                    >
-                      QC In Progress
-                    </button>
-                  )}
-                </>
-              </div>
-
-              <>
-                {viewTask?.status === "inprogress" ||
-                viewTask?.status === "qc_progress" ? (
-                  <button
-                    onClick={() => handleStatusChange("inprogress")}
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                  >
-                    In Progress
-                  </button>
-                ) : (
-                  <button
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
-                  >
-                    In Progress
-                  </button>
-                )}
-              </>
-
-              <>
-                {viewTask?.status === "qc_progress" ||
-                viewTask?.status === "qc_complete" ? (
-                  <button
-                    onClick={() => handleStatusChange("qc_complete")}
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-blue-700 text-[18px] font-medium text-white`}
-                  >
-                    QC Complete
-                  </button>
-                ) : (
-                  <button
-                    className={`w-[200px] h-[53px] rounded-[44px] bg-slate-600 text-[18px] font-medium text-white`}
-                  >
-                    QC Complete
-                  </button>
-                )}
-              </>
-            </div>
-          )}
+          <QcButtons viewTask={viewTask} updateTask={updateTask} id={id} />
 
           {/* Chatting */}
           <Chatting />

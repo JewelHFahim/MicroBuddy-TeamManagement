@@ -86,7 +86,7 @@ const Notices = () => {
                           {item.title}
                         </p>
                         <p className="text-[13px] text-[#216FED] mt-2 ">
-                          {item.content}
+                          {(item.content).slice(0, 100)}...
                         </p>
                       </div>
                     </div>

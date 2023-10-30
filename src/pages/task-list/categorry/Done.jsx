@@ -15,11 +15,15 @@ const Done = ({ redirect }) => {
   };
   return (
     <>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <div className="mt-[30px] flex flex-col gap-[20px]">
-          <Card cardData={doneTask} dataSet={dataSet} />
+      {doneTask?.length > 0 && (
+        <div>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <div className="mt-[30px] flex flex-col gap-[20px]">
+              <Card cardData={doneTask} dataSet={dataSet} />
+            </div>
+          )}
         </div>
       )}
     </>
