@@ -9,13 +9,18 @@ import { LuClipboardList } from 'react-icons/lu';
 import { PiUsersThreeBold } from 'react-icons/pi';
 import { useDispatch, useSelector } from 'react-redux';
 import { addLogout } from '../../redux/features/user/userSlice';
+import { useUserDetailsQuery } from '../../redux/features/user/userApi';
 
 
 const SideDrawer = () => {
 
   const location = useLocation();
   const dispatch = useDispatch();
-  const {type, email, username} = useSelector(state=> state.user);
+
+  const {type, email, username, userId} = useSelector(state=> state.user);
+  const { data: userDetails } = useUserDetailsQuery(userId);
+
+
 
 
   console.log(type)
@@ -105,8 +110,7 @@ const SideDrawer = () => {
           <div className="flex items-center gap-4 px-4">
             <img
               className="object-cover rounded-full h-[61px] w-[61px]"
-              src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
-              alt="avatar"
+              src={userDetails?.image}
             />
 
             <p className="flex flex-col mx-2">

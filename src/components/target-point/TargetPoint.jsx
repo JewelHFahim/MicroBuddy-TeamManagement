@@ -1,12 +1,25 @@
+/* eslint-disable react/prop-types */
+import { useEffect } from "react";
+import { useState } from "react";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import { ImLink } from "react-icons/im";
 
-const TargetPoint = () => {
+const TargetPoint = ({userDetails}) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formattedDate = currentDate.toLocaleDateString();
   
     return (
         <section className="mt-10 target-point w-[590px] font-Manrope h-[94px] bg-white rounded-[9px] px-[6px] py-[13px] flex justify-between items-center">
             <div className="w-[82px] h-[68px] bg-[#69D0CA] rounded-[9px] flex justify-center items-center">
-              <p className="text-[27px] font-semibold">100</p>
+              <p className="text-[27px] font-semibold">{userDetails?.score}</p>
             </div>
 
             <div>
@@ -16,11 +29,11 @@ const TargetPoint = () => {
               <div className="mt-[10px] flex gap-4">
                 <p className="flex items-center gap-[9px] text-[14px] font-semibold text-[#7C8DB5] border-r-[3px] pr-4">
                   <ImLink className="text-[17px]" />
-                  <span>October 23</span>
+                  <span>{formattedDate}</span>
                 </p>
                 <p className="flex items-center gap-[9px] text-[14px] font-semibold text-[#7C8DB5] uppercase">
                   <BiMessageRoundedDots className="text-[17px]" />
-                  <span>Assign: 50</span>
+                  <span>Assign: {userDetails?.assigned_tasks_count}</span>
                 </p>
               </div>
             </div>

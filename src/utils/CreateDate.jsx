@@ -1,30 +1,17 @@
 /* eslint-disable react/prop-types */
-import { setHours, setMinutes } from "date-fns";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+const CreateDate = ({ startDate, setStartDate }) => {
+  return (
+    <DatePicker
+      selected={startDate}
+      onChange={(date) => setStartDate(date)}
+      showTimeSelect
+      dateFormat="MMMM d, yyyy h:mm aa"
+      className=" w-[330px] px-1"
+    />
+  );
+};
 
-
-const CreateDate = ({startDate, setStartDate}) => {
-
-    // const [startDate, setStartDate] = useState(
-    //   setHours(setMinutes(new Date(), 30), 16),
-    // );
-
-    return (
-      <DatePicker
-        selected={startDate}
-        onChange={(date) => setStartDate(date)}
-        showTimeSelect
-        excludeTimes={[
-          setHours(setMinutes(new Date(), 0), 17),
-          setHours(setMinutes(new Date(), 30), 18),
-          setHours(setMinutes(new Date(), 30), 19),
-          setHours(setMinutes(new Date(), 30), 17),
-        ]}
-        dateFormat="MMMM d, yyyy h:mm aa"
-      />
-    );
-  };
-
-  export default CreateDate;
+export default CreateDate;

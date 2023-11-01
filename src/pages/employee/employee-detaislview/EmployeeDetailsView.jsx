@@ -5,7 +5,6 @@ import {
   useUserDetailsQuery,
 } from "../../../redux/features/user/userApi";
 import { useParams } from "react-router-dom";
-import { userProPic } from "../../../utils/Important";
 import SearchField from "../../../utils/SearchField";
 import TaskFilterMenu from "../../../components/task-filter/TaskFilterMenu";
 import FilterButton from "../../../utils/FilterButton";
@@ -38,7 +37,7 @@ const EmployeeDetailsView = () => {
           <div className="flex items-center gap-4">
 
             <div className="w-[238px] h-[238px] rounded-[15px] overflow-hidden">
-              <img src={userProPic} alt="" className="w-full h-full" />
+              <img src={userDetails?.image} alt="" className="w-full h-full" />
             </div>
 
             <div className="font-semibold text-[#273240]">
@@ -57,10 +56,8 @@ const EmployeeDetailsView = () => {
                 Reset Password
               </span>
             </div>
-
           </div>
-
-          <TargetPoint />
+          <TargetPoint userDetails={userDetails}/>
         </div>
 
         <div>
@@ -72,11 +69,8 @@ const EmployeeDetailsView = () => {
             <LiaEditSolid className="text-[61px] text-[#FF8723]" />
           </div>
 
-          <div className="mt-[36px] flex items-center gap-5">
-            <div className="w-[234px] h-[283px] bg-[#307EF3] rounded-[10px] p-[24px]">
-              <button className="bg-white bg-opacity-[40%] p-3 rounded-lg">
-                <FaEdit className="text-[30px] text-white" />
-              </button>
+          <div className="mt-[36px] flex items-center gap-5 text-center">
+            <div className="w-[234px] h-[283px] bg-[#307EF3] rounded-[10px] p-[24px] shadow-md">
               <div className="mt-10">
                 <h3 className="text-[40px] text-white font-bold">12</h3>
                 <p className="mt-5 text-[20px] text-white font-medium uppercase">
@@ -85,10 +79,7 @@ const EmployeeDetailsView = () => {
               </div>
             </div>
 
-            <div className="w-[234px] h-[283px] bg-[#353F5C] rounded-[10px] p-[24px]">
-              <button className="bg-white bg-opacity-[40%] p-3 rounded-lg">
-                <FaEdit className="text-[30px] text-white" />
-              </button>
+            <div className="w-[234px] h-[283px] bg-[#353F5C] rounded-[10px] p-[24px] shadow-md">
               <div className="mt-10">
                 <h3 className="text-[40px] text-white font-bold">52</h3>
                 <p className="mt-5 text-[20px] text-white font-medium uppercase">
@@ -97,6 +88,7 @@ const EmployeeDetailsView = () => {
               </div>
             </div>
           </div>
+
         </div>
       </section>
 

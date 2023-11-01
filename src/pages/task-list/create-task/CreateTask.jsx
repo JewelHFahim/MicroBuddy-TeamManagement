@@ -10,6 +10,7 @@ import { setHours, setMinutes } from "date-fns";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { LiaUserPlusSolid } from "react-icons/lia";
+import "./CreateTask.css";
 
 const CreateTask = () => {
   const navigate = useNavigate();
@@ -32,12 +33,15 @@ const CreateTask = () => {
       Authorization: `Token ${token}`,
     },
   };
-  // const [isLoading, setIsLoading] = useState(false);
+
+  const [isPosting, setIsPosting] = useState(false); // Initialize loading state
 
   const onSubmit = async (data, event) => {
     event.preventDefault();
 
     try {
+      setIsPosting(true);
+
       // Step 1: Create a Task
       const taskData = {
         task_name: data.task_name,
@@ -98,6 +102,8 @@ const CreateTask = () => {
       navigate("/task-list");
     } catch (error) {
       console.log(errors);
+    } finally {
+      setIsPosting(false);
     }
   };
 
@@ -109,10 +115,20 @@ const CreateTask = () => {
         {/* Crate Task Btn */}
         <div className="flex justify-end">
           <button
+            disabled={isPosting}
             type="submit"
-            className="w-[268px] h-[60px] rounded-[58px] bg-[#216FED] text-[22px] font-medium text-white flex items-center justify-center gap-4"
+            className="w-[268px] h-[60px] rounded-[58px] bg-[#216FED] text-[22px] font-medium text-white"
           >
-            <FaClipboardList className="text-[30px]" /> Create Task
+            {isPosting ? (
+              <button className="flex justify-center items-center gap-4 px-5">
+                <div className="loader"></div>
+                Creating . . .
+              </button>
+            ) : (
+              <p className="flex items-center justify-center gap-4">
+                <FaClipboardList className="text-[30px]" /> Create Task
+              </p>
+            )}
           </button>
         </div>
 
@@ -152,7 +168,7 @@ const CreateTask = () => {
                 <input
                   type="text"
                   {...register("option_text")}
-                  className="w-[300px] h-[43px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold bg-white"
+                  className="w-[300px] h-[40px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold bg-white"
                   placeholder="+ New Check List Item"
                 />
                 <LiaUserPlusSolid className="text-[25px] text-blue-700" />
@@ -165,6 +181,7 @@ const CreateTask = () => {
                 {...register("user")}
                 className="w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center focus:outline-none px-3 text-[20px] capitalize font-semibold"
               >
+                <option value="" hidden selected>Select QC</option>
                 {allUser?.map((user, i) => (
                   <option key={i} value={user?.user?.id}>
                     {user?.user?.username} {user?.user?.id}
@@ -193,6 +210,7 @@ const CreateTask = () => {
               {...register("assignee")}
               className=" w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold"
             >
+               <option value="" hidden selected>Select Assignee</option>
               {allUser?.map((user, i) => (
                 <option key={i} value={user?.user?.id}>
                   {user?.user?.username} {user?.user?.id}
@@ -223,6 +241,7 @@ const CreateTask = () => {
                 data-te-select-init
                 className=" w-[200px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold"
               >
+                <option value="" hidden selected>Select Prio.</option>
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>

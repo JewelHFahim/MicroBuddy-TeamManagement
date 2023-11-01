@@ -74,8 +74,8 @@ const ViewTask = () => {
               disabled
               defaultValue={viewTask?.task_submit}
               type="text"
-              placeholder="Google Drive Link..."
-              className="w-full h-[67px] rounded-[15px] px-5 placeholder:text-blue-600 focus:outline-none text-[25px]"
+              placeholder="Task Submit . . ."
+              className="w-full h-[70px] rounded-[15px] px-5 placeholder:text-blue-600 placeholder:text-opacity-[50%] focus:outline-none text-[25px] border overflow-x-auto cursor-text"
             />
           </div>
 

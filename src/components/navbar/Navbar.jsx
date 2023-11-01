@@ -6,9 +6,12 @@ import TargetPoint from "../target-point/TargetPoint";
 import NotificationList from "../notification/NotificationList";
 import { useState } from "react";
 import { useGetAllNotificationQuery } from "../../redux/features/notification/NotificationApi";
+import { useUserDetailsQuery } from "../../redux/features/user/userApi";
 
 const Navbar = () => {
-  const { email, username } = useSelector((state) => state.user);
+
+  const { email, username, userId } = useSelector((state) => state.user);
+  const { data: userDetails } = useUserDetailsQuery(userId);
   const { data: allNotification } = useGetAllNotificationQuery();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +24,7 @@ const Navbar = () => {
       <div className="flex justify-between items-center w-full h-full">
         {/* target Points */}
         <div className="-mt-10">
-          <TargetPoint />
+          <TargetPoint userDetails={userDetails}/>
         </div>
 
         <NotificationList

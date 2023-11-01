@@ -6,9 +6,8 @@ import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
 const Todo = ({ redirect }) => {
-  const { data: allTask, isLoading } = useGetAllTaskQuery();
-  // const { data: allQcTask } = useGetAllQCTaskListQuery();
 
+  const { data: allTask, isLoading } = useGetAllTaskQuery();
   const filteredTodo = allTask?.filter((task) => task.status === "todo");
 
   const dataSet = {
