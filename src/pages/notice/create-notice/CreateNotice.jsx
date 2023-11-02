@@ -4,16 +4,25 @@ import Title from "../../../utils/Title";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import TextEditor from "../../../components/text-editor/TextEditor";
+import { encode as base64_encode } from "base-64";
 
 const CreateNotice = () => {
   const { register, handleSubmit } = useForm();
   const [createNotice] = useCreateNoticeMutation();
   const { userId } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [content, setContent] = useState("");
+
+  
 
   const onSubmit = (data, event) => {
     event.preventDefault();
-    const notice = { ...data, author: userId };
+
+    let encoded = base64_encode(content);
+
+    const notice = { ...data, author: userId, content:encoded  };
     console.log(notice);
     createNotice(notice);
     toast.success("Created Notice");
@@ -38,17 +47,7 @@ const CreateNotice = () => {
             />
           </div>
 
-          <div className="mt-5">
-            <label className="text-[34px] font-semibold ml-2">
-              Notice Details.
-            </label>
-            <input
-              type="text"
-              {...register("content")}
-              placeholder="Title Here"
-              className="w-full h-[375px] rounded-[46px] border border-blue-700 bg-white focus:outline-none px-5 text-[20px] font-medium"
-            />
-          </div>
+          <TextEditor content={content} setContent={setContent} />
 
           <div className="flex justify-end mt-5">
             <button

@@ -1,4 +1,3 @@
-import { FaEdit } from "react-icons/fa";
 import { LiaEditSolid } from "react-icons/lia";
 import Title from "../../../utils/Title";
 import {
@@ -18,6 +17,8 @@ import InProgress from "../../task-list/categorry/InProgress";
 import Pause from "../../task-list/categorry/Pause";
 import CheckList from "../../task-list/categorry/CheckList";
 import TargetPoint from "../../../components/target-point/TargetPoint";
+import { useState } from "react";
+import UpdateTargetpoint from "../../../components/target-point/UpdateTargetpoint";
 
 const EmployeeDetailsView = () => {
   const { id } = useParams();
@@ -25,6 +26,11 @@ const EmployeeDetailsView = () => {
   const { data: userDetails } = useUserDetailsQuery(id);
 
   const redirect = "view-task";
+
+  const [isOpen, setIsOpen] = useState(false);
+  const openModal = () => {
+    setIsOpen(true);
+  };
 
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px] pb-10">
@@ -44,7 +50,7 @@ const EmployeeDetailsView = () => {
               <h3 className="text-[40px]  uppercase leading-[60px]">
                 {userDetails?.user.username}
               </h3>
-              <p className="text-[26px] uppercase">Digital Marketing</p>
+              <p className="text-[26px] uppercase">{userDetails?.category}</p>
               <p className="border-b border-blue-700 border-dashed pb-1 ">
                 Email:
                 <span className="text-blue-600 font-normal ml-1">
@@ -58,6 +64,7 @@ const EmployeeDetailsView = () => {
             </div>
           </div>
           <TargetPoint userDetails={userDetails}/>
+        
         </div>
 
         <div>
@@ -66,7 +73,7 @@ const EmployeeDetailsView = () => {
               {userDetails?.type}
             </button>
 
-            <LiaEditSolid className="text-[61px] text-[#FF8723]" />
+            <button   onClick={openModal} ><LiaEditSolid className="text-[61px] text-[#FF8723]" /></button>
           </div>
 
           <div className="mt-[36px] flex items-center gap-5 text-center">
@@ -90,6 +97,8 @@ const EmployeeDetailsView = () => {
           </div>
 
         </div>
+
+        <UpdateTargetpoint isOpen={isOpen} setIsOpen={setIsOpen} openModal={openModal}/>
       </section>
 
       {/*  <<=== Search & Filter ====>>  */}

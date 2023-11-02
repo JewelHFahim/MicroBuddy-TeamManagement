@@ -43,6 +43,19 @@ const ViewTask = () => {
     navigate("/task-list");
   };
 
+  const decodeBase64 = (base64String) => {
+    try {
+      return atob(base64String);
+    } catch (error) {
+      console.error("Error decoding base64:", error);
+      return "";
+    }
+  };
+
+  const renderAsPlainText = (content) => {
+    return { __html: content }; // This sets the innerHTML to the decoded content
+  };
+
   return (
     <div>
       <Title>View Task</Title>
@@ -55,13 +68,12 @@ const ViewTask = () => {
           <div className="w-[712px] h-[780px] overflow-y-auto rounded-[15px] bg-[#F2F6FC] p-[40px]  shadow-md">
             <h2 className="text-[34px] text-secondary font-semibold">
               {viewTask?.task_name}
-
-              
-
-            </h2>
+              </h2>
             <hr />
-            <p className="text-[25px] font-[300] mt-8">
-              {viewTask?.description}
+            <p className="text-[25px] font-[300] mt-8"
+             dangerouslySetInnerHTML={renderAsPlainText(decodeBase64(viewTask?.description))}
+            >
+              {/* {viewTask?.description} */}
             </p>
           </div>
 

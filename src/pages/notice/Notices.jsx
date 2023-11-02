@@ -24,6 +24,19 @@ const Notices = () => {
     toast.error("Deleted");
   };
 
+  const decodeBase64 = (base64String) => {
+    try {
+      return atob(base64String);
+    } catch (error) {
+      console.error("Error decoding base64:", error);
+      return "";
+    }
+  };
+
+  const renderAsPlainText = (content) => {
+    return { __html: content }; // This sets the innerHTML to the decoded content
+  };
+
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px]">
       <Title>Notices</Title>
@@ -82,12 +95,20 @@ const Notices = () => {
                         className="w-[81px] h-[81px] rounded-[20px]"
                       />
                       <div>
+                        
                         <p className="text-[24px] font-medium text-[#273240]">
                           {item.title}
                         </p>
-                        <p className="text-[13px] text-[#216FED] mt-2 ">
-                          {(item.content).slice(0, 100)}...
-                        </p>
+
+
+                        <div
+                          className="text-[13px] text-[#216FED] mt-2 "
+                          dangerouslySetInnerHTML={renderAsPlainText(
+                            decodeBase64(item?.content)
+                          )}
+                        ></div>
+
+
                       </div>
                     </div>
 

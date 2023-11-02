@@ -9,7 +9,7 @@ const CreateDate = ({ startDate, setStartDate }) => {
       onChange={(date) => setStartDate(date)}
       showTimeSelect
       dateFormat="MMMM d, yyyy h:mm aa"
-      className=" w-[330px] px-1"
+      className=" w-[330px] px-1 focus:outline-none"
     />
   );
 };

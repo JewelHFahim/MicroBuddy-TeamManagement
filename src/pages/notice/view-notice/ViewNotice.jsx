@@ -11,6 +11,20 @@ const ViewNotice = () => {
   const { type } = useSelector((state) => state.user);
   const { data: noticeDetails, isLoading } = useViewNoticeQuery(id);
 
+  const decodeBase64 = (base64String) => {
+    try {
+      return atob(base64String);
+    } catch (error) {
+      console.error("Error decoding base64:", error);
+      return "";
+    }
+  };
+
+  const renderAsPlainText = (content) => {
+    return { __html: content }; // This sets the innerHTML to the decoded content
+  };
+
+
   return (
     <div>
       <Title>View Notice</Title>
@@ -37,9 +51,12 @@ const ViewNotice = () => {
               <p>{DateFormat(noticeDetails?.created_at)}</p>
             </div>
 
-            <p className="text-[20px] text-blue-700 mt-10 w-[70%]">
-              {noticeDetails?.content}
-            </p>
+         
+            <div className="text-[20px] text-blue-700 mt-10 w-[70%]"
+              dangerouslySetInnerHTML={renderAsPlainText(decodeBase64(noticeDetails?.content))}
+            ></div>
+
+            
           </div>
 
           {type === "superadmin" && (

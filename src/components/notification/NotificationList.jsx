@@ -3,7 +3,7 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import DateFormat from "../../utils/DateFormat";
 import { useGetAllNotificationQuery } from "../../redux/features/notification/NotificationApi";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const NotificationList = ({ isOpen, setIsOpen }) => {
   const { data: allNotification } = useGetAllNotificationQuery();
@@ -37,9 +37,6 @@ const NotificationList = ({ isOpen, setIsOpen }) => {
       });
     }
   }, [allNotification]);
-
-
-
 
   const closeModal = () => {
     setIsOpen(false);

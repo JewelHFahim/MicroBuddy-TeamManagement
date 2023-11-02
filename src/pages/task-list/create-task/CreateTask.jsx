@@ -11,6 +11,8 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { LiaUserPlusSolid } from "react-icons/lia";
 import "./CreateTask.css";
+import TextEditor from "../../../components/text-editor/TextEditor";
+import { encode as base64_encode } from "base-64";
 
 const CreateTask = () => {
   const navigate = useNavigate();
@@ -25,6 +27,7 @@ const CreateTask = () => {
 
   const { userId, token } = useSelector((state) => state.user);
   const { data: allUser } = useGetAllUserQuery();
+  const [content, setContent] = useState("");
 
   const baseurl = "https://jabedahmed.pythonanywhere.com";
   const headers = {
@@ -38,6 +41,7 @@ const CreateTask = () => {
 
   const onSubmit = async (data, event) => {
     event.preventDefault();
+    let encoded = base64_encode(content);
 
     try {
       setIsPosting(true);
@@ -45,57 +49,37 @@ const CreateTask = () => {
       // Step 1: Create a Task
       const taskData = {
         task_name: data.task_name,
-        description: data.description,
+        description: encoded,
         due_date: startDate,
         points: data.points,
         priority: data.priority,
         assigner: userId,
         assignee: parseInt(data.assignee),
       };
-      const taskResponse = await axios.post(
-        `${baseurl}/task-create/`,
-        taskData,
-        headers
-      );
+      console.log(taskData);
+
+
+      const taskResponse = await axios.post( `${baseurl}/task-create/`, taskData, headers);
       console.log(taskResponse);
       const taskId = taskResponse.data.id;
 
       // Step 2: Create a qc_task using the taskId
       const optionText = { option_text: data.option_text };
-      const checkTextResponse = await axios.post(
-        `${baseurl}/option-create/`,
-        optionText
-      );
+      const checkTextResponse = await axios.post( `${baseurl}/option-create/`, optionText);
       const checkTextId = checkTextResponse.data.id;
       console.log(checkTextResponse);
 
       // Step 3: Create a qc_task using the taskId
-      const qc_task = {
-        task: taskId,
-        user: parseInt(data.user),
-        check_text: checkTextId,
-      };
-      const qcTaskResponse = await axios.post(
-        `${baseurl}/qc-task-create/`,
-        qc_task,
-        headers
-      );
+      const qc_task = { task: taskId, user: parseInt(data.user), check_text: checkTextId };
+      const qcTaskResponse = await axios.post( `${baseurl}/qc-task-create/`, qc_task, headers);
       const qcTaskId = qcTaskResponse.data.id;
       console.log(qcTaskResponse);
 
       // Step 4: Create a qc_status using the qcTaskId
-      const qc_status = {
-        qc: qcTaskId,
-        is_checked: false,
-        comment: null,
-      };
+      const qc_status = { qc: qcTaskId, is_checked: false, comment: null };
 
       // Step 4: Create a qc-status-create using the taskId
-      const qcStatusResponse = await axios.post(
-        `${baseurl}/qc-status-create/`,
-        qc_status,
-        headers
-      );
+      const qcStatusResponse = await axios.post(`${baseurl}/qc-status-create/`, qc_status, headers );
       console.log(qcStatusResponse);
 
       toast.success("Task Created");
@@ -150,13 +134,8 @@ const CreateTask = () => {
           <label className="text-[34px] font-semibold text-secondary pl-2">
             Task Details
           </label>
-          <textarea
-            {...register("description")}
-            cols="177"
-            rows="14"
-            placeholder="Details"
-            className="rounded-[46px] border border-[#216FED] p-6 focus:outline-none"
-          ></textarea>
+
+          <TextEditor content={content} setContent={setContent} />
         </div>
 
         {/* Check List + QC User +  Points + Assign */}
@@ -181,7 +160,9 @@ const CreateTask = () => {
                 {...register("user")}
                 className="w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center focus:outline-none px-3 text-[20px] capitalize font-semibold"
               >
-                <option value="" hidden selected>Select QC</option>
+                <option value="" hidden selected>
+                  Select QC
+                </option>
                 {allUser?.map((user, i) => (
                   <option key={i} value={user?.user?.id}>
                     {user?.user?.username} {user?.user?.id}
@@ -210,7 +191,9 @@ const CreateTask = () => {
               {...register("assignee")}
               className=" w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold"
             >
-               <option value="" hidden selected>Select Assignee</option>
+              <option value="" hidden selected>
+                Select Assignee
+              </option>
               {allUser?.map((user, i) => (
                 <option key={i} value={user?.user?.id}>
                   {user?.user?.username} {user?.user?.id}
@@ -241,7 +224,9 @@ const CreateTask = () => {
                 data-te-select-init
                 className=" w-[200px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold"
               >
-                <option value="" hidden selected>Select Prio.</option>
+                <option value="" hidden selected>
+                  Select Prio.
+                </option>
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>

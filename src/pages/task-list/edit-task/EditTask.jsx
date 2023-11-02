@@ -16,6 +16,8 @@ import {
 import toast from "react-hot-toast";
 import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
 import { useEffect } from "react";
+import TextEditor from "../../../components/text-editor/TextEditor";
+import { encode as base64_encode } from "base-64";
 
 const EditTask = () => {
   const navigate = useNavigate();
@@ -48,6 +50,7 @@ const EditTask = () => {
   const [updateQCUserStatus] = useUpdateQCUserStatusMutation();
   const [updateTask] = useUpdateTaskMutation();
   const { data: allUser } = useGetAllUserQuery();
+  const [content, setContent] = useState("");
 
   const assigneeName = allUser?.find((user) => {
     if (user.user.id === viewTask?.assignee) {
@@ -58,7 +61,7 @@ const EditTask = () => {
   // ============================>> UPDATE FORM <<====================
   const [status, setStatus] = useState(viewTask?.status);
   const [task_name, setTask_name] = useState(viewTask?.task_name);
-  const [description, setDescription] = useState(viewTask?.description);
+  // const [description, setDescription] = useState(viewTask?.description);
   const [points, setPoints] = useState(viewTask?.points);
   const [priority, setPriority] = useState(viewTask?.priority);
   const [isChecked, setIsChecked] = useState(false);
@@ -67,10 +70,12 @@ const EditTask = () => {
     setIsChecked(!isChecked);
   };
 
+  let encoded = base64_encode(content);
+
   const onSubmit = () => {
     const upd = {
       task_name,
-      description,
+      description: encoded,
       points,
       status,
       priority,
@@ -85,9 +90,9 @@ const EditTask = () => {
     if (task_name !== undefined) {
       upd.task_name = task_name;
     }
-    if (description !== undefined) {
-      upd.description = description;
-    }
+    // if (description !== undefined) {
+    //   upd.description = description;
+    // }
     if (points !== undefined) {
       upd.points = points;
     }
@@ -145,24 +150,14 @@ const EditTask = () => {
             defaultValue={viewTask?.task_name}
             type="text"
             placeholder="Title here"
-            className="w-full h-[66px] rounded-[46px] border border-[#216FED] px-6 focus:outline-none"
+            className="w-full h-[66px] rounded-[46px] border border-[#216FED]  px-6 focus:outline-none"
           />
         </div>
 
         {/* Task Desc Input */}
-        <div className="mt-5">
-          <label className="text-[34px] font-semibold text-secondary pl-2">
-            Task Details
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            defaultValue={viewTask?.description}
-            cols="177"
-            rows="14"
-            placeholder="Details"
-            className="rounded-[46px] border border-[#216FED] p-6 focus:outline-none"
-          ></textarea>
+        <div className="mt-4">
+          <label className="text-[34px] font-semibold text-secondary pl-2">Task Description</label>
+          <TextEditor content={content} setContent={setContent}/>
         </div>
 
         {/* Check List + Assign */}
@@ -170,7 +165,7 @@ const EditTask = () => {
           {/* Check List */}
           <div className="">
             <h2 className="text-[34px] font-semibold">Check List -</h2>
-
+            
             <div className="flex items-center gap-5">
               {/* Radio Button */}
               <div>
@@ -227,7 +222,9 @@ const EditTask = () => {
                   }
                 })}
               </div>
+
             </div>
+
           </div>
 
           {/* Points */}
@@ -254,6 +251,7 @@ const EditTask = () => {
               </div>
             </div>
           </div>
+
         </section>
 
         {/* Date and Priority */}
@@ -287,6 +285,7 @@ const EditTask = () => {
             </div>
           </div>
         </section>
+        
       </form>
     </div>
   );
