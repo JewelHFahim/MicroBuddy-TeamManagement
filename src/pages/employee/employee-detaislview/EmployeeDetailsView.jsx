@@ -102,7 +102,7 @@ const singleUserTask = allTask?.filter(task => task.assignee === parseInt(id));
 
         </div>
 
-        <UpdateTargetpoint isOpen={isOpen} setIsOpen={setIsOpen} openModal={openModal}/>
+        <UpdateTargetpoint isOpen={isOpen} setIsOpen={setIsOpen} openModal={openModal} userDetails={userDetails} />
       </section>
 
       {/*  <<=== Search & Filter ====>>  */}

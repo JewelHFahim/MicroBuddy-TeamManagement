@@ -6,7 +6,6 @@ console.log("Token", userInfo?.token);
 
 const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-
     // <<================ QUERIES ===============>>
     getAllUser: builder.query({
       query: () => "/user/list-user/",
@@ -18,15 +17,15 @@ const userApi = apiSlice.injectEndpoints({
       providesTags: ["Team-Management"],
     }),
 
-    singleViewTargetpoint: builder.query({
-      query: (id) => `/user/target-detail/${id}/`,
+    // <<================ TARGET POINT ===============>>
+
+    viewDetailTargetpoint: builder.query({
+      query: (id) => `/user/target-filter/?user=${id}`,
       providesTags: ["Team-Management"],
     }),
 
-    // <<================ TARGET POINT ===============>>
-
     updateTargetpoint: builder.mutation({
-      query: ({data, id}) => ({
+      query: ({ data, id }) => ({
         method: "POST",
         url: `/user/target-update/${id}/`,
         body: data,
@@ -36,5 +35,10 @@ const userApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllUserQuery, useUserDetailsQuery, useSingleViewTargetpointQuery, useUpdateTargetpointMutation } = userApi;
+export const {
+  useGetAllUserQuery,
+  useUserDetailsQuery,
+  useUpdateTargetpointMutation,
+  useViewDetailTargetpointQuery,
+} = userApi;
 export default userApi;

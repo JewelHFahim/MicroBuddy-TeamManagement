@@ -58,20 +58,34 @@ const CreateTask = () => {
       };
       console.log(taskData);
 
-
-      const taskResponse = await axios.post( `${baseurl}/task-create/`, taskData, headers);
+      const taskResponse = await axios.post(
+        `${baseurl}/task-create/`,
+        taskData,
+        headers
+      );
       console.log(taskResponse);
       const taskId = taskResponse.data.id;
 
       // Step 2: Create a qc_task using the taskId
       const optionText = { option_text: data.option_text };
-      const checkTextResponse = await axios.post( `${baseurl}/option-create/`, optionText);
+      const checkTextResponse = await axios.post(
+        `${baseurl}/option-create/`,
+        optionText
+      );
       const checkTextId = checkTextResponse.data.id;
       console.log(checkTextResponse);
 
       // Step 3: Create a qc_task using the taskId
-      const qc_task = { task: taskId, user: parseInt(data.user), check_text: checkTextId };
-      const qcTaskResponse = await axios.post( `${baseurl}/qc-task-create/`, qc_task, headers);
+      const qc_task = {
+        task: taskId,
+        user: parseInt(data.user),
+        check_text: checkTextId,
+      };
+      const qcTaskResponse = await axios.post(
+        `${baseurl}/qc-task-create/`,
+        qc_task,
+        headers
+      );
       const qcTaskId = qcTaskResponse.data.id;
       console.log(qcTaskResponse);
 
@@ -79,7 +93,11 @@ const CreateTask = () => {
       const qc_status = { qc: qcTaskId, is_checked: false, comment: null };
 
       // Step 4: Create a qc-status-create using the taskId
-      const qcStatusResponse = await axios.post(`${baseurl}/qc-status-create/`, qc_status, headers );
+      const qcStatusResponse = await axios.post(
+        `${baseurl}/qc-status-create/`,
+        qc_status,
+        headers
+      );
       console.log(qcStatusResponse);
 
       toast.success("Task Created");

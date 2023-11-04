@@ -58,7 +58,7 @@ const Employee = () => {
                       {user.user.username}
                     </td>
                     <td className="px-6 py-8 whitespace-nowrap uppercase">
-                      Software Developer
+                      {user?.category}
                     </td>
                     <td className="px-6 py-8 whitespace-nowrap">
                       {user.user.email}
