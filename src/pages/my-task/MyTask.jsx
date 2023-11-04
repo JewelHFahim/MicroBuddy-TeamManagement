@@ -11,10 +11,15 @@ import FilterButton from "../../utils/FilterButton";
 import QcTodo from "../task-list/categorry/QcTodo";
 import QCProgress from "../task-list/categorry/QCProgress";
 import QCComplete from "../task-list/categorry/QCComplete";
+import { useGetAllTaskQuery } from "../../redux/features/task/taskApi";
 
 const MyTask = () => {
-  const { type } = useSelector((state) => state.user);
+
   const redirect = "update-mytask";
+  const { type, userId } = useSelector((state) => state.user);
+  const {data: allTask} = useGetAllTaskQuery();
+const singleUserTask = allTask?.filter(task => task.assignee === parseInt(userId));
+
 
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px] pb-10">
@@ -47,16 +52,16 @@ const MyTask = () => {
         {(type !== "superadmin" || type !== "admin") && (
           <>
             {/*  <<=========== TODO ============>>  */}
-            <Todo redirect={redirect} />
+            <Todo redirect={redirect} singleUserTask={singleUserTask}/>
 
             {/*  <<======== IN PROGRESS ========>>  */}
-            <InProgress redirect={redirect} />
+            <InProgress redirect={redirect} singleUserTask={singleUserTask}/>
 
             {/*  <<=========== PAUSE ===========>>  */}
-            <Pause redirect={redirect} />
+            <Pause redirect={redirect} singleUserTask={singleUserTask}/>
 
             {/*  <<===== FOR QC CHECKLIST ======>>  */}
-            <CheckList redirect={redirect} />
+            <CheckList redirect={redirect} singleUserTask={singleUserTask}/>
           </>
         )}
       </>

@@ -3,10 +3,14 @@ import { useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const Pause = ({ redirect }) => {
+const Pause = ({ redirect, singleUserTask}) => {
+  const pathName = (window.location.pathname);
   
   const { data: allTask, isLoading } = useGetAllTaskQuery();
-  const filteredPause = allTask?.filter((task) => task.status === "pause");
+
+  const currentData = pathName === "/task-list" ? allTask : singleUserTask;
+
+  const filteredPause = currentData?.filter((task) => task.status === "pause");
 
   const dataSet = {
     btnText: "Pause",

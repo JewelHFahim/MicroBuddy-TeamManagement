@@ -13,7 +13,6 @@ import FilterButton from "../../utils/FilterButton";
 import AddNewTaskBtn from "./categorry/AddNewTaskBtn";
 
 const TaskList = () => {
-  
   const redirect = "view-task";
 
   return (

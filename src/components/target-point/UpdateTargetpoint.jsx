@@ -4,15 +4,18 @@ import CreateDate from "../../utils/CreateDate";
 import { useState } from "react";
 import { setHours, setMinutes } from "date-fns";
 import { RiCloseCircleLine } from "react-icons/ri";
+import { useUpdateTargetpointMutation } from "../../redux/features/user/userApi";
 
 const UpdateTargetpoint = ({ isOpen, setIsOpen }) => {
   const { register, handleSubmit } = useForm();
   const [startDate, setStartDate] = useState(
     setHours(setMinutes(new Date(), 30), 16)
   );
+  const [updateTargetpoint] = useUpdateTargetpointMutation();
 
   const onSubmit = (data) => {
-    console.log({...data, startDate});
+    console.log(data);
+    // updateTargetpoint(data)
   };
 
   const closeModal = () => {
@@ -52,14 +55,14 @@ const UpdateTargetpoint = ({ isOpen, setIsOpen }) => {
                   />
                 </div>
 
-                <div className="border-b border-blue-700 mt-5 ">
+                {/* <div className="border-b border-blue-700 mt-5 ">
                   <p className=" text-blue-700 ">
                     <CreateDate
                       startDate={startDate}
                       setStartDate={setStartDate}
                     />
                   </p>
-                </div>
+                </div> */}
 
                 <div className="flex justify-end">
                   <button className="border px-5 py-1 font-medium bg-blue-500 text-white rounded-md mt-4">

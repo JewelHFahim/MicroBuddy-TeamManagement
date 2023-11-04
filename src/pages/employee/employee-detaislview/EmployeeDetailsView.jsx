@@ -19,13 +19,16 @@ import CheckList from "../../task-list/categorry/CheckList";
 import TargetPoint from "../../../components/target-point/TargetPoint";
 import { useState } from "react";
 import UpdateTargetpoint from "../../../components/target-point/UpdateTargetpoint";
+import { useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
 
 const EmployeeDetailsView = () => {
   const { id } = useParams();
   const { type } = useSelector((state) => state.user);
   const { data: userDetails } = useUserDetailsQuery(id);
-
   const redirect = "view-task";
+
+const {data: allTask} = useGetAllTaskQuery();
+const singleUserTask = allTask?.filter(task => task.assignee === parseInt(id));
 
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => {
@@ -69,6 +72,7 @@ const EmployeeDetailsView = () => {
 
         <div>
           <div className="flex items-center justify-center gap-4">
+
             <button className="w-[170px] h-[56px] rounded-[26px] border-2 border-[#FF8723] flex justify-center items-center uppercase text-[#FF8723] text-[19px] font-semibold ">
               {userDetails?.type}
             </button>
@@ -128,16 +132,17 @@ const EmployeeDetailsView = () => {
         {(type !== "superadmin" || type !== "admin") && (
           <>
             {/*  <<=========== TODO ============>>  */}
-            <Todo redirect={redirect} />
+            <Todo redirect={redirect} singleUserTask={singleUserTask}/>
 
             {/*  <<======== IN PROGRESS ========>>  */}
-            <InProgress redirect={redirect} />
+            <InProgress redirect={redirect} singleUserTask={singleUserTask} />
 
             {/*  <<=========== PAUSE ===========>>  */}
-            <Pause redirect={redirect} />
+            <Pause redirect={redirect} singleUserTask={singleUserTask}/>
 
             {/*  <<===== FOR QC CHECKLIST ======>>  */}
-            <CheckList redirect={redirect} />
+
+            <CheckList redirect={redirect} singleUserTask={singleUserTask}/>
           </>
         )}
       </>

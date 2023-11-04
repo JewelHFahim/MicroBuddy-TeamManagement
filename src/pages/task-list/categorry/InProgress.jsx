@@ -3,9 +3,15 @@ import { useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const InProgress = ({ redirect }) => {
+const InProgress = ({ redirect, singleUserTask }) => {
+
+  const pathName = (window.location.pathname);
+
   const { data: allTask, isLoading } = useGetAllTaskQuery();
-  const filteredInProgress = allTask?.filter(
+
+  const currentData = pathName === "/task-list" ? allTask : singleUserTask;
+
+  const filteredInProgress = currentData?.filter(
     (task) => task.status === "inprogress"
   );
 

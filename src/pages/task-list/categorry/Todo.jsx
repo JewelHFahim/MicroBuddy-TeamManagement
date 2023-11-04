@@ -5,10 +5,15 @@ import {
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const Todo = ({ redirect }) => {
+const Todo = ({ redirect, singleUserTask }) => {
+
+  const pathName = (window.location.pathname);
 
   const { data: allTask, isLoading } = useGetAllTaskQuery();
-  const filteredTodo = allTask?.filter((task) => task.status === "todo");
+
+  const currentData = pathName === "/task-list" ? allTask : singleUserTask;
+
+  const filteredTodo = currentData?.filter((task) => task.status === "todo");
 
   const dataSet = {
     btnText: "To Do",

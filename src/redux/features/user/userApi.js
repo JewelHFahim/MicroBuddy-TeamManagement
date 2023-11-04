@@ -18,22 +18,23 @@ const userApi = apiSlice.injectEndpoints({
       providesTags: ["Team-Management"],
     }),
 
-    // <<================ MUTATION ===============>>
+    singleViewTargetpoint: builder.query({
+      query: (id) => `/user/target-detail/${id}/`,
+      providesTags: ["Team-Management"],
+    }),
+
+    // <<================ TARGET POINT ===============>>
 
     updateTargetpoint: builder.mutation({
       query: ({data, id}) => ({
         method: "POST",
-        url: `/notice-update/${id}/`,
+        url: `/user/target-update/${id}/`,
         body: data,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
       }),
       invalidatesTags: ["Team-Management"],
     }),
   }),
 });
 
-export const { useGetAllUserQuery, useUserDetailsQuery } = userApi;
+export const { useGetAllUserQuery, useUserDetailsQuery, useSingleViewTargetpointQuery, useUpdateTargetpointMutation } = userApi;
 export default userApi;

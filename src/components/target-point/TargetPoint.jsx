@@ -3,16 +3,23 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import { ImLink } from "react-icons/im";
+import { useSingleViewTargetpointQuery } from "../../redux/features/user/userApi";
 
 const TargetPoint = ({userDetails}) => {
+  console.log(userDetails?.user?.id);
+  console.log(userDetails)
+
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const {data: detailViewTargetPoint } = useSingleViewTargetpointQuery(1);
+  console.log(detailViewTargetPoint)
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentDate(new Date());
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const formattedDate = currentDate.toLocaleDateString();
   
