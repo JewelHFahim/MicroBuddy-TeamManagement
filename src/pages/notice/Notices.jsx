@@ -104,7 +104,7 @@ const Notices = () => {
                         <div
                           className="text-[13px] text-[#216FED] mt-2 "
                           dangerouslySetInnerHTML={renderAsPlainText(
-                            decodeBase64(item?.content)
+                            (decodeBase64(item?.content).slice(0,200))
                           )}
                         ></div>
 

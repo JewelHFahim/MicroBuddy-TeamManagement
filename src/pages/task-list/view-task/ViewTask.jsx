@@ -30,7 +30,11 @@ const ViewTask = () => {
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: QCListBytaskId } = useGetTaskListByQcIdQuery(id);
   const { data: qcStatusList } = useGetQCStatusByQcIdQuery(qcId);
-  const { type } = useSelector((state) => state.user);
+  const { type, userId } = useSelector((state) => state.user);
+  const { data: qcObject } = useGetTaskListByQcIdQuery(id);
+  console.log(qcObject);
+
+  console.log(viewTask);
 
   useEffect(() => {
     const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
@@ -68,10 +72,13 @@ const ViewTask = () => {
           <div className="w-[712px] h-[780px] overflow-y-auto rounded-[15px] bg-[#F2F6FC] p-[40px]  shadow-md">
             <h2 className="text-[34px] text-secondary font-semibold">
               {viewTask?.task_name}
-              </h2>
+            </h2>
             <hr />
-            <p className="text-[25px] font-[300] mt-8"
-             dangerouslySetInnerHTML={renderAsPlainText(decodeBase64(viewTask?.description))}
+            <p
+              className="text-[25px] font-[300] mt-8"
+              dangerouslySetInnerHTML={renderAsPlainText(
+                decodeBase64(viewTask?.description)
+              )}
             >
               {/* {viewTask?.description} */}
             </p>
@@ -171,24 +178,30 @@ const ViewTask = () => {
         {/* 2nd column */}
         <section className=" w-full">
           {/* For QC Status Update */}
-          <QcButtons
-            viewTask={viewTask}
-            type={type}
-            updateTask={updateTask}
-            id={id}
-          />
+          {qcObject?.[0]?.task === id &&
+            qcObject?.[0]?.user !== viewTask.assigner &&
+            qcObject?.[0]?.user !== viewTask.assignee && (
+              <QcButtons
+                viewTask={viewTask}
+                type={type}
+                updateTask={updateTask}
+                id={id}
+              />
+            )}
 
           {/* Chating UI */}
           <Chatting />
 
-          <div className="mt-[50px] flex justify-end ">
-            <button
-              onClick={() => hnadleTaskDelete(id)}
-              className="w-[388px] h-[53px] rounded-[44px] bg-[#ED2121] text-[20px] text-white font-medium uppercase"
-            >
-              Delete This Project
-            </button>
-          </div>
+          {(type === "superadmin" || viewTask?.assigner === userId) && (
+            <div className="mt-[50px] flex justify-end ">
+              <button
+                onClick={() => hnadleTaskDelete(id)}
+                className="w-[388px] h-[53px] rounded-[44px] bg-[#ED2121] text-[20px] text-white font-medium uppercase"
+              >
+                Delete This Project
+              </button>
+            </div>
+          )}
         </section>
       </section>
     </div>

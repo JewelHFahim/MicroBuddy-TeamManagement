@@ -164,12 +164,14 @@ const CreateTask = () => {
               <div className=" w-[358px] h-[45px] rounded-[46px] bg-white border border-blue-700 flex justify-between items-center pr-4">
                 <input
                   type="text"
-                  {...register("option_text")}
+                  {...register("option_text", { required: true })}
                   className="w-[300px] h-[40px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold bg-white"
                   placeholder="+ New Check List Item"
                 />
                 <LiaUserPlusSolid className="text-[25px] text-blue-700" />
               </div>
+              <p className="text-red-600">{errors.option_text && <span>Check List is required</span>}</p>
+
             </div>
 
             <div className="mt-4">
@@ -187,6 +189,8 @@ const CreateTask = () => {
                   </option>
                 ))}
               </select>
+              <p className="text-red-600">{errors.user && <span>User is required</span>}</p>
+
             </div>
           </div>
 
@@ -196,10 +200,11 @@ const CreateTask = () => {
             <div className=" w-[140px] h-[45px] rounded-[46px] border border-blue-700 px-1 bg-white">
               <input
                 type="number"
-                {...register("points")}
+                {...register("points", { required: true })}
                 className="w-[120px] h-[40px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold bg-white"
                 placeholder="+ Points"
               />
+              <p className="text-red-600">{errors.points && <span>Point is required</span>}</p>
             </div>
           </div>
 
@@ -236,9 +241,9 @@ const CreateTask = () => {
 
           <div>
             <h2 className="text-[25px] font-semibold">Task Prio.</h2>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col items-center gap-2">
               <select
-                {...register("priority")}
+                {...register("priority", { required: true })}
                 data-te-select-init
                 className=" w-[200px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center pr-4 focus:outline-none px-2 text-[20px] capitalize font-semibold"
               >
@@ -249,6 +254,8 @@ const CreateTask = () => {
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
               </select>
+              <p className="text-red-600">{errors.priority && <span> Priority is required</span>}</p>
+
             </div>
           </div>
         </section>

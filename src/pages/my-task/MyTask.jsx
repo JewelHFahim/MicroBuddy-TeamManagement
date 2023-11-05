@@ -11,15 +11,30 @@ import FilterButton from "../../utils/FilterButton";
 import QcTodo from "../task-list/categorry/QcTodo";
 import QCProgress from "../task-list/categorry/QCProgress";
 import QCComplete from "../task-list/categorry/QCComplete";
-import { useGetAllTaskQuery } from "../../redux/features/task/taskApi";
+import {
+  useGetAllTaskQuery,
+  useGetQCTaskListByQcIdQuery,
+} from "../../redux/features/task/taskApi";
 
 const MyTask = () => {
-
   const redirect = "update-mytask";
   const { type, userId } = useSelector((state) => state.user);
-  const {data: allTask} = useGetAllTaskQuery();
-const singleUserTask = allTask?.filter(task => task.assignee === parseInt(userId));
+  const { data: allTask } = useGetAllTaskQuery();
+  const singleUserTask = allTask?.filter(
+    (task) => task.assignee === parseInt(userId)
+  );
+  const { data: qcTaskList } = useGetQCTaskListByQcIdQuery(1);
+  console.log(qcTaskList);
 
+
+
+  // Extract unique `id` values from qcTaskList
+  const qcTaskIds = qcTaskList?.map((qcTask) => qcTask.id);
+
+  // Filter allTask based on matching `id` values
+  const filteredAllTask = allTask?.filter((task) => qcTaskIds?.includes(task.id));
+
+  console.log(filteredAllTask);
 
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px] pb-10">
@@ -39,29 +54,29 @@ const singleUserTask = allTask?.filter(task => task.assignee === parseInt(userId
       <Statistics />
 
       {/*  <<======= QC Todo ========>>  */}
-      <QcTodo redirect={redirect}/>
+      <QcTodo redirect={redirect} />
 
       {/*  <<==== QC In PROGRESS =====>> */}
       <QCProgress redirect={redirect} />
 
       {/*  <<===== QC COMPLETE =======>>  */}
-      <QCComplete redirect={redirect}/>
+      <QCComplete redirect={redirect} />
 
       {/* ####### NOT FOR SUPERADMIN/ADMIN ######## */}
       <>
         {(type !== "superadmin" || type !== "admin") && (
           <>
             {/*  <<=========== TODO ============>>  */}
-            <Todo redirect={redirect} singleUserTask={singleUserTask}/>
+            <Todo redirect={redirect} singleUserTask={singleUserTask} />
 
             {/*  <<======== IN PROGRESS ========>>  */}
-            <InProgress redirect={redirect} singleUserTask={singleUserTask}/>
+            <InProgress redirect={redirect} singleUserTask={singleUserTask} />
 
             {/*  <<=========== PAUSE ===========>>  */}
-            <Pause redirect={redirect} singleUserTask={singleUserTask}/>
+            <Pause redirect={redirect} singleUserTask={singleUserTask} />
 
             {/*  <<===== FOR QC CHECKLIST ======>>  */}
-            <CheckList redirect={redirect} singleUserTask={singleUserTask}/>
+            <CheckList redirect={redirect} singleUserTask={singleUserTask} />
           </>
         )}
       </>

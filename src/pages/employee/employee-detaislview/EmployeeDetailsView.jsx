@@ -1,8 +1,6 @@
 import { LiaEditSolid } from "react-icons/lia";
 import Title from "../../../utils/Title";
-import {
-  useUserDetailsQuery,
-} from "../../../redux/features/user/userApi";
+import { useUserDetailsQuery } from "../../../redux/features/user/userApi";
 import { useParams } from "react-router-dom";
 import SearchField from "../../../utils/SearchField";
 import TaskFilterMenu from "../../../components/task-filter/TaskFilterMenu";
@@ -27,8 +25,10 @@ const EmployeeDetailsView = () => {
   const { data: userDetails } = useUserDetailsQuery(id);
   const redirect = "view-task";
 
-const {data: allTask} = useGetAllTaskQuery();
-const singleUserTask = allTask?.filter(task => task.assignee === parseInt(id));
+  const { data: allTask } = useGetAllTaskQuery();
+  const singleUserTask = allTask?.filter(
+    (task) => task.assignee === parseInt(id)
+  );
 
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => {
@@ -42,9 +42,7 @@ const singleUserTask = allTask?.filter(task => task.assignee === parseInt(id));
       {/* Profile Details */}
       <section className="h-[465px] rounded-[46px] bg-[#F2F6FC] flex  justify-between items-center px-[55px]">
         <div className="flex flex-col justify-between">
-          
           <div className="flex items-center gap-4">
-
             <div className="w-[238px] h-[238px] rounded-[15px] overflow-hidden">
               <img src={userDetails?.image} alt="" className="w-full h-full" />
             </div>
@@ -66,18 +64,20 @@ const singleUserTask = allTask?.filter(task => task.assignee === parseInt(id));
               </span>
             </div>
           </div>
-          <TargetPoint userDetails={userDetails}/>
-        
+          <TargetPoint userDetails={userDetails} />
         </div>
 
         <div>
           <div className="flex items-center justify-center gap-4">
-
             <button className="w-[170px] h-[56px] rounded-[26px] border-2 border-[#FF8723] flex justify-center items-center uppercase text-[#FF8723] text-[19px] font-semibold ">
               {userDetails?.type}
             </button>
 
-            <button   onClick={openModal} ><LiaEditSolid className="text-[61px] text-[#FF8723]" /></button>
+            {type === "superadmin" && (
+              <button onClick={openModal}>
+                <LiaEditSolid className="text-[61px] text-[#FF8723]" />
+              </button>
+            )}
           </div>
 
           <div className="mt-[36px] flex items-center gap-5 text-center">
@@ -85,7 +85,7 @@ const singleUserTask = allTask?.filter(task => task.assignee === parseInt(id));
               <div className="mt-10">
                 <h3 className="text-[40px] text-white font-bold">12</h3>
                 <p className="mt-5 text-[20px] text-white font-medium uppercase">
-                  Over Date Lifetime
+                  Over Date
                 </p>
               </div>
             </div>
@@ -94,15 +94,19 @@ const singleUserTask = allTask?.filter(task => task.assignee === parseInt(id));
               <div className="mt-10">
                 <h3 className="text-[40px] text-white font-bold">52</h3>
                 <p className="mt-5 text-[20px] text-white font-medium uppercase">
-                  Over Date Lifetime
+                  Complete
                 </p>
               </div>
             </div>
           </div>
-
         </div>
 
-        <UpdateTargetpoint isOpen={isOpen} setIsOpen={setIsOpen} openModal={openModal} userDetails={userDetails} />
+        <UpdateTargetpoint
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          openModal={openModal}
+          userDetails={userDetails}
+        />
       </section>
 
       {/*  <<=== Search & Filter ====>>  */}
@@ -132,17 +136,17 @@ const singleUserTask = allTask?.filter(task => task.assignee === parseInt(id));
         {(type !== "superadmin" || type !== "admin") && (
           <>
             {/*  <<=========== TODO ============>>  */}
-            <Todo redirect={redirect} singleUserTask={singleUserTask}/>
+            <Todo redirect={redirect} singleUserTask={singleUserTask} />
 
             {/*  <<======== IN PROGRESS ========>>  */}
             <InProgress redirect={redirect} singleUserTask={singleUserTask} />
 
             {/*  <<=========== PAUSE ===========>>  */}
-            <Pause redirect={redirect} singleUserTask={singleUserTask}/>
+            <Pause redirect={redirect} singleUserTask={singleUserTask} />
 
             {/*  <<===== FOR QC CHECKLIST ======>>  */}
 
-            <CheckList redirect={redirect} singleUserTask={singleUserTask}/>
+            <CheckList redirect={redirect} singleUserTask={singleUserTask} />
           </>
         )}
       </>

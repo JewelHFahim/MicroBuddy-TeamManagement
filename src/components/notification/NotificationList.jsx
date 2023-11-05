@@ -53,10 +53,10 @@ const NotificationList = ({ isOpen, setIsOpen }) => {
 
             <div className="relative w-[500px] inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-top transition-all transform bg-white rounded-lg shadow-xl">
               {allNotification?.length <= 0 ? (
-                <p>
-                  You have no new
+                <p className="flex items-center gap-1">
+                  You have no new 
                   <span className="font-semibold text-green-800 underline underline-offset-2">
-                    Notification
+                    Notification !
                   </span>
                 </p>
               ) : (

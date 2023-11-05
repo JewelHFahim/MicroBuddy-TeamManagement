@@ -33,6 +33,7 @@ const UpdateMyTask = () => {
   const { userId, type } = useSelector((state) => state.user);
   const [updateQCUserStatus] = useUpdateQCUserStatusMutation();
 
+
   useEffect(() => {
     const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
     console.log(isChekedStatus);
@@ -183,11 +184,28 @@ const UpdateMyTask = () => {
 
         {/***************************** * SECOND COLUMN *******************************/}
         <section className="w-[50%]">
+          
           {/* For Member Status Update */}
-          <MemberButtons viewTask={viewTask} updateTask={updateTask} id={id} />
+          {viewTask?.assignee === userId && (
+            <MemberButtons
+              viewTask={viewTask}
+              updateTask={updateTask}
+              id={id}
+            />
+          )}
 
-          {/* For QC Status Update */}
-          <QcButtons viewTask={viewTask} updateTask={updateTask} id={id} />
+          {
+
+            
+          
+          (Number(QCListBytaskId?.[0]?.task) === Number(id) &&
+            Number(QCListBytaskId?.[0]?.user) !== Number(viewTask?.assigner) &&
+            Number(QCListBytaskId?.[0]?.user) !== Number(viewTask?.assignee)) &&
+            
+            
+              <QcButtons viewTask={viewTask} updateTask={updateTask} id={id} />
+
+            }
 
           {/* Chatting */}
           <Chatting />

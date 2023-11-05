@@ -34,8 +34,13 @@ const taskApi = apiSlice.injectEndpoints({
       providesTags: ["Team-Management"],
     }),
 
+    getQCTaskListByQcId: builder.query({
+      query: (id) => `/search-user-for-qc/?user=${id}`,
+      providesTags: ["Team-Management"],
+    }),
+
     getQCStatusByQcId: builder.query({
-      query: (id) => `/search-qc/?qc=${id} `,
+      query: (id) => `/search-qc/?qc=${id}`,
       providesTags: ["Team-Management"],
     }),
 
@@ -110,6 +115,7 @@ export const {
   useUpdateQCUserStatusMutation,
   useGetTaskListByQcIdQuery,
   useGetQCStatusByQcIdQuery,
-  useGetAllQCTaskListQuery
+  useGetAllQCTaskListQuery,
+  useGetQCTaskListByQcIdQuery
 } = taskApi;
 export default taskApi;

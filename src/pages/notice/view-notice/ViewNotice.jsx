@@ -34,9 +34,10 @@ const ViewNotice = () => {
           <Loading />
         </div>
       ) : (
-        <section className="w-full h-[457px] rounded-[46px] shadow-md border border-blue-700 p-10 flex justify-between items-start">
-          <div className="w-[95%]">
-            <h1 className="text-[80px] font-semibold text-secondary">
+        <section className="w-full h-[550px] overflow-hidden rounded-[46px] shadow-md border border-blue-700 p-10 flex justify-between items-start">
+
+          <div className="w-[1300px] h-[500px] overflow-x-auto border">
+            <h1 className="text-[80px] font-semibold text-secondary leading-[100px]">
               {noticeDetails?.title}
             </h1>
 

@@ -21,8 +21,6 @@ const SideDrawer = () => {
   const { data: userDetails } = useUserDetailsQuery(userId);
 
 
-
-
   console.log(type)
   
   const userRole = type;
@@ -71,9 +69,15 @@ const SideDrawer = () => {
   ];
 
   const filteredMenus = Menues.filter(menu => {
-    if (userRole === ('superadmin' || 'admin')) {
+    if (userRole === ('superadmin')) {
       return true;
-    } else if (userRole === 'member') {
+    } 
+
+    else if (userRole === 'admin') {
+      return !['History'].includes(menu.title);
+    }
+
+     else if (userRole === 'member') {
       return !['Task List', 'Employee', 'History', 'Setting'].includes(menu.title);
     }
   });
@@ -108,10 +112,7 @@ const SideDrawer = () => {
           </nav>
 
           <div className="flex items-center gap-4 px-4">
-            <img
-              className="object-cover rounded-full h-[61px] w-[61px]"
-              src={userDetails?.image}
-            />
+            <img className="object-cover rounded-full h-[61px] w-[61px]" src={userDetails?.image}/>
 
             <p className="flex flex-col mx-2">
               <span className="font-medium text-[#273240] text-[21px] uppercase">

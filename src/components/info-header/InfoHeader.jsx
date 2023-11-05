@@ -73,7 +73,7 @@ const InfoHeader = ({ viewTask, allUser }) => {
             </p>
           </div>
 
-          {(type === "superadmin" || type === "admin") && (
+          {type === "superadmin" && (
             <div className="mx-4">
               <Link to={`/edit-task/${viewTask?.id}`}>
                 <button>

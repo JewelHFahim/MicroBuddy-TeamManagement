@@ -12,6 +12,7 @@ const Navbar = () => {
 
   const { email, username, userId } = useSelector((state) => state.user);
   const { data: userDetails } = useUserDetailsQuery(userId);
+  console.log(userDetails)
   const { data: allNotification } = useGetAllNotificationQuery();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +25,7 @@ const Navbar = () => {
       <div className="flex justify-between items-center w-full h-full">
         {/* target Points */}
         <div className="-mt-10">
-          <TargetPoint userDetails={userDetails}/>
+          <TargetPoint userDetails={userDetails} />
         </div>
 
         <NotificationList
@@ -60,7 +61,9 @@ const Navbar = () => {
               </span>
               <span className="text-[#737B8B] text-[14px] ">{email}</span>
             </p>
-            <div className="w-[56px] h-[56px] bg-[#C4C4C4] rounded-full"></div>
+            <div className="w-[56px] h-[56px] bg-[#C4C4C4] rounded-full">
+              <img src={userDetails?.image} alt="" className="w-full h-full rounded-full object-cover" />
+            </div>
           </div>
         </section>
       </div>
