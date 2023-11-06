@@ -1,25 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useSelector } from "react-redux";
-import {
-  useGetAllQCTaskListQuery,
-  useGetAllTaskQuery,
-} from "../../../redux/features/task/taskApi";
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const QcTodo = ({ redirect }) => {
-  const { userId } = useSelector((state) => state.user);
-
-  const { data: allTask, isLoading } = useGetAllTaskQuery();
-  const { data: allQCTask } = useGetAllQCTaskListQuery();
-
-  const tasksWithQcUser = allQCTask
-    ?.filter((task) => task.user === userId)
-    .map((task) => task.task);
-
-  const onlyQCTask = allTask?.filter(
-    (task) => tasksWithQcUser?.includes(task.id) && task.status === "checklist"
-  );
+const QcTodo = ({ redirect, filteredAllQCTask, isLoading }) => {
+  const onlyQCTask = filteredAllQCTask?.filter((task) => task.status === "checklist");
 
   const dataSet = {
     btnText: "QC Todo",

@@ -176,6 +176,7 @@ const CreateTask = () => {
 
             <div className="mt-4">
               <h2 className="text-[25px] font-semibold">Add QC User</h2>
+              
               <select
                 {...register("user")}
                 className="w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center focus:outline-none px-3 text-[20px] capitalize font-semibold"
@@ -189,6 +190,7 @@ const CreateTask = () => {
                   </option>
                 ))}
               </select>
+              
               <p className="text-red-600">{errors.user && <span>User is required</span>}</p>
 
             </div>

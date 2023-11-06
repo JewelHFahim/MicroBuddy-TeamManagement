@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import {
   useGetAllCheckListQuery,
   useGetQCStatusByQcIdQuery,
+  useGetQCTaskListByQcIdQuery,
   useGetTaskListByQcIdQuery,
   useUpdateQCUserStatusMutation,
   useUpdateTaskMutation,
@@ -20,7 +21,6 @@ import QcButtons from "../../../components/qc-buttons/QcButtons";
 import MemberButtons from "../../../components/member-btns/MemberButtons";
 
 const UpdateMyTask = () => {
-  // const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const { id } = useParams();
   const { data: QCListBytaskId } = useGetTaskListByQcIdQuery(id);
@@ -32,7 +32,6 @@ const UpdateMyTask = () => {
   const { data: allUser } = useGetAllUserQuery();
   const { userId, type } = useSelector((state) => state.user);
   const [updateQCUserStatus] = useUpdateQCUserStatusMutation();
-
 
   useEffect(() => {
     const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
@@ -60,6 +59,25 @@ const UpdateMyTask = () => {
     toast.success("Task Location Submitted");
     form.reset();
   };
+
+  // QC Button implimentation
+  const { data: qcTaskList } = useGetQCTaskListByQcIdQuery(userId);
+  console.log(qcTaskList);
+
+  const [found, setFound] = useState();
+  console.log(found);
+  useEffect(() => {
+    const isMatched = qcTaskList?.some((qcTask) => {
+      return qcTask.task === viewTask?.id && qcTask.user === userId;
+    });
+
+    if (isMatched) {
+      setFound(true);
+    } else {
+      setFound(false);
+    }
+  }, [qcTaskList, viewTask, userId]);
+
 
   return (
     <div className="pb-[300px]">
@@ -184,9 +202,8 @@ const UpdateMyTask = () => {
 
         {/***************************** * SECOND COLUMN *******************************/}
         <section className="w-[50%]">
-          
           {/* For Member Status Update */}
-          {viewTask?.assignee === userId && (
+          {viewTask?.assignee === Number(userId) && (
             <MemberButtons
               viewTask={viewTask}
               updateTask={updateTask}
@@ -194,18 +211,9 @@ const UpdateMyTask = () => {
             />
           )}
 
-          {
-
-            
-          
-          (Number(QCListBytaskId?.[0]?.task) === Number(id) &&
-            Number(QCListBytaskId?.[0]?.user) !== Number(viewTask?.assigner) &&
-            Number(QCListBytaskId?.[0]?.user) !== Number(viewTask?.assignee)) &&
-            
-            
-              <QcButtons viewTask={viewTask} updateTask={updateTask} id={id} />
-
-            }
+          {(found === true &&  viewTask?.assignee !== Number(userId)) && (
+            <QcButtons viewTask={viewTask} updateTask={updateTask} id={id} />
+          )}
 
           {/* Chatting */}
           <Chatting />

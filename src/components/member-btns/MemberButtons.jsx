@@ -1,10 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useSelector } from "react-redux";
-
 const MemberButtons = ({viewTask, updateTask, id }) => {
-
-    const { type } = useSelector(state=> state.user);
-
 
     const handleStatusChange = (newStatus) => {
         const data = { status: newStatus };
@@ -12,11 +7,10 @@ const MemberButtons = ({viewTask, updateTask, id }) => {
         updateTask({ data, id });
       };
     
-
     return (
         <>
             {/* For Member Status Update */}
-          {type === "member" && (
+         
             <div className="flex items-center gap-6 justify-end">
               <div className="flex flex-col gap-5">
                 <>
@@ -102,7 +96,7 @@ const MemberButtons = ({viewTask, updateTask, id }) => {
                 )}
               </>
             </div>
-          )}
+          
         </>
     );
 };

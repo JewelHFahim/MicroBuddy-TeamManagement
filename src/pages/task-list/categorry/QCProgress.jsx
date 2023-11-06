@@ -3,11 +3,11 @@ import { useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const QCProgress = ({ redirect }) => {
-  const { data: allTask, isLoading } = useGetAllTaskQuery();
-  const filteredQCProgress = allTask?.filter(
-    (task) => task.status === "qc_progress"
-  );
+const QCProgress = ({ redirect, filteredAllQCTask, isLoading}) => {
+  const { data: allTask } = useGetAllTaskQuery();
+  const pathName = (window.location.pathname);
+  const currentData = pathName === "/task-list" ? allTask : filteredAllQCTask;
+  const filteredQCProgress = currentData?.filter((task) => task.status === "qc_progress");
 
   const dataSet = {
     btnText: "QC Progress",

@@ -1,11 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const QCComplete = ({ redirect }) => {
-  const { data: allTask, isLoading } = useGetAllTaskQuery();
-  const filteredQcComplete = allTask?.filter(
+const QCComplete = ({ redirect, filteredAllQCTask, isLoading }) => {
+  const filteredQcComplete = filteredAllQCTask?.filter(
     (task) => task.status === "qc_complete"
   );
 

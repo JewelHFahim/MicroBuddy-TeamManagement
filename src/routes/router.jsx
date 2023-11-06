@@ -21,17 +21,23 @@ import UpdateNotice from "../pages/notice/notice-update/UpdateNotice";
 import CheckListCreat from "../pages/task-list/create-task/CheckListCreat";
 import ABC from "../pages/task-list/create-task/abc";
 import UpdateMyTask from "../pages/my-task/update/UpdateMyTask";
+import QCTask from "../pages/my-task/QCTask";
+import MemberTask from "../pages/my-task/MemberTask";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <PrivateRouter> <Main /> </PrivateRouter>,
+    element: (
+      <PrivateRouter>
+        {" "}
+        <Main />{" "}
+      </PrivateRouter>
+    ),
     children: [
       {
         path: "/",
         element: <Home />,
       },
-
 
       // **********My Task Related************//
       {
@@ -43,7 +49,14 @@ const router = createBrowserRouter([
         element: <UpdateMyTask />,
       },
 
-
+      {
+        path: "/qc-task",
+        element: <QCTask />,
+      },
+      {
+        path: "/my-task",
+        element: <MemberTask />,
+      },
 
       {
         path: "/calender",
@@ -76,8 +89,6 @@ const router = createBrowserRouter([
         element: <ABC />,
       },
 
-
-
       // **********Emplyee************//
       {
         path: "/employee",
@@ -88,7 +99,6 @@ const router = createBrowserRouter([
         path: "/employee-detail-view/:id",
         element: <EmployeeDetailsView />,
       },
-
 
       // **********Notices************//
       {
@@ -121,12 +131,12 @@ const router = createBrowserRouter([
 
   {
     path: "/login",
-    element: <Login/>
+    element: <Login />,
   },
   {
     path: "/register",
-    element: <Register/>
-  }
+    element: <Register />,
+  },
 ]);
 
 export default router;
