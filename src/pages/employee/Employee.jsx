@@ -5,6 +5,7 @@ import { useGetAllUserQuery } from "../../redux/features/user/userApi";
 import Loading from "../../utils/loading/Loading";
 
 const Employee = () => {
+  
   const { data: allUser, isLoading } = useGetAllUserQuery();
 
   const tableHeadData = [

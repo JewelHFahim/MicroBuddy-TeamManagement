@@ -2,6 +2,7 @@
 import {
   useGetAllTaskQuery,
 } from "../../../redux/features/task/taskApi";
+import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
@@ -15,11 +16,25 @@ const Todo = ({ redirect, singleUserTask }) => {
 
   const filteredTodo = currentData?.filter((task) => task.status === "todo");
 
+  const { data: allUser } = useGetAllUserQuery();
+
+
+  // Pic
+   function getUserImage(userId) {
+    const user = allUser?.find((u) => u.user.id === userId);
+    return user ? user.user.image : null;
+  }
+  
+  // Usage in your component or as a prop to pass to another component
+  // const assignerImage = getUserImage(task.assigner);
+let abc = "";
+
   const dataSet = {
     btnText: "To Do",
     bgColor: "bg-[#FF8723]",
     textColor: "text-[#FF8723]",
     redirect: redirect,
+    fn: getUserImage(abc)
   };
 
   return (

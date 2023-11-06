@@ -2,7 +2,10 @@ import Title from "../../../utils/Title";
 import { FaClipboardList } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
+import {
+  useGetAllUserQuery,
+  useUserDetailsQuery,
+} from "../../../redux/features/user/userApi";
 import { useForm } from "react-hook-form";
 import CreateDate from "../../../utils/CreateDate";
 import { useState } from "react";
@@ -27,6 +30,8 @@ const CreateTask = () => {
 
   const { userId, token } = useSelector((state) => state.user);
   const { data: allUser } = useGetAllUserQuery();
+  const { data: currentUser } = useUserDetailsQuery(userId);
+  console.log(currentUser?.image);
   const [content, setContent] = useState("");
 
   const baseurl = "https://jabedahmed.pythonanywhere.com";
@@ -54,6 +59,7 @@ const CreateTask = () => {
         points: data.points,
         priority: data.priority,
         assigner: userId,
+        image: currentUser?.image,
         assignee: parseInt(data.assignee),
       };
       console.log(taskData);
@@ -170,13 +176,14 @@ const CreateTask = () => {
                 />
                 <LiaUserPlusSolid className="text-[25px] text-blue-700" />
               </div>
-              <p className="text-red-600">{errors.option_text && <span>Check List is required</span>}</p>
-
+              <p className="text-red-600">
+                {errors.option_text && <span>Check List is required</span>}
+              </p>
             </div>
 
             <div className="mt-4">
               <h2 className="text-[25px] font-semibold">Add QC User</h2>
-              
+
               <select
                 {...register("user")}
                 className="w-[358px] h-[45px] rounded-[46px] border border-blue-700 flex justify-between items-center focus:outline-none px-3 text-[20px] capitalize font-semibold"
@@ -190,9 +197,10 @@ const CreateTask = () => {
                   </option>
                 ))}
               </select>
-              
-              <p className="text-red-600">{errors.user && <span>User is required</span>}</p>
 
+              <p className="text-red-600">
+                {errors.user && <span>User is required</span>}
+              </p>
             </div>
           </div>
 
@@ -206,7 +214,9 @@ const CreateTask = () => {
                 className="w-[120px] h-[40px] rounded-[46px] placeholder:text-blue-700 placeholder:font-semibold pl-4 focus:outline-none bg-transparent font-semibold bg-white"
                 placeholder="+ Points"
               />
-              <p className="text-red-600">{errors.points && <span>Point is required</span>}</p>
+              <p className="text-red-600">
+                {errors.points && <span>Point is required</span>}
+              </p>
             </div>
           </div>
 
@@ -256,8 +266,9 @@ const CreateTask = () => {
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
               </select>
-              <p className="text-red-600">{errors.priority && <span> Priority is required</span>}</p>
-
+              <p className="text-red-600">
+                {errors.priority && <span> Priority is required</span>}
+              </p>
             </div>
           </div>
         </section>
