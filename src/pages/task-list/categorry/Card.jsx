@@ -5,8 +5,19 @@ import { userProPic } from "../../../utils/Important";
 import StatusBtnOutLine from "../../../utils/StatusBtnOutLine";
 import { Link } from "react-router-dom";
 import DateFormat from "../../../utils/DateFormat";
+import { useGetAllUserQuery } from "../../../redux/features/user/userApi";
+import { useState } from "react";
+import { useEffect } from "react";
+import { getRandomColor } from "../../../utils/getRandomColor";
 
 const Card = ({ cardData, dataSet }) => {
+  const { data: allUser } = useGetAllUserQuery();
+  
+  const [backgroundColor, setBackgroundColor] = useState(getRandomColor());
+  useEffect(() => {
+    setBackgroundColor(getRandomColor());
+  }, []);
+
   return (
     <>
       <section className="mt-[32px]">
@@ -49,8 +60,17 @@ const Card = ({ cardData, dataSet }) => {
 
                       <td className="px-6 py-4 ">
                         <div className="flex justify-center items-center">
-                          <div className="w-[35px] h-[35px] rounded-full border-2 shrink-0 flex justify-center items-center font-semibold">
-                            {item?.assignee}
+                          <div
+                            className="w-[35px] h-[35px] rounded-full border-2 shrink-0 flex justify-center items-center font-semibold capitalize text-white"
+                            style={{ backgroundColor }}
+                          >
+                            {allUser?.map((user) => {
+                              if (user?.user?.id === item?.assignee) {
+                                const username = user?.user?.username;
+                                return username ? username.charAt(0) : null;
+                              }
+                              return null;
+                            })}
                           </div>
                         </div>
                       </td>

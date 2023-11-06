@@ -62,11 +62,13 @@ const ViewTask = () => {
 
   return (
     <div>
+
       <Title>View Task</Title>
 
       <InfoHeader viewTask={viewTask} allUser={allUser} />
 
       <section className="mt-[27px] flex gap-[40px]">
+
         {/* 1st column */}
         <section>
           <div className="w-[712px] h-[780px] overflow-y-auto rounded-[15px] bg-[#F2F6FC] p-[40px]  shadow-md">
@@ -203,7 +205,9 @@ const ViewTask = () => {
             </div>
           )}
         </section>
+        
       </section>
+
     </div>
   );
 };
