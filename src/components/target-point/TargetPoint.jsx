@@ -5,6 +5,7 @@ import { useViewDetailTargetpointQuery } from "../../redux/features/user/userApi
 import DateFormat from "../../utils/DateFormat";
 
 const TargetPoint = ({ userDetails }) => {
+  
   const { data: targetPointDetail } = useViewDetailTargetpointQuery(
     userDetails?.user?.id
   );

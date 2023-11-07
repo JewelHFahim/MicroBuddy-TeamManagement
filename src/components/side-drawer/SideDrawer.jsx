@@ -126,6 +126,7 @@ const SideDrawer = () => {
             <button onClick={()=>dispatch(addLogout())} className="text-[31px]">
               <GrLogout />
             </button>
+            
           </div>
         </div>
       </aside>

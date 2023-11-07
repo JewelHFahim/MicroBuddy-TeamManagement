@@ -37,7 +37,7 @@ const Card = ({ cardData, dataSet, qcImages }) => {
                       <td className="flex items-center gap-x-[40px] px-6 whitespace-nowrap max-w-[700px] ">
                         <img
                           src={item?.image !== null ? item?.image : userProPic}
-                          className="w-[90px] h-[90px]  rounded-[31px]"
+                          className="w-[90px] h-[90px]  rounded-full"
                         />
 
                         <div className="text-left">
@@ -61,7 +61,7 @@ const Card = ({ cardData, dataSet, qcImages }) => {
                       <td className="px-6 py-4 ">
                         <div className="flex justify-center items-center">
                           <div
-                            className="w-[35px] h-[35px] rounded-full border-2 shrink-0 flex justify-center items-center font-semibold capitalize text-white"
+                            className="w-[45px] h-[45px] rounded-full border-2 shrink-0 flex justify-center items-center font-semibold capitalize text-white"
                             style={{ backgroundColor }}
                           >
                             {allUser?.map((user) => {
@@ -81,7 +81,7 @@ const Card = ({ cardData, dataSet, qcImages }) => {
                         </div>
                       </td>
 
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 pl-16">
                         {qcImages
                           ?.filter((userImg) => {
                             return userImg?.qcTask === item.id && userImg.qcImg;
@@ -91,7 +91,7 @@ const Card = ({ cardData, dataSet, qcImages }) => {
                               key={index}
                               src={filteredUserImg.qcImg}
                               alt="qc"
-                              className="w-[35px] h-[35px] rounded-full"
+                              className="w-[45px] h-[45px] rounded-full"
                             />
                           ))}
                          

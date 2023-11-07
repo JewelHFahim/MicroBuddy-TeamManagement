@@ -29,8 +29,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <PrivateRouter>
-        {" "}
-        <Main />{" "}
+        <Main />
       </PrivateRouter>
     ),
     children: [
@@ -44,6 +43,7 @@ const router = createBrowserRouter([
         path: "/my-task",
         element: <MyTask />,
       },
+      
       {
         path: "/update-mytask/:id",
         element: <UpdateMyTask />,
@@ -135,7 +135,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <PrivateRouter><Register /></PrivateRouter>,
   },
 ]);
 

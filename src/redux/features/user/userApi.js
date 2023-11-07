@@ -32,6 +32,19 @@ const userApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Team-Management"],
     }),
+
+
+    // <<================ CHNAGE PASSWORD ===============>>
+
+  changePassword: builder.mutation({
+      query: ({ data }) => ({
+        method: "POST",
+        url: `/user/change-password/`,
+        body: data,
+      }),
+      invalidatesTags: ["Team-Management"],
+    }),
+
   }),
 });
 
@@ -40,5 +53,6 @@ export const {
   useUserDetailsQuery,
   useUpdateTargetpointMutation,
   useViewDetailTargetpointQuery,
+  useChangePasswordMutation
 } = userApi;
 export default userApi;

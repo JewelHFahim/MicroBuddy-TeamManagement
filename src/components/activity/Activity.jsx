@@ -31,33 +31,37 @@ const Activity = ({ id, allUser }) => {
                     />
                   ))}
               </div>
-              <div className="flex flex-col">
-                <p className="text-secondary text-[18px]">
-                  {allUser
-                    ?.filter((user) => {
-                      return user?.user?.id === acitivity?.user;
-                    })
-                    .map((filteredUser, index) => (
-                      <span key={index}>{filteredUser?.user?.username}</span>
-                    ))}
-                </p>
+              <div className="flex  items-start gap-4">
 
-                <p className="text-[12px] text-[#7C8DB5]">
-                  {DateFormat(acitivity?.created_at)}
-                </p>
-                <div className="mt-5">
-                  <p className="font-semibold flex gap-2">
-                    Status:
-                    <span className="uppercase text-green-700">
+                <div className="">
+                  <p className="text-secondary text-[18px]">
+                    {allUser
+                      ?.filter((user) => {
+                        return user?.user?.id === acitivity?.user;
+                      })
+                      .map((filteredUser, index) => (
+                        <span key={index}>{filteredUser?.user?.username}</span>
+                      ))}
+                  </p>
+
+                  <p className="text-[12px] text-[#7C8DB5]">
+                    {DateFormat(acitivity?.created_at)}
+                  </p>
+                </div>
+
+                <div className=" mt-[2px]">
+                  <p className=" flex gap-2">
+                    Change Status:
+                    <span className="uppercase text-green-700 font-semibold">
                       {acitivity?.status}
                     </span>
                   </p>
                 </div>
+
               </div>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

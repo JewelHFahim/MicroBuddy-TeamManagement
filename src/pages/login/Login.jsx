@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { loginUser, setToken } from "../../redux/features/user/userSlice";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/mb logo.png";
 
 const Login = () => {
@@ -94,14 +94,15 @@ const Login = () => {
               Sign In
             </button>
 
-            <div className="mt-6 text-center ">
+            {/* <div className="mt-6 text-center ">
               <Link
                 to="/register"
                 className="text-sm text-blue-500 hover:underline dark:text-blue-400"
               >
                 Dont have an account? Sign Up
               </Link>
-            </div>
+            </div> */}
+
           </div>
         </form>
       </div>

@@ -31,7 +31,6 @@ const Navbar = () => {
         <NotificationList
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          openModal={openModal}
           allNotification={allNotification}
         />
 

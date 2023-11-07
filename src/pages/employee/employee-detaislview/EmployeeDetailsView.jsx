@@ -58,10 +58,7 @@ const EmployeeDetailsView = () => {
                   {userDetails?.user.email}
                 </span>
               </p>
-              Password:
-              <span className="text-blue-600 font-normal ml-1">
-                Reset Password
-              </span>
+             
             </div>
           </div>
           <TargetPoint userDetails={userDetails} />
