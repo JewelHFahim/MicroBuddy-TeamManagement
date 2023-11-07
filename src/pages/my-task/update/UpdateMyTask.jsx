@@ -78,7 +78,6 @@ const UpdateMyTask = () => {
     }
   }, [qcTaskList, viewTask, userId]);
 
-
   return (
     <div className="pb-[300px]">
       <Title>Update MyTask</Title>
@@ -173,20 +172,21 @@ const UpdateMyTask = () => {
               </div>
 
               {/* QC User Name */}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 w-[40px] h-[40px] rounded-full">
                 {QCListBytaskId?.map((qc) => {
                   const user = allUser?.find(
                     (user) => user.user.id === qc.user
                   );
                   if (user) {
                     return (
-                      <p
-                        key={user.id}
-                        className="w-[45px] h-[45px] rounded-full flex justify-center items-center text-[25px] bg-green-200 border-[4px] border-green-300"
-                        title={`${user.user.username}`}
-                      >
-                        {user.user.username.charAt(0)}
-                      </p>
+                      
+                      <img
+                      title={`${user.user.username}`}
+                        key={qc.id}
+                        src={user?.image}
+                        alt=""
+                        className="w-full h-full rounded-full"
+                      />
                     );
                   } else {
                     <p>User with userId not found</p>;
@@ -197,7 +197,7 @@ const UpdateMyTask = () => {
           </section>
 
           {/*Activity*/}
-          <Activity />
+          <Activity  id={id} allUser={allUser} />
         </section>
 
         {/***************************** * SECOND COLUMN *******************************/}
@@ -211,7 +211,7 @@ const UpdateMyTask = () => {
             />
           )}
 
-          {(found === true &&  viewTask?.assignee !== Number(userId)) && (
+          {found === true && viewTask?.assignee !== Number(userId) && (
             <QcButtons viewTask={viewTask} updateTask={updateTask} id={id} />
           )}
 

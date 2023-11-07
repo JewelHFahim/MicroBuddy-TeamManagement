@@ -1,9 +1,5 @@
 import apiSlice from "../../api/apiSlice";
 
-const userInfo = JSON.parse(localStorage.getItem("user-info"));
-
-console.log("Token", userInfo?.token);
-
 const noticeApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
@@ -25,10 +21,6 @@ const noticeApi = apiSlice.injectEndpoints({
         method: "POST",
         url: "/notice-create/",
         body: data,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
       }),
       invalidatesTags: ["Team-Management"],
     }),
@@ -37,10 +29,6 @@ const noticeApi = apiSlice.injectEndpoints({
       query: (id) => ({
         method: "DELETE",
         url: `/notice-delete/${id}/`,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
       }),
       invalidatesTags: ["Team-Management"],
     }),
@@ -50,10 +38,6 @@ const noticeApi = apiSlice.injectEndpoints({
         method: "POST",
         url: `/notice-update/${id}/`,
         body: data,
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Token ${userInfo?.token}`,
-        },
       }),
       invalidatesTags: ["Team-Management"],
     }),

@@ -4,15 +4,10 @@ import CheckList from "../task-list/categorry/CheckList";
 import InProgress from "../task-list/categorry/InProgress";
 import Pause from "../task-list/categorry/Pause";
 import Todo from "../task-list/categorry/Todo";
-import { useGetAllTaskQuery } from "../../redux/features/task/taskApi";
 
-const MemberTask = () => {
-  const redirect = "update-mytask";
+const MemberTask = ({dataFromCenter}) => {
   const { type, userId } = useSelector((state) => state.user);
-  const { data: allTask } = useGetAllTaskQuery();
-  const singleUserTask = allTask?.filter(
-    (task) => task.assignee === parseInt(userId)
-  );
+  const singleUserTask = dataFromCenter?.allTask?.filter((task) => task.assignee === parseInt(userId));
 
   return (
     <>
@@ -20,16 +15,16 @@ const MemberTask = () => {
       {(type !== "superadmin" || type !== "admin") && (
         <>
           {/*  <<=========== TODO ============>>  */}
-          <Todo redirect={redirect} singleUserTask={singleUserTask} />
+          <Todo  singleUserTask={singleUserTask} dataFromCenter={dataFromCenter} />
 
           {/*  <<======== IN PROGRESS ========>>  */}
-          <InProgress redirect={redirect} singleUserTask={singleUserTask} />
+          <InProgress singleUserTask={singleUserTask} dataFromCenter={dataFromCenter}  />
 
           {/*  <<=========== PAUSE ===========>>  */}
-          <Pause redirect={redirect} singleUserTask={singleUserTask} />
+          <Pause singleUserTask={singleUserTask} dataFromCenter={dataFromCenter}  />
 
           {/*  <<===== FOR QC CHECKLIST ======>>  */}
-          <CheckList redirect={redirect} singleUserTask={singleUserTask} />
+          <CheckList singleUserTask={singleUserTask} dataFromCenter={dataFromCenter}  />
         </>
       )}
     </>

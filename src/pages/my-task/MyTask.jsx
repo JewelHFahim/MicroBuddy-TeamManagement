@@ -7,10 +7,32 @@ import QCTask from "./QCTask";
 import MemberTask from "./MemberTask";
 import { useState } from "react";
 import { memberBtnStyle, qcButtonStyle } from "../../utils/Important";
+import { useGetAllQCTaskListQuery, useGetAllTaskQuery } from "../../redux/features/task/taskApi";
+import { useGetAllUserQuery } from "../../redux/features/user/userApi";
 
 const MyTask = () => {
-  const [toggleTask, setToggoleTasl] = useState("member-task");
+  const redirect = "update-mytask";
+  const { data: allTask, isLoading } = useGetAllTaskQuery();
+  const { data: allUser } = useGetAllUserQuery();
+  const { data: allQc } = useGetAllQCTaskListQuery();
 
+  const userImages = allQc?.map((qc) => {
+    const task = allTask?.find((task) => task.id === qc.task);
+    const user = allUser?.find((userEntry) => userEntry.user.id === qc.user);
+    if (task && user) {
+      return { qcImg: user?.image, qcTask: qc?.task };
+    }
+    return null;
+  });
+
+  const dataFromCenter = {
+    redirect: redirect,
+    qcImg: userImages,
+    allTask: allTask,
+    isLoading: isLoading,
+  };
+
+  const [toggleTask, setToggoleTasl] = useState("member-task");
   const handleToggle = (toggle) => {
     setToggoleTasl(toggle);
   };
@@ -53,8 +75,11 @@ const MyTask = () => {
       <Statistics />
 
       {/*  <<======= TASK ========>>  */}
-      {toggleTask === "qc-task" ? <QCTask /> : <MemberTask />}
-      
+      {toggleTask === "qc-task" ? (
+        <QCTask dataFromCenter={dataFromCenter} />
+      ) : (
+        <MemberTask dataFromCenter={dataFromCenter} />
+      )}
     </div>
   );
 };

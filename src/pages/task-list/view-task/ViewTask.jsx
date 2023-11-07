@@ -32,9 +32,6 @@ const ViewTask = () => {
   const { data: qcStatusList } = useGetQCStatusByQcIdQuery(qcId);
   const { type, userId } = useSelector((state) => state.user);
   const { data: qcObject } = useGetTaskListByQcIdQuery(id);
-  console.log(qcObject);
-
-  console.log(viewTask);
 
   useEffect(() => {
     const isChekedStatus = QCListBytaskId?.map((ck) => setQcId(ck.id));
@@ -62,13 +59,11 @@ const ViewTask = () => {
 
   return (
     <div>
-
       <Title>View Task</Title>
 
       <InfoHeader viewTask={viewTask} allUser={allUser} />
 
       <section className="mt-[27px] flex gap-[40px]">
-
         {/* 1st column */}
         <section>
           <div className="w-[712px] h-[780px] overflow-y-auto rounded-[15px] bg-[#F2F6FC] p-[40px]  shadow-md">
@@ -150,20 +145,20 @@ const ViewTask = () => {
               </div>
 
               {/* QC User Name */}
-              <div>
+              <div className="flex flex-col gap-2 w-[40px] h-[40px] rounded-full">
                 {QCListBytaskId?.map((qc) => {
                   const user = allUser?.find(
                     (user) => user.user.id === qc.user
                   );
                   if (user) {
                     return (
-                      <p
-                        key={user.id}
-                        className="w-[55px] h-[55px] rounded-full flex justify-center items-center text-[25px] bg-green-200 border-[4px] border-green-300"
+                      <img
                         title={`${user.user.username}`}
-                      >
-                        {user.user.username.charAt(0)}
-                      </p>
+                        key={qc.id}
+                        src={user?.image}
+                        alt=""
+                        className="w-full h-full rounded-full"
+                      />
                     );
                   } else {
                     <p>User with userId not found</p>;
@@ -174,7 +169,7 @@ const ViewTask = () => {
           </div>
 
           {/* Activity */}
-          <Activity />
+          <Activity id={id} allUser={allUser} />
         </section>
 
         {/* 2nd column */}
@@ -194,20 +189,22 @@ const ViewTask = () => {
           {/* Chating UI */}
           <Chatting />
 
-          {(type === "superadmin" || viewTask?.assigner === userId) && (
-            <div className="mt-[50px] flex justify-end ">
-              <button
-                onClick={() => hnadleTaskDelete(id)}
-                className="w-[388px] h-[53px] rounded-[44px] bg-[#ED2121] text-[20px] text-white font-medium uppercase"
-              >
-                Delete This Project
-              </button>
-            </div>
+          { viewTask?.status !== "done" && (
+            <>
+              {(type === "superadmin" || viewTask?.assigner === userId) && (
+                <div className="mt-[50px] flex justify-end ">
+                  <button
+                    onClick={() => hnadleTaskDelete(id)}
+                    className="w-[388px] h-[53px] rounded-[44px] bg-[#ED2121] text-[20px] text-white font-medium uppercase"
+                  >
+                    Delete This Project
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </section>
-        
       </section>
-
     </div>
   );
 };

@@ -10,9 +10,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { getRandomColor } from "../../../utils/getRandomColor";
 
-const Card = ({ cardData, dataSet }) => {
+const Card = ({ cardData, dataSet, qcImages }) => {
   const { data: allUser } = useGetAllUserQuery();
-  
+
   const [backgroundColor, setBackgroundColor] = useState(getRandomColor());
   useEffect(() => {
     setBackgroundColor(getRandomColor());
@@ -66,8 +66,14 @@ const Card = ({ cardData, dataSet }) => {
                           >
                             {allUser?.map((user) => {
                               if (user?.user?.id === item?.assignee) {
-                                const username = user?.user?.username;
-                                return username ? username.charAt(0) : null;
+                                const userImg = user?.image;
+                                return userImg ? (
+                                  <img
+                                    src={userImg}
+                                    alt=""
+                                    className="w-full h-full rounded-full"
+                                  />
+                                ) : null;
                               }
                               return null;
                             })}
@@ -75,7 +81,21 @@ const Card = ({ cardData, dataSet }) => {
                         </div>
                       </td>
 
-                      <td className="px-6 py-4 ">QC</td>
+                      <td className="px-6 py-4">
+                        {qcImages
+                          ?.filter((userImg) => {
+                            return userImg?.qcTask === item.id && userImg.qcImg;
+                          })
+                          .map((filteredUserImg, index) => (
+                            <img
+                              key={index}
+                              src={filteredUserImg.qcImg}
+                              alt="qc"
+                              className="w-[35px] h-[35px] rounded-full"
+                            />
+                          ))}
+                         
+                      </td>
 
                       <td className="px-2 ">
                         <div className="flex justify-center items-center px-5 w-full">
@@ -187,5 +207,38 @@ export default Card;
 //     category: "Designer",
 //     assigned_tasks_count: 0,
 //     assigned_tasks_total: 0,
+//   },
+// ];
+
+// const allQc = [
+//   {
+//     id: 1,
+//     task: 1,
+//     user: 1,
+//     check_text: 1,
+//   },
+//   {
+//     id: 2,
+//     task: 2,
+//     user: 1,
+//     check_text: 2,
+//   },
+//   {
+//     id: 3,
+//     task: 3,
+//     user: 4,
+//     check_text: 3,
+//   },
+//   {
+//     id: 4,
+//     task: 4,
+//     user: 1,
+//     check_text: 6,
+//   },
+//   {
+//     id: 5,
+//     task: 6,
+//     user: 1,
+//     check_text: 10,
 //   },
 // ];
