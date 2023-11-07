@@ -1,6 +1,6 @@
 import { LiaEditSolid } from "react-icons/lia";
 import Title from "../../../utils/Title";
-import { useUserDetailsQuery } from "../../../redux/features/user/userApi";
+import { useGetAllUserQuery, useUserDetailsQuery } from "../../../redux/features/user/userApi";
 import { useParams } from "react-router-dom";
 import SearchField from "../../../utils/SearchField";
 import TaskFilterMenu from "../../../components/task-filter/TaskFilterMenu";
@@ -17,23 +17,43 @@ import CheckList from "../../task-list/categorry/CheckList";
 import TargetPoint from "../../../components/target-point/TargetPoint";
 import { useState } from "react";
 import UpdateTargetpoint from "../../../components/target-point/UpdateTargetpoint";
-import { useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
+import { useGetAllQCTaskListQuery, useGetAllTaskQuery } from "../../../redux/features/task/taskApi";
 
 const EmployeeDetailsView = () => {
+
   const { id } = useParams();
   const { type } = useSelector((state) => state.user);
   const { data: userDetails } = useUserDetailsQuery(id);
-  const redirect = "view-task";
+  const { data: allUser } = useGetAllUserQuery();
+  const { data: allQc } = useGetAllQCTaskListQuery();
+  const { data: allTask, isLoading } = useGetAllTaskQuery();
 
-  const { data: allTask } = useGetAllTaskQuery();
-  const singleUserTask = allTask?.filter(
-    (task) => task.assignee === parseInt(id)
-  );
+  const singleUserTask = allTask?.filter((task) => task.assignee === parseInt(id));
 
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => {
     setIsOpen(true);
   };
+
+
+  //
+  const userImages = allQc?.map((qc) => {
+    const task = allTask?.find((task) => task.id === qc.task);
+    const user = allUser?.find((userEntry) => userEntry.user.id === qc.user);
+    if (task && user) {
+      return { qcImg: user?.image, qcTask: qc?.task };
+    }
+    return null;
+  });
+
+  const redirect = "view-task";
+  const dataFromCenter = {
+    redirect: redirect,
+    qcImg: userImages,
+    allTask: allTask,
+    isLoading: isLoading,
+  };
+
 
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px] pb-10">
@@ -120,30 +140,30 @@ const EmployeeDetailsView = () => {
       <Statistics />
 
       {/*  <<======= QC Todo ========>>  */}
-      <QcTodo />
+      <QcTodo dataFromCenter={dataFromCenter}/>
 
       {/*  <<==== QC In PROGRESS =====>> */}
-      <QCProgress redirect={redirect} />
+      <QCProgress dataFromCenter={dataFromCenter} />
 
       {/*  <<===== QC COMPLETE =======>>  */}
-      <QCComplete />
+      <QCComplete dataFromCenter={dataFromCenter}/>
 
       {/* ####### NOT FOR SUPERADMIN/ADMIN ######## */}
       <>
         {(type !== "superadmin" || type !== "admin") && (
           <>
             {/*  <<=========== TODO ============>>  */}
-            <Todo redirect={redirect} singleUserTask={singleUserTask} />
+            <Todo dataFromCenter={dataFromCenter} singleUserTask={singleUserTask} />
 
             {/*  <<======== IN PROGRESS ========>>  */}
-            <InProgress redirect={redirect} singleUserTask={singleUserTask} />
+            <InProgress dataFromCenter={dataFromCenter} singleUserTask={singleUserTask} />
 
             {/*  <<=========== PAUSE ===========>>  */}
-            <Pause redirect={redirect} singleUserTask={singleUserTask} />
+            <Pause dataFromCenter={dataFromCenter} singleUserTask={singleUserTask} />
 
             {/*  <<===== FOR QC CHECKLIST ======>>  */}
 
-            <CheckList redirect={redirect} singleUserTask={singleUserTask} />
+            <CheckList dataFromCenter={dataFromCenter} singleUserTask={singleUserTask} />
           </>
         )}
       </>

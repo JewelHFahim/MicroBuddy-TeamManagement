@@ -90,10 +90,7 @@ const Notices = () => {
                     className="w-full border flex justify-between items-center bg-white rounded-lg shadow-sm px-4  py-2 notice"
                   >
                     <div className="flex items-center gap-x-3 whitespace-nowrap">
-                      <img
-                        src={notice}
-                        className="w-[81px] h-[81px] rounded-[20px]"
-                      />
+                      <img src={notice} className="w-[81px] h-[81px] rounded-[20px]"/>
                       <div>
                         
                         <p className="text-[24px] font-medium text-[#273240]">
