@@ -2,9 +2,9 @@
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const QcTodo = ({ filteredAllQCTask, dataFromCenter }) => {
+const QcTodo = ({ dataFromCenter }) => {
 
-  const onlyQCTask = filteredAllQCTask?.filter((task) => task.status === "checklist");
+  const onlyQCTask = dataFromCenter?.filteredAllQCTask?.filter((task) => task.status === "checklist");
 
   const dataSet = {
     btnText: "QC Todo",

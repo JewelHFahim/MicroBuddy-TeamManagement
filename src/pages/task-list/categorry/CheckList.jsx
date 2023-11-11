@@ -6,6 +6,7 @@ const CheckList = ({ singleUserTask, dataFromCenter }) => {
 
   const pathName = (window.location.pathname);
   const currentData = pathName === "/task-list" ? dataFromCenter?.allTask : singleUserTask;
+  
   const filteredCheckList = currentData?.filter((task) => task.status === "checklist");
 
   const dataSet = {

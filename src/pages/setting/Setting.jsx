@@ -1,4 +1,3 @@
-import { LiaEditSolid } from "react-icons/lia";
 import Title from "../../utils/Title";
 import { useUserDetailsQuery } from "../../redux/features/user/userApi";
 import { useSelector } from "react-redux";

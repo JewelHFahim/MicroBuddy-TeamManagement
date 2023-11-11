@@ -3,9 +3,11 @@ import Title from "../../utils/Title";
 import { Link } from "react-router-dom";
 import { useGetAllUserQuery } from "../../redux/features/user/userApi";
 import Loading from "../../utils/loading/Loading";
+import { useSelector } from "react-redux";
 
 const Employee = () => {
   const { data: allUser, isLoading } = useGetAllUserQuery();
+  const {type} = useSelector(state => state.user)
 
   const tableHeadData = [
     { title: "ID" },
@@ -24,9 +26,13 @@ const Employee = () => {
       <Title>Employee</Title>
 
       <section>
+
+       {
+        type === "superadmin" &&
         <Link to="/register" className="w-full flex justify-end">
-          <button className="font-semibold text-blue-600 text-[18px]"> + Add Member </button>
-        </Link>
+        <button className="font-semibold text-blue-600 text-[18px]"> + Add Member </button>
+      </Link>
+       }
 
         <table className="w-full table-auto text-sm text-left bg-gray-50">
           <thead className=" text-gray-600 font-medium border-b uppercase">
