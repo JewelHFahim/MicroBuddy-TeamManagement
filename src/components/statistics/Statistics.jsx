@@ -5,36 +5,33 @@ import { IoCheckmarkDoneCircle } from "react-icons/io5";
 import { MdMoreTime } from "react-icons/md";
 
 const Statistics = () => {
-  // const currentDate = new Date();
-
-
 const {data: allTask } = useGetAllTaskQuery();
 const memberProgress = allTask?.filter(task => task.status === "inprogress");
 const qcProgress = allTask?.filter(task => task.status === "qc_progress");
+
 const completeTask = allTask?.filter(task => task.status === "done");
+function countOverdueTasks(allTask) {
+  if (!Array.isArray(allTask)) {
+    return 0;
+  }
+
+  let overdueCount = 0;
+  const currentDate = new Date();
+  for (const task of allTask) {
+    const dueDate = new Date(task?.due_date);
+
+    if (currentDate > dueDate) {
+      overdueCount++;
+    }
+  }
+  return overdueCount;
+}
+
+const totalOverdueTasks = countOverdueTasks(allTask);
+
+console.log('Total overdue tasks:', totalOverdueTasks);
 
 
-
-// Function to count overdue tasks
-// function countOverdueTasks(tasks) {
-
-//   let overdueCount = 0;
-
-//   for (const task of tasks) {
-//     const dueDate = new Date(task?.due_date);
-
-//     if (currentDate > dueDate) {
-//       overdueCount++;
-//     }
-//   }
-
-//   return overdueCount;
-// }
-
-// // Call the function to count overdue tasks
-// const totalOverdueTasks = countOverdueTasks(allTask);
-
-// console.log('Total overdue tasks:', totalOverdueTasks);
 
 
 const datas = [
@@ -57,7 +54,7 @@ const datas = [
     bg: "bg-[#216FED]",
   },
   {
-    total: 0,
+    total: totalOverdueTasks,
     title: "Over Date",
     icon: <MdMoreTime />,
     bg: "bg-[#ED9B21]",

@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
 const userInfo = JSON.parse(localStorage.getItem("user-info"));
-console.log(userInfo?.username);
 
 const initialState = {
   email: "" || userInfo?.email,
@@ -30,13 +29,8 @@ export const loginUser = createAsyncThunk(
         }
       );
 
-      console.log(response);
-
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        console.log(data.token);
-
         dispatch(setToken(data.token));
         dispatch(setEmail(data?.user?.email));
         dispatch(setUsername(data?.user?.username));
@@ -50,9 +44,7 @@ export const loginUser = createAsyncThunk(
           type: data.user.type,
           id: data.user.id,
         };
-
         localStorage.setItem("user-info", JSON.stringify(info));
-
         toast.success("Login Success");
       } else {
         toast.error("Login Failed");

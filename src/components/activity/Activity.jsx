@@ -8,15 +8,12 @@ const Activity = ({ id, allUser }) => {
 
   return (
     <section>
-      <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] w-[712px] h-[666px] p-[40px]">
+      <div className="mt-[27px] bg-[#F2F6FC] rounded-[15px] w-[712px] h-[666px] p-[40px] overflow-y-auto">
         <h2 className="text-secondary text-[20px] font-semibold">Activity</h2>
 
         <div className="">
           {activityList?.map((acitivity) => (
-            <div
-              key={acitivity.id}
-              className="mt-[40px] flex items-start gap-4"
-            >
+            <div key={acitivity.id} className="mt-[40px] flex items-start gap-4">
               <div className="w-[40px] h-[40px] rounded-full border-2 border-white bg-yellow-300">
                 {allUser
                   ?.filter((user) => {

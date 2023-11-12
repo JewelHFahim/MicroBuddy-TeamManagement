@@ -13,17 +13,11 @@ import { useUserDetailsQuery } from '../../redux/features/user/userApi';
 
 
 const SideDrawer = () => {
-
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const {type, email, username, userId} = useSelector(state=> state.user);
+  const {type, username, userId} = useSelector(state=> state.user);
   const { data: userDetails } = useUserDetailsQuery(userId);
-
-
-  console.log(type)
-  
-  const userRole = type;
   
   const Menues = [
     {
@@ -69,15 +63,15 @@ const SideDrawer = () => {
   ];
 
   const filteredMenus = Menues.filter(menu => {
-    if (userRole === ('superadmin')) {
+    if (type === ('superadmin')) {
       return true;
     } 
 
-    else if (userRole === 'admin') {
+    else if (type === 'admin') {
       return !['History'].includes(menu.title);
     }
 
-     else if (userRole === 'member') {
+     else if (type === 'member') {
       return !['Task List', 'Employee', 'History', 'Setting'].includes(menu.title);
     }
   });
@@ -119,7 +113,7 @@ const SideDrawer = () => {
                 {username}
               </span>
               <span className="uppercase text-[13px] text-[#216FED] font-medium">
-                {email}
+                {userDetails?.type}
               </span>
             </p>
 

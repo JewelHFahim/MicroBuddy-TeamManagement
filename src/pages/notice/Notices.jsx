@@ -13,9 +13,11 @@ import DateFormat from "../../utils/DateFormat";
 import Loading from "../../utils/loading/Loading";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { useGetAllUserQuery } from "../../redux/features/user/userApi";
 
 const Notices = () => {
   const { data: allNotices, isLoading } = useGetAllNoticeQuery();
+  const { data: allUser } = useGetAllUserQuery();
   const [deleteNotice] = useDeleteNoticeMutation();
   const { type } = useSelector((state) => state.user);
 
@@ -90,22 +92,30 @@ const Notices = () => {
                     className="w-full border flex justify-between items-center bg-white rounded-lg shadow-sm px-4  py-2 notice"
                   >
                     <div className="flex items-center gap-x-3 whitespace-nowrap">
-                      <img src={notice} className="w-[81px] h-[81px] rounded-[20px]"/>
+                    {allUser
+                          ?.filter((userImg) => {
+                            return userImg?.user?.id === item.author && userImg.image;
+                          })
+                          .map((filteredUserImg, index) => (
+                            <img
+                              key={index}
+                              src={filteredUserImg.image}
+                              alt="qc"
+                              className="w-[65px] h-[65px] rounded-[20px]"
+                            />
+                          ))}
+
                       <div>
-                        
                         <p className="text-[24px] font-medium text-[#273240]">
                           {item.title}
                         </p>
 
-
                         <div
                           className="text-[13px] text-[#216FED] mt-2 "
                           dangerouslySetInnerHTML={renderAsPlainText(
-                            (decodeBase64(item?.content).slice(0,200))
+                            decodeBase64(item?.content).slice(0, 200).slice(0, 80)
                           )}
                         ></div>
-
-
                       </div>
                     </div>
 
@@ -124,7 +134,7 @@ const Notices = () => {
                           </button>
                         </Link>
 
-                        {type === "superadmin" && (
+                        {(type === "superadmin" || type === "admin") && (
                           <button
                             onClick={() => handleDelete(item.id)}
                             className="text-[25px] text-red-800 pb-2"
