@@ -2,10 +2,10 @@
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const QCProgress = ({  filteredAllQCTask, dataFromCenter}) => {
+const QCProgress = ({ dataFromCenter}) => {
 
   const pathName = (window.location.pathname);
-  const currentData = pathName === "/task-list" ? dataFromCenter?.allTask : filteredAllQCTask;
+  const currentData = pathName === "/task-list" ? dataFromCenter?.allTask : dataFromCenter?.filteredAllQCTask;
   const filteredQCProgress = currentData?.filter((task) => task.status === "qc_progress");
 
   const dataSet = {

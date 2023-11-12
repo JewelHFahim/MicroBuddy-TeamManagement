@@ -3,6 +3,9 @@ import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
 const Done = ({ dataFromCenter }) => {
+
+
+  
   const doneTask = dataFromCenter?.allTask?.filter((task) => task.status === "done");
 
   const dataSet = {

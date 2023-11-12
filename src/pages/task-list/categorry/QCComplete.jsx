@@ -2,8 +2,8 @@
 import Loading from "../../../utils/loading/Loading";
 import Card from "./Card";
 
-const QCComplete = ({ filteredAllQCTask, dataFromCenter }) => {
-  const filteredQcComplete = filteredAllQCTask?.filter(
+const QCComplete = ({ dataFromCenter }) => {
+  const filteredQcComplete = dataFromCenter?.filteredAllQCTask?.filter(
     (task) => task.status === "qc_complete"
   );
   const dataSet = {

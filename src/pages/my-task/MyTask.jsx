@@ -7,29 +7,40 @@ import QCTask from "./QCTask";
 import MemberTask from "./MemberTask";
 import { useState } from "react";
 import { memberBtnStyle, qcButtonStyle } from "../../utils/Important";
-import { useGetAllQCTaskListQuery, useGetAllTaskQuery } from "../../redux/features/task/taskApi";
-import { useGetAllUserQuery } from "../../redux/features/user/userApi";
+import { useGetAllQCTaskListQuery, useGetAllTaskQuery, useGetQCTaskListByQcIdQuery } from "../../redux/features/task/taskApi";
+import { useGetAllUserQuery, useUserDetailsQuery } from "../../redux/features/user/userApi";
+import { useSelector } from "react-redux";
 
 const MyTask = () => {
+
   const redirect = "update-mytask";
+  const {userId} = useSelector(state=> state.user)
   const { data: allTask, isLoading } = useGetAllTaskQuery();
   const { data: allUser } = useGetAllUserQuery();
   const { data: allQc } = useGetAllQCTaskListQuery();
+  const { data: userDetail } = useUserDetailsQuery(userId);
+
+  // ========>> FOR QC SECTION START
+  const { data: qcTaskList } = useGetQCTaskListByQcIdQuery(userId);
+  const qcTaskIds = qcTaskList?.map((qcTask) => qcTask.task);
+  const filteredAllQCTask = allTask?.filter((task) => qcTaskIds?.includes(task.id));
 
   const userImages = allQc?.map((qc) => {
     const task = allTask?.find((task) => task.id === qc.task);
     const user = allUser?.find((userEntry) => userEntry.user.id === qc.user);
-    if (task && user) {
-      return { qcImg: user?.image, qcTask: qc?.task };
-    }
+    if (task && user) { return { qcImg: user?.image, qcTask: qc?.task }}
     return null;
   });
+
+  // =======>> QC END HERE
 
   const dataFromCenter = {
     redirect: redirect,
     qcImg: userImages,
     allTask: allTask,
+    filteredAllQCTask: filteredAllQCTask,
     isLoading: isLoading,
+    userDetail: userDetail
   };
 
   const [toggleTask, setToggoleTasl] = useState("member-task");
@@ -72,7 +83,7 @@ const MyTask = () => {
       </section>
 
       {/*  <<====== Statistics ======>>  */}
-      <Statistics />
+      <Statistics dataFromCenter={dataFromCenter}/>
 
       {/*  <<======= TASK ========>>  */}
       {toggleTask === "qc-task" ? (

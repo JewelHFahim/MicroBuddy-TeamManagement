@@ -4,6 +4,7 @@ import CheckList from "../task-list/categorry/CheckList";
 import InProgress from "../task-list/categorry/InProgress";
 import Pause from "../task-list/categorry/Pause";
 import Todo from "../task-list/categorry/Todo";
+import Done from "../task-list/categorry/Done";
 
 const MemberTask = ({dataFromCenter}) => {
   const { type, userId } = useSelector((state) => state.user);
@@ -25,6 +26,10 @@ const MemberTask = ({dataFromCenter}) => {
 
           {/*  <<===== FOR QC CHECKLIST ======>>  */}
           <CheckList singleUserTask={singleUserTask} dataFromCenter={dataFromCenter}  />
+
+          {/*  <<===== FOR QC CHECKLIST ======>>  */}
+          <Done singleUserTask={singleUserTask} dataFromCenter={dataFromCenter}  />
+
         </>
       )}
     </>
