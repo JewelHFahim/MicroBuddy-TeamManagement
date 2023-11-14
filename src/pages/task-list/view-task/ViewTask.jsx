@@ -77,7 +77,6 @@ const ViewTask = () => {
                 decodeBase64(viewTask?.description)
               )}
             >
-              {/* {viewTask?.description} */}
             </p>
           </div>
 

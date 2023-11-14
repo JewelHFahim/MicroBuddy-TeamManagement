@@ -78,6 +78,20 @@ const UpdateMyTask = () => {
     }
   }, [qcTaskList, viewTask, userId]);
 
+
+  const decodeBase64 = (base64String) => {
+    try {
+      return atob(base64String);
+    } catch (error) {
+      console.error("Error decoding base64:", error);
+      return "";
+    }
+  };
+
+  const renderAsPlainText = (content) => {
+    return { __html: content }; // This sets the innerHTML to the decoded content
+  };
+
   return (
     <div className="pb-[300px]">
       <Title>Update MyTask</Title>
@@ -89,7 +103,12 @@ const UpdateMyTask = () => {
           {/* title and description */}
           <div className="mt-5 w-[712px] h-[780px] overflow-y-auto bg-[#F2F6FC] border border-blue-700 rounded-[15px] shadow-md p-[40px] text-[#273240]">
             <h1 className="text-[34px] font-semibold">{viewTask?.task_name}</h1>
-            <p className="text-[25px] font-light">{viewTask?.description}</p>
+            <p
+              className="text-[25px] font-[300] mt-8"
+              dangerouslySetInnerHTML={renderAsPlainText(
+                decodeBase64(viewTask?.description)
+              )}
+            ></p>
           </div>
 
           {/* Task Submit */}
