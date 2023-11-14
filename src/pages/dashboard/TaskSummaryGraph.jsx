@@ -3,18 +3,25 @@ import { FaBasketballBall } from "react-icons/fa";
 import { BsFillCalendarFill } from "react-icons/bs";
 import ReactApexChart from "react-apexcharts";
 import { useState } from "react";
+import { useGetAllUserQuery } from "../../redux/features/user/userApi";
+import { useGetAllTaskQuery } from "../../redux/features/task/taskApi";
 
 const TaskSummaryGraph = () => {
+  const { data: allUser } = useGetAllUserQuery();
+  const { data: allTask } = useGetAllTaskQuery();
+
+  const assignedTask = allUser?.map((user => user?.assigned_tasks_total))
 
   const [chartData] = useState({
     series: [
       {
         name: "PRODUCT A",
-        data: [44, 55, 41, 67, 22, 43],
+        // data: [44, 55, 41, 67, 22, 43, 50],
+        data: assignedTask,
       },
       {
         name: "PRODUCT B",
-        data: [13, 23, 20, 8, 13, 27],
+        data: [13, 23, 20, 8, 13, 27, 50],
       },
     ],
 
@@ -75,6 +82,7 @@ const TaskSummaryGraph = () => {
           "01/04/2011 GMT",
           "01/05/2011 GMT",
           "01/06/2011 GMT",
+          "01/07/2011 GMT",
         ],
       },
 
@@ -103,8 +111,7 @@ const TaskSummaryGraph = () => {
         </div>
 
         <div className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex items-center justify-center gap-[20px] text-white">
-          {" "}
-          <BsFillCalendarFill className="text-[28px]" />{" "}
+          <BsFillCalendarFill className="text-[28px]" />
           <p className="text-[18px] font-Poppins font-semibold">Filter</p>
         </div>
       </section>
@@ -120,15 +127,22 @@ const TaskSummaryGraph = () => {
         </div>
 
         <div className="flex justify-evenly items-center">
-          {Array.from({ length: 6 }).map((item, i) => (
-            <div
-              key={i}
-              className={`w-[75px] h-[75px] bg-red-200 rounded-full`}
-            ></div>
-          ))}
+          {allUser
+            ?.filter((user) => user.type !== "superadmin")
+            ?.map((item, i) => (
+              <div
+                key={i}
+                className={`w-[75px] h-[75px] bg-red-200 rounded-full ml-8`}
+              >
+                <img
+                  src={item?.image}
+                  alt=""
+                  className="w-full h-full rounded-full"
+                />
+              </div>
+            ))}
         </div>
       </section>
-      
     </div>
   );
 };
