@@ -22,7 +22,9 @@ const Navbar = () => {
 
   return (
     <nav className="nav-container border w-full h-[120px] pl-[33px] pr-[90px]">
+
       <div className="flex justify-between items-center w-full h-full">
+
         {/* target Points */}
         <div className="-mt-10">
           <TargetPoint userDetails={userDetails} />
@@ -65,7 +67,9 @@ const Navbar = () => {
             </div>
           </div>
         </section>
+
       </div>
+
     </nav>
   );
 };

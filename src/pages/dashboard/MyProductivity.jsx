@@ -107,8 +107,7 @@ const MyProductivity = () => {
           </div>
 
           <div className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex items-center justify-center gap-[20px] text-white">
-            {" "}
-            <BsFillCalendarFill className="text-[28px]" />{" "}
+            <BsFillCalendarFill className="text-[28px]" />
             <p className="text-[18px] font-Poppins font-semibold">Filter</p>
           </div>
         </section>

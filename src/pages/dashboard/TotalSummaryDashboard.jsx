@@ -1,33 +1,80 @@
+/* eslint-disable react/prop-types */
 import { BiMessageRoundedDots } from "react-icons/bi";
 import { ImLink } from "react-icons/im";
 import { PiUsersThreeBold } from "react-icons/pi";
+import { FaBriefcase } from "react-icons/fa6";
+import { BsGraphUpArrow } from "react-icons/bs";
+import { IoMdClose } from "react-icons/io";
 
-const TotalSummaryDashboard = () => {
+const TotalSummaryDashboard = ({ allUser, allTask }) => {
+  const employees = allUser?.filter((user) => user.type !== "superadmin");
+  const completedTask = allTask?.filter((task) => task.status === "done");
+
+  const visibleUser = allUser?.slice(0, 5);
+
+
+  console.log(employees);
+
+  const datas = [
+    {
+      title: "Total Employees",
+      total: employees?.length,
+      parcentage: 11,
+      icon: <PiUsersThreeBold />,
+      color: "bg-[#EE9D01]",
+    },
+
+    {
+      title: "Total Tasks",
+      total: allTask?.length,
+      parcentage: 11,
+      icon: <FaBriefcase />,
+      color: "bg-[#5F5CF1]",
+    },
+
+    {
+      title: "Completed Task",
+      total: completedTask?.length,
+      parcentage: 11,
+      icon: <BsGraphUpArrow />,
+      color: "bg-[#1BC5BD]",
+    },
+
+    {
+      title: "Over Due Task",
+      total: 16,
+      parcentage: 11,
+      icon: <IoMdClose />,
+      color: "bg-[#F64E60]",
+    },
+  ];
+
   return (
     <div className="w-full h-[397px] flex gap-[25px]">
-
       <section className="flex flex-col gap-[18px]">
         <div className="grid grid-cols-4 gap-5">
-          {[1, 2, 3, 4].map((data, i) => (
+          {datas.map((data, i) => (
             <div
               key={i}
-              className="w-[192px] h-[249px] rounded-xl bg-white px-[17px] py-[27px]"
+              className="w-[160px] h-[250px] rounded-xl bg-white px-[17px] py-[27px]"
             >
-              <div className="w-[42px] h-[42px] rounded-[10px] bg-[#EE9D01] flex justify-center items-center">
-                <PiUsersThreeBold className="text-[20px] text-white" />
+              <div
+                className={`w-[42px] h-[42px] rounded-[10px] ${data.color} flex justify-center items-center text-[20px] text-white`}
+              >
+                {data.icon}
               </div>
 
               <p className="text-[#464E5F] text-opacity-[70%] text-[14px] mt-[25px]">
-                Total Employees
+                {data.title}
               </p>
               <h2 className="text-[25px] text-[#464E5F] font-semibold mt-[25px]">
-                2.3016
+                {data.total}
               </h2>
               <p className="text-[#464E5F]">Task</p>
               <p className="mt-3">
                 <span className="text-[12px] font-bold text-[#4AB58E]">
                   +35%
-                </span>{" "}
+                </span>
                 <span className="text-[12px] text-opacity-[50%]">
                   This Month
                 </span>
@@ -69,28 +116,35 @@ const TotalSummaryDashboard = () => {
         </section>
       </section>
 
-      <section className="w-[586px] rounded-[12px] p-[24px] bg-white">
+      <section className="w-full rounded-[12px] p-[24px] bg-white">
         <p className="text-[#464E5F] font-semibold">Top Employees</p>
 
         <div className="mt-[40px] flex flex-col gap-[25px]">
-        {
-            [1,2,3,4].map((data, i)=> (
-            <div key={i} className="flex items-center gap-[50px]">
-                <div className="flex items-center gap-5">
+          {visibleUser?.filter(user => user.type !== "superadmin")?.map((data, i) => (
+            <div key={i} className="flex items-center gap-[50px] border-b">
+              <div className="flex items-center gap-5 min-w-[170px]">
 
-                <div className="w-[42px] h-[42px] rounded-full bg-slate-300 "></div>
-                <p className="text-textColor text-[14px] font-semibold">Rudolph G</p>
+                <div className="w-[42px] h-[42px] rounded-full bg-slate-300 ">
+                  <img src={data.image} alt="" className="w-full h-full rounded-full"/>
                 </div>
 
-                <p className="text-textColor text-[14px] font-semibold">Product Design</p>
-                <p className="text-textColor text-[14px] font-semibold">194 task</p>
-                <p className="text-[#04AA77] text-[14px] font-semibold">1.0124 pts</p>
+                <p className="text-textColor text-[14px] font-semibold capitalize">
+                  {data?.user?.username}
+                </p>
+              </div>
+
+              <p className="text-textColor text-[14px] font-semibold  min-w-[180px]">
+              {data?.category}
+              </p>
+              <p className="text-textColor text-[14px] font-semibold  min-w-[80px]">
+                {data?.assigned_tasks_total} task
+              </p>
+              <p className="text-[#04AA77] text-[14px] font-semibold min-w-[80px]">
+                {data?.score} pts
+              </p>
             </div>
-            ))
-        }
+          ))}
         </div>
-
-
       </section>
     </div>
   );

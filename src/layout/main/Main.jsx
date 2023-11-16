@@ -6,12 +6,17 @@ const Main = () => {
   return (
     <div className="flex font-Poppins">
       <SideDrawer />
+
       <div className="w-full">
         <Navbar/>
+
         <div className="pl-[33px] pr-[90px]">
           <Outlet/>
         </div>
+        
       </div>
+
+
     </div>
   );
 };

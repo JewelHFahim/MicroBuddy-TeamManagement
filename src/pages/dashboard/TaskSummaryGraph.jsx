@@ -5,22 +5,29 @@ import ReactApexChart from "react-apexcharts";
 import { useState } from "react";
 import { useGetAllUserQuery } from "../../redux/features/user/userApi";
 import { useGetAllTaskQuery } from "../../redux/features/task/taskApi";
+import { useSelector } from "react-redux";
 
 const TaskSummaryGraph = () => {
+  const {userId} = useSelector(state => state.user)
   const { data: allUser } = useGetAllUserQuery();
   const { data: allTask } = useGetAllTaskQuery();
 
-  const assignedTask = allUser?.map((user => user?.assigned_tasks_total))
+  const assignedTask = allUser?.map((user => user?.assigned_tasks_total));
+
+  const assignedTaskDone = allTask?.filter(task =>  task?.assignee === userId && task.status === "done");
+  console.log(assignedTaskDone)
+
+
 
   const [chartData] = useState({
     series: [
       {
-        name: "PRODUCT A",
+        name: "Total Task",
         // data: [44, 55, 41, 67, 22, 43, 50],
         data: assignedTask,
       },
       {
-        name: "PRODUCT B",
+        name: "Complete Task",
         data: [13, 23, 20, 8, 13, 27, 50],
       },
     ],
