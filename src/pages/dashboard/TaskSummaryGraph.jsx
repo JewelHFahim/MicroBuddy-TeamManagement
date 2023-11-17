@@ -8,16 +8,18 @@ import { useGetAllTaskQuery } from "../../redux/features/task/taskApi";
 import { useSelector } from "react-redux";
 
 const TaskSummaryGraph = () => {
-  const {userId} = useSelector(state => state.user)
+  const { userId } = useSelector((state) => state.user);
   const { data: allUser } = useGetAllUserQuery();
   const { data: allTask } = useGetAllTaskQuery();
 
-  const assignedTask = allUser?.map((user => user?.assigned_tasks_total));
+  // const assignedTask = allUser?.map((user) => user?.assigned_tasks_total);
+  const assignedTask = allUser?.filter((user) => user.type !== "superadmin")?.map(user => user.assigned_tasks_total);
 
-  const assignedTaskDone = allTask?.filter(task =>  task?.assignee === userId && task.status === "done");
-  console.log(assignedTaskDone)
+  // console.log(test);
 
-
+  const assignedTaskDone = allTask?.filter(
+    (task) => task?.assignee === userId && task.status === "done"
+  );
 
   const [chartData] = useState({
     series: [
@@ -35,7 +37,6 @@ const TaskSummaryGraph = () => {
     options: {
       chart: {
         type: "bar",
-
         height: 400,
         stacked: true,
         toolbar: {
@@ -46,7 +47,6 @@ const TaskSummaryGraph = () => {
       responsive: [
         {
           breakpoint: 480,
-
           options: {
             legend: { show: false },
           },
@@ -115,6 +115,16 @@ const TaskSummaryGraph = () => {
             <FaBasketballBall className="text-[29px]" />
             <p className="text-[25px] font-semibold font-Urbanist">Complete</p>
           </div>
+
+          <div className="border border-red-600 flex gap-2">
+            {allUser?.map((user, i) => (
+              <div key={i}>
+                <p>{user.user.username}</p>
+                <p>t-{user.assigned_tasks_total}</p>
+              </div>
+            ))}
+          </div>
+        
         </div>
 
         <div className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex items-center justify-center gap-[20px] text-white">
