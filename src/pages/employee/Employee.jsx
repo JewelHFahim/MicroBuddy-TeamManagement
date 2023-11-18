@@ -1,13 +1,19 @@
 import { FiEye } from "react-icons/fi";
 import Title from "../../utils/Title";
 import { Link } from "react-router-dom";
-import { useGetAllUserQuery } from "../../redux/features/user/userApi";
+import {
+  useDeleteUserMutation,
+  useGetAllUserQuery,
+} from "../../redux/features/user/userApi";
 import Loading from "../../utils/loading/Loading";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { BsFillTrashFill } from "react-icons/bs";
 
 const Employee = () => {
   const { data: allUser, isLoading } = useGetAllUserQuery();
-  const {type} = useSelector(state => state.user)
+  const [deleteUser] = useDeleteUserMutation();
+  const { type } = useSelector((state) => state.user);
 
   const tableHeadData = [
     { title: "ID" },
@@ -21,18 +27,24 @@ const Employee = () => {
     { title: "" },
   ];
 
+  const handleDelete = (id) => {
+    deleteUser(id);
+    console.log(id)
+    toast.success("Deleted user");
+  };
+
   return (
     <div className="w-full font-Poppins pl-[33px] pr-[90px]">
       <Title>Employee</Title>
 
       <section>
-
-       {
-        type === "superadmin" &&
-        <Link to="/register" className="w-full flex justify-end">
-        <button className="font-semibold text-blue-600 text-[18px]"> + Add Member </button>
-      </Link>
-       }
+        {type === "superadmin" && (
+          <Link to="/register" className="w-full flex justify-end">
+            <button className="font-semibold text-blue-600 text-[18px]">
+              + Add Member
+            </button>
+          </Link>
+        )}
 
         <table className="w-full table-auto text-sm text-left bg-gray-50">
           <thead className=" text-gray-600 font-medium border-b uppercase">
@@ -89,12 +101,18 @@ const Employee = () => {
                     {user.type}
                   </td>
 
-                  <td className="text-[20px]">
+                  <td className="text-[20px] flex items-center gap-4">
                     <Link to={`/employee-detail-view/${user.user.id}`}>
                       <button>
                         <FiEye />
                       </button>
                     </Link>
+
+                    {type === "superadmin" && (
+                      <button onClick={()=> handleDelete(user.user.id)} className="text-red-300 mr-2 hover:text-red-600">
+                        <BsFillTrashFill />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

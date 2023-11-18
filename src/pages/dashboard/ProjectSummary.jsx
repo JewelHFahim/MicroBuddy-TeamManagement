@@ -11,10 +11,10 @@ const ProjectSummary = () => {
   const {userId} = useSelector(state => state.user);
   const { data: allTask } = useGetAllTaskQuery();
 
-
   const totalTask = allTask?.filter(task => task.assignee === userId);
   const inProgress = allTask?.filter(task => task.assignee === userId && task.status === "inprogress");
   const completed = allTask?.filter(task => task.assignee === userId && task.status === "done");
+  const overDate = allTask?.filter(task => task.status === "done" && task.on_time_completion === false);
 
   const datas = [
     {
@@ -31,7 +31,7 @@ const ProjectSummary = () => {
 
     {
       title: "Over Date",
-      total: 50,
+      total: overDate?.length,
       icon: <LiaTelegram />,
     },
 
@@ -61,7 +61,7 @@ const ProjectSummary = () => {
             <p className="text-[#200E3266] text-[20px] ">
               On time completed rate
             </p>
-            <p className="text-[25px]">90%</p>
+            <p className="text-[25px]"> { ((overDate?.length / completed?.length) * 100).toFixed(2)}% </p>
             <button className="w-[116px] h-[30px] rounded-[21px] bg-[#0e123e1a] flex items-center justify-center gap-4 text-[18px]">
               <SlGraph /> 3.1%
             </button>

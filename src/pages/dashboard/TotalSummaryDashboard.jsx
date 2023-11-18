@@ -7,13 +7,13 @@ import { BsGraphUpArrow } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io";
 
 const TotalSummaryDashboard = ({ allUser, allTask }) => {
+
   const employees = allUser?.filter((user) => user.type !== "superadmin");
   const completedTask = allTask?.filter((task) => task.status === "done");
-
   const visibleUser = allUser?.slice(0, 5);
+  const overDate = allTask?.filter(task => task.status === "done" && task.on_time_completion === false);
 
 
-  console.log(employees);
 
   const datas = [
     {
@@ -42,7 +42,7 @@ const TotalSummaryDashboard = ({ allUser, allTask }) => {
 
     {
       title: "Over Due Task",
-      total: 16,
+      total: overDate?.length,
       parcentage: 11,
       icon: <IoMdClose />,
       color: "bg-[#F64E60]",

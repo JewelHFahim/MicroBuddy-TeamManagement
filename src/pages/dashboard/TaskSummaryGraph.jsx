@@ -5,32 +5,51 @@ import ReactApexChart from "react-apexcharts";
 import { useState } from "react";
 import { useGetAllUserQuery } from "../../redux/features/user/userApi";
 import { useGetAllTaskQuery } from "../../redux/features/task/taskApi";
-import { useSelector } from "react-redux";
 
 const TaskSummaryGraph = () => {
-  const { userId } = useSelector((state) => state.user);
+
+
   const { data: allUser } = useGetAllUserQuery();
   const { data: allTask } = useGetAllTaskQuery();
 
-  // const assignedTask = allUser?.map((user) => user?.assigned_tasks_total);
-  const assignedTask = allUser?.filter((user) => user.type !== "superadmin")?.map(user => user.assigned_tasks_total);
+  const assignedTask = allUser?.filter((user) => user.type !== "superadmin")?.map((user) => user.assigned_tasks_total);
+console.log(assignedTask)
 
-  // console.log(test);
+// Filter out superadmin users
+const regularUsers = allUser?.filter((user) => user.type !== "superadmin");
 
-  const assignedTaskDone = allTask?.filter(
-    (task) => task?.assignee === userId && task.status === "done"
-  );
+// Get unique user IDs for regular users
+const userIds = regularUsers?.map((user) => user.user.id);
+console.log(userIds);
+
+// Function to get done tasks for a specific user
+const getDoneTasksForUser = (userId) => {
+  return allTask?.filter((task) => task.assignee === userId && task.status === "done" && task.assignee !== null);
+};
+
+// Get done tasks for all regular users
+const allUsersDoneTasks = {};
+userIds?.forEach((userId) => { 
+  const doneTasks = getDoneTasksForUser(userId);
+  allUsersDoneTasks[userId] = doneTasks;
+});
+
+// Get array lengths as an array
+const arrayLengths = userIds?.map((userId) => allUsersDoneTasks[userId]?.length || 0);
+console.log(arrayLengths);
+
 
   const [chartData] = useState({
     series: [
       {
         name: "Total Task",
         // data: [44, 55, 41, 67, 22, 43, 50],
-        data: assignedTask,
+        data: arrayLengths,
       },
       {
         name: "Complete Task",
-        data: [13, 23, 20, 8, 13, 27, 50],
+        // data: [13, 23, 20, 8, 13, 27, 50],
+        data: assignedTask,
       },
     ],
 
@@ -115,16 +134,6 @@ const TaskSummaryGraph = () => {
             <FaBasketballBall className="text-[29px]" />
             <p className="text-[25px] font-semibold font-Urbanist">Complete</p>
           </div>
-
-          <div className="border border-red-600 flex gap-2">
-            {allUser?.map((user, i) => (
-              <div key={i}>
-                <p>{user.user.username}</p>
-                <p>t-{user.assigned_tasks_total}</p>
-              </div>
-            ))}
-          </div>
-        
         </div>
 
         <div className="w-[184px] h-[60px] rounded-[20px] bg-[#216FED] flex items-center justify-center gap-[20px] text-white">

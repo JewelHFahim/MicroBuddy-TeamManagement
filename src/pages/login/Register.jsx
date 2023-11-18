@@ -20,7 +20,7 @@ const Register = () => {
     console.log(res);
     toast.success("Register Success");
     console.log(data);
-    navigate("/login");
+    navigate("/employee");
   };
 
   const inputStyle =

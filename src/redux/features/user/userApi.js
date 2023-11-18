@@ -47,6 +47,17 @@ const userApi = apiSlice.injectEndpoints({
       invalidatesTags: ["Team-Management"],
     }),
 
+    // <<================ DELETE USER ===============>>
+
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        method: "DELETE",
+        url: `/user/delete-user/${id}/`,
+      }),
+      invalidatesTags: ["Team-Management"],
+    }),
+
+
   }),
 });
 
@@ -55,6 +66,7 @@ export const {
   useUserDetailsQuery,
   useUpdateTargetpointMutation,
   useViewDetailTargetpointQuery,
-  useChangePasswordMutation
+  useChangePasswordMutation,
+  useDeleteUserMutation
 } = userApi;
 export default userApi;

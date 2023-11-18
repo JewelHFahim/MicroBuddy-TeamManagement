@@ -23,9 +23,11 @@ const EditTask = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const { id } = useParams();
+
   const [startDate, setStartDate] = useState(
     setHours(setMinutes(new Date(), 30), 16)
   );
+
   const { data: allOptions } = useGetAllCheckListQuery();
   const { data: viewTask } = useViewTaskQuery(id);
   const { data: QCListBytaskId } = useGetTaskListByQcIdQuery(id);
@@ -61,7 +63,6 @@ const EditTask = () => {
   // ============================>> UPDATE FORM <<====================
   const [status, setStatus] = useState(viewTask?.status);
   const [task_name, setTask_name] = useState(viewTask?.task_name);
-  // const [description, setDescription] = useState(viewTask?.description);
   const [points, setPoints] = useState(viewTask?.points);
   const [priority, setPriority] = useState(viewTask?.priority);
   const [isChecked, setIsChecked] = useState(false);
@@ -90,9 +91,6 @@ const EditTask = () => {
     if (task_name !== undefined) {
       upd.task_name = task_name;
     }
-    // if (description !== undefined) {
-    //   upd.description = description;
-    // }
     if (points !== undefined) {
       upd.points = points;
     }
@@ -100,9 +98,7 @@ const EditTask = () => {
       upd.priority = priority;
     }
     const data = { is_checked: isChecked };
-    console.log(data);
     updateQCUserStatus({ data, QCID });
-
     toast.success("Updated");
     navigate(`/view-task/${id}`);
   };
@@ -263,7 +259,7 @@ const EditTask = () => {
 
             <div className="flex items-center gap-4">
               <p className="text-[25px] text-blue-700">
-                <CreateDate startDate={startDate} setStartDate={setStartDate} />
+                <CreateDate startDate={startDate} setStartDate={setStartDate} viewTask={viewTask}/>
               </p>
             </div>
           </div>
