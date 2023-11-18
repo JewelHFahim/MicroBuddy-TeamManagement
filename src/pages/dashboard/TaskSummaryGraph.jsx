@@ -40,17 +40,26 @@ userIds?.forEach((userId) => {
 const arrayLengths = userIds?.map((userId) => allUsersDoneTasks[userId]?.length || 0);
 console.log(arrayLengths);
 
+  // Function to get the last 7 days including today
+  // const getLast7Days = () => {
+  //   const today = new Date();
+  //   const last7Days = Array.from({ length: 7 }, (_, index) => {
+  //     const day = new Date(today);
+  //     day.setDate(today.getDate() - index);
+  //     return day.toISOString().split('T')[0];
+  //   });
+  //   return last7Days.reverse();
+  // };
+
 
   const [chartData] = useState({
     series: [
       {
         name: "Total Task",
-        // data: [44, 55, 41, 67, 22, 43, 50],
         data: arrayLengths,
       },
       {
         name: "Complete Task",
-        // data: [13, 23, 20, 8, 13, 27, 50],
         data: assignedTask,
       },
     ],
@@ -99,24 +108,22 @@ console.log(arrayLengths);
       },
 
       xaxis: {
+
+
         lines: {
           show: false,
         },
-        type: "datetime",
-        categories: [
-          "01/01/2011 GMT",
-          "01/02/2011 GMT",
-          "01/03/2011 GMT",
-          "01/04/2011 GMT",
-          "01/05/2011 GMT",
-          "01/06/2011 GMT",
-          "01/07/2011 GMT",
-        ],
+
+        // type: "datetime",
+        // categories: getLast7Days(),
+
+
       },
 
       legend: {
         show: false,
       },
+
       fill: {
         opacity: 1,
       },

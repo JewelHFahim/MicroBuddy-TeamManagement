@@ -1,7 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
-const TaskFilterMenu = () => {
+// eslint-disable-next-line no-unused-vars
+const TaskFilterMenu = ({status, setStatus}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -13,7 +15,7 @@ const TaskFilterMenu = () => {
   };
 
   const menuClass =
-    "block px-4 py-3 text-sm text-gray-900 capitalize transition-colors duration-300 transform  hover:bg-blue-500 hover:text-white";
+    "block px-4 py-3 text-sm text-gray-900 capitalize transition-colors duration-300 transform  hover:bg-blue-500 hover:text-white w-full";
   return (
     <div className="relative inline-block text-[18px] font-semibold text-black">
       {/* Dropdown toggle button */}
@@ -31,32 +33,16 @@ const TaskFilterMenu = () => {
           onClick={closeDropdown}
           className="absolute right-0 z-20 w-[200px] py-2 mt-2 origin-top-right bg-white rounded-md shadow-xl"
         >
-          <a href="#" className={menuClass}>
-            To Do
-          </a>
-          <a href="#" className={menuClass}>
-            In Progress
-          </a>
-          <a href="#" className={menuClass}>
-            Pause
-          </a>
-          <a href="#" className={menuClass}>
-            Check List
-          </a>
-          <a href="#" className={menuClass}>
-            Member Done List
-          </a>
-          {/* QC From Here */}
-          <hr />
-          <a href="#" className={menuClass}>
-            QC Progress
-          </a>
-          <a href="#" className={menuClass}>
-            QC Complete
-          </a>
-          <a href="#" className={menuClass}>
-            QC Done List
-          </a>
+          <button onClick={()=>setStatus("all")} className={menuClass}> All</button>
+          <button onClick={()=>setStatus("adminApproval")} className={menuClass}> Admin Approval </button>
+          <button onClick={()=>setStatus("todo")} className={menuClass}> To Do </button>
+          <button onClick={()=>setStatus("inProgress")} className={menuClass}> In Progress </button>
+          <button onClick={()=>setStatus("pause")} className={menuClass}> Pause </button>
+          <button onClick={()=>setStatus("checkList")} className={menuClass}> Check List </button>
+          <button onClick={()=>setStatus("memberDone")} className={menuClass}> Member Done List </button>
+          <button onClick={()=>setStatus("qcProgress")} className={menuClass}>  QC Progress </button>
+          <button onClick={()=>setStatus("qcComplete")} className={menuClass}>  QC Complete </button>
+          <button onClick={()=>setStatus("qcDone")} className={menuClass}>  QC Done List </button>
         </div>
       )}
     </div>

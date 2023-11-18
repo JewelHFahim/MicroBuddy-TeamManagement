@@ -16,9 +16,9 @@ import {
   useGetAllQCTaskListQuery,
   useGetAllTaskQuery,
 } from "../../redux/features/task/taskApi";
+import { useState } from "react";
 
 const TaskList = () => {
-  
   const redirect = "view-task";
   const { data: allTask, isLoading } = useGetAllTaskQuery();
   const { data: allUser } = useGetAllUserQuery();
@@ -40,6 +40,8 @@ const TaskList = () => {
     isLoading: isLoading,
   };
 
+  const [status, setStatus] = useState("all");
+
   return (
     <div className="w-full font-Poppins pb-10">
       <Title>Task LIst</Title>
@@ -49,7 +51,7 @@ const TaskList = () => {
         <SearchField />
         <AddNewTaskBtn />
         <div className="flex items-center gap-5">
-          <TaskFilterMenu />
+          <TaskFilterMenu status={status} setStatus={setStatus}/>
           <FilterButton />
         </div>
       </section>
@@ -58,25 +60,51 @@ const TaskList = () => {
       <Statistics />
 
       {/*  <<========= Admin Task ========>>  */}
-      <AdminApproval  dataFromCenter={dataFromCenter}/>
+      {/* <AdminApproval dataFromCenter={dataFromCenter} /> */}
 
       {/*  <<=========== TODO ============>>  */}
-      <Todo dataFromCenter={dataFromCenter} />
+      {/* <Todo dataFromCenter={dataFromCenter} /> */}
 
       {/*  <<======== IN PROGRESS ========>>  */}
-      <InProgress dataFromCenter={dataFromCenter} />
+      {/* <InProgress dataFromCenter={dataFromCenter} /> */}
 
       {/*  <<========== PAUSE ============>>  */}
-      <Pause dataFromCenter={dataFromCenter}/>
+      {/* <Pause dataFromCenter={dataFromCenter} /> */}
 
       {/*  <<======== CHECKLIST ==========>>  */}
-      <CheckList dataFromCenter={dataFromCenter} />
+      {/* <CheckList dataFromCenter={dataFromCenter} /> */}
 
       {/*  <<======= QC PROGRESS =========>>  */}
-      <QCProgress dataFromCenter={dataFromCenter} />
+      {/* <QCProgress dataFromCenter={dataFromCenter} /> */}
 
       {/*  <<=========== DONE ============>>  */}
-      <Done dataFromCenter={dataFromCenter} />
+      {/* <Done dataFromCenter={dataFromCenter} /> */}
+
+      <div>
+
+        {/* Conditionally render components based on the status state */}
+        {(status === "all" || status === "adminApproval") && (
+          <AdminApproval dataFromCenter={dataFromCenter} />
+        )}
+        {(status === "all" || status === "todo") && (
+          <Todo dataFromCenter={dataFromCenter} />
+        )}
+        {(status === "all" || status === "inProgress") && (
+          <InProgress dataFromCenter={dataFromCenter} />
+        )}
+        {(status === "all" || status === "pause") && (
+          <Pause dataFromCenter={dataFromCenter} />
+        )}
+        {(status === "all" || status === "checkList") && (
+          <CheckList dataFromCenter={dataFromCenter} />
+        )}
+        {(status === "all" || status === "qcProgress") && (
+          <QCProgress dataFromCenter={dataFromCenter} />
+        )}
+        {(status === "all" || status === "done") && (
+          <Done dataFromCenter={dataFromCenter} />
+        )}
+      </div>
     </div>
   );
 };
