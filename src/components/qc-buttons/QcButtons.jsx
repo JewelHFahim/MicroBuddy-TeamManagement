@@ -1,9 +1,13 @@
 /* eslint-disable react/prop-types */
 const QcButtons = ({ viewTask, updateTask, id }) => {
+
+
   const handleStatusChange = (newStatus) => {
     const data = { status: newStatus };
     updateTask({ data, id });
   };
+
+  
 
   return (
     <>

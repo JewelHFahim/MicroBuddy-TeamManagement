@@ -1,95 +1,13 @@
-import { useState } from "react";
-import ReactApexChart from "react-apexcharts";
 import { BsFillCalendarFill } from "react-icons/bs";
 import { FaBasketballBall } from "react-icons/fa";
 import { PiFolderSimpleMinusBold } from "react-icons/pi";
+import ApexChart from "./MyProduct";
 
 const MyProductivity = () => {
-  const [chartData] = useState({
-    series: [
-      {
-        name: "PRODUCT A",
-        data: [44, 55, 41, 67, 22, 43],
-      }
-    ],
-
-    options: {
-      chart: {
-        type: "bar",
-
-        height: 400,
-        stacked: true,
-        toolbar: {
-          show: false,
-        },
-      },
-
-      responsive: [
-        {
-          breakpoint: 480,
-
-          options: {
-            legend: { show: false },
-          },
-        },
-      ],
-
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          borderRadius: 10,
-          dataLabels: {
-            total: {
-              enabled: true,
-              style: {
-                fontSize: "13px",
-                fontWeight: 900,
-              },
-            },
-          },
-
-          states: {
-            hover: {
-              color: "#000", // Change the color when hovering
-            },
-          },
-        },
-      },
-
- 
-      colors: ["#FEEEF4"],
-
-      yaxis: {
-        lines: {
-          show: false,
-        },
-      },
-
-      xaxis: {
-        lines: {
-          show: false,
-        },
-        type: "datetime",
-        categories: [
-          "01/01/2011 GMT",
-          "01/02/2011 GMT",
-          "01/03/2011 GMT",
-          "01/04/2011 GMT",
-          "01/05/2011 GMT",
-          "01/06/2011 GMT",
-        ],
-      },
-
-      legend: {
-        show: false,
-      },
-    },
-  });
 
   return (
     <div className="mt-[26px] ">
       <h2 className="text-[#0E123E] text-[36px] font-bold">My Productivity</h2>
-
       <section className="mt-[23px] w-full h-[597px] rounded-[21px] bg-white p-[43px] shadow-lg">
         <section className="w-full flex justify-between">
           <div className="flex items-center gap-[61px]">
@@ -113,16 +31,8 @@ const MyProductivity = () => {
         </section>
 
         <section className="mt-10">
-          <div id="chart">
-            <ReactApexChart
-              options={chartData.options}
-              series={chartData.series}
-              type="bar"
-              height={400}
-            />
-          </div>
+          <ApexChart />
         </section>
-
       </section>
     </div>
   );

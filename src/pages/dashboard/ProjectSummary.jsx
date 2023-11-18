@@ -14,6 +14,7 @@ const ProjectSummary = () => {
   const totalTask = allTask?.filter(task => task.assignee === userId);
   const inProgress = allTask?.filter(task => task.assignee === userId && task.status === "inprogress");
   const completed = allTask?.filter(task => task.assignee === userId && task.status === "done");
+  
   const overDate = allTask?.filter(task => task.status === "done" && task.on_time_completion === false);
 
   const datas = [

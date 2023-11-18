@@ -57,6 +57,11 @@ const ViewTask = () => {
     return { __html: content }; // This sets the innerHTML to the decoded content
   };
 
+  const handleStatusChange = (newStatus) => {
+    const data = { status: newStatus };
+    updateTask({ data, id });
+  };
+
   return (
     <div>
       <Title>View Task</Title>
@@ -76,8 +81,7 @@ const ViewTask = () => {
               dangerouslySetInnerHTML={renderAsPlainText(
                 decodeBase64(viewTask?.description)
               )}
-            >
-            </p>
+            ></p>
           </div>
 
           {/* Task File */}
@@ -173,6 +177,17 @@ const ViewTask = () => {
 
         {/* 2nd column */}
         <section className=" w-full">
+          {(type === "superadmin" &&  viewTask?.status !== "done") && (
+            <div className="w-full flex justify-center">
+              <button
+              onClick={() => handleStatusChange("done")}
+              className={`w-[250px] h-[50px] rounded-[44px] bg-blue-600 hover:bg-blue-700 text-[18px] font-medium text-white`}
+            >
+              Mark As Done
+            </button>
+            </div>
+          )}
+
           {/* For QC Status Update */}
           {qcObject?.[0]?.task === id &&
             qcObject?.[0]?.user !== viewTask.assigner &&
@@ -188,7 +203,7 @@ const ViewTask = () => {
           {/* Chating UI */}
           <Chatting />
 
-          { viewTask?.status !== "done" && (
+          {viewTask?.status !== "done" && (
             <>
               {(type === "superadmin" || viewTask?.assigner === userId) && (
                 <div className="mt-[50px] flex justify-end ">

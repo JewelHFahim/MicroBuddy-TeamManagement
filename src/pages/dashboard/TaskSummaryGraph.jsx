@@ -34,6 +34,8 @@ userIds?.forEach((userId) => {
   allUsersDoneTasks[userId] = doneTasks;
 });
 
+
+
 // Get array lengths as an array
 const arrayLengths = userIds?.map((userId) => allUsersDoneTasks[userId]?.length || 0);
 console.log(arrayLengths);

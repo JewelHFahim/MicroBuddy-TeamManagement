@@ -16,7 +16,6 @@ const InfoHeader = ({ viewTask, allUser }) => {
     }
   });
 
-
   // QC Button implimentation
   const { data: qcTaskList } = useGetQCTaskListByQcIdQuery(userId);
   console.log(qcTaskList);
@@ -34,8 +33,6 @@ const InfoHeader = ({ viewTask, allUser }) => {
       setFound(false);
     }
   }, [qcTaskList, viewTask, userId]);
-
-
 
   return (
     <section className="w-full h-[97px] rounded-[15px] bg-[#F2F6FC] flex gap-4 justify-between items-center px-4">
@@ -95,16 +92,18 @@ const InfoHeader = ({ viewTask, allUser }) => {
               {viewTask?.status}
             </p>
           </div>
-         
-          { ((type === "superadmin") || (Number(viewTask?.assigner) === Number(userId)) ) && (
-            <div className="mx-4">
-              <Link to={`/edit-task/${viewTask?.id}`}>
-                <button>
-                  <FiEdit className="text-[45px]" />
-                </button>
-              </Link>
-            </div>
-          )}
+
+          {(type === "superadmin" ||
+            Number(viewTask?.assigner) === Number(userId)) &&
+            viewTask?.status !== "done" && (
+              <div className="mx-4">
+                <Link to={`/edit-task/${viewTask?.id}`}>
+                  <button>
+                    <FiEdit className="text-[45px]" />
+                  </button>
+                </Link>
+              </div>
+            )}
         </div>
       </>
     </section>
