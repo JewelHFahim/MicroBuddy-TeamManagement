@@ -51,7 +51,7 @@ const TaskList = () => {
         <SearchField />
         <AddNewTaskBtn />
         <div className="flex items-center gap-5">
-          <TaskFilterMenu status={status} setStatus={setStatus}/>
+          <TaskFilterMenu status={status} setStatus={setStatus} />
           <FilterButton />
         </div>
       </section>
@@ -59,29 +59,7 @@ const TaskList = () => {
       {/* Statistics */}
       <Statistics />
 
-      {/*  <<========= Admin Task ========>>  */}
-      {/* <AdminApproval dataFromCenter={dataFromCenter} /> */}
-
-      {/*  <<=========== TODO ============>>  */}
-      {/* <Todo dataFromCenter={dataFromCenter} /> */}
-
-      {/*  <<======== IN PROGRESS ========>>  */}
-      {/* <InProgress dataFromCenter={dataFromCenter} /> */}
-
-      {/*  <<========== PAUSE ============>>  */}
-      {/* <Pause dataFromCenter={dataFromCenter} /> */}
-
-      {/*  <<======== CHECKLIST ==========>>  */}
-      {/* <CheckList dataFromCenter={dataFromCenter} /> */}
-
-      {/*  <<======= QC PROGRESS =========>>  */}
-      {/* <QCProgress dataFromCenter={dataFromCenter} /> */}
-
-      {/*  <<=========== DONE ============>>  */}
-      {/* <Done dataFromCenter={dataFromCenter} /> */}
-
       <div>
-
         {/* Conditionally render components based on the status state */}
         {(status === "all" || status === "adminApproval") && (
           <AdminApproval dataFromCenter={dataFromCenter} />
